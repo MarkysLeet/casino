@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeoCasino — почувствуй азарт</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="page page--home">
+  <div class="floating-gifts" aria-hidden="true">
+    <div class="gift gift--one"></div>
+    <div class="gift gift--two"></div>
+    <div class="gift gift--three"></div>
+  </div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <span class="brand__logo">🪙</span>
+      <span class="brand__name">NeoCasino</span>
+    </div>
+    <nav class="topbar__nav">
+      <a href="auth.html">Войти</a>
+      <a href="dashboard.html">Личный кабинет</a>
+      <a href="#vip">VIP</a>
+      <a href="#missions">Миссии</a>
+    </nav>
+    <button class="btn btn--primary">Играть сейчас</button>
+  </header>
+
+  <main class="main">
+    <section class="hero glass">
+      <div class="hero__content">
+        <h1>NeoCasino — почувствуй азарт</h1>
+        <p>Современное казино с геймифицированным интерфейсом, живой активностью и эксклюзивными бонусами.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="auth.html">Начать</a>
+          <a class="btn btn--ghost" href="#games">Исследовать игры</a>
+        </div>
+      </div>
+      <div class="hero__art">
+        <div class="hero__orb"></div>
+        <div class="hero__glow"></div>
+      </div>
+    </section>
+
+    <section id="games" class="games glass">
+      <header class="section__header">
+        <h2 class="section__title">Категории игр</h2>
+        <div class="switcher">
+          <button class="switcher__btn is-active" data-mode="online">Онлайн</button>
+          <button class="switcher__btn" data-mode="offline">Оффлайн</button>
+        </div>
+      </header>
+      <div class="games__grid">
+        <article class="game-card" data-type="online">
+          <div class="game-card__icon">🎰</div>
+          <h3>Fruit Spin</h3>
+          <p>Сочные призы и мгновенные вращения.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.8</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+        <article class="game-card" data-type="online">
+          <div class="game-card__icon">🎲</div>
+          <h3>Рулетка</h3>
+          <p>Новый запуск каждые 60 секунд.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.6</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+        <article class="game-card" data-type="offline">
+          <div class="game-card__icon">🃏</div>
+          <h3>BlackJack Neo</h3>
+          <p>Раунд стартует сразу после ставки.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.9</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+        <article class="game-card" data-type="offline">
+          <div class="game-card__icon">🎡</div>
+          <h3>Wheel Rush</h3>
+          <p>Оффлайн-механика с мгновенным стартом.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.4</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+        <article class="game-card" data-type="online">
+          <div class="game-card__icon">🏆</div>
+          <h3>Neo Tournament</h3>
+          <p>Живые ставки и рейтинги в реальном времени.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.7</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+        <article class="game-card" data-type="offline">
+          <div class="game-card__icon">💎</div>
+          <h3>Crystal Slots</h3>
+          <p>Активация после внесения ставки.</p>
+          <div class="game-card__meta">
+            <span class="rating">★ 4.5</span>
+            <button class="btn btn--secondary">Играть</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="mechanics glass">
+      <h2 class="section__title">Механики игр</h2>
+      <div class="mechanics__grid">
+        <article class="mechanic">
+          <h3>Оффлайн-игры</h3>
+          <p>Раунд запускается только после внесения ставки. Слот-машины ожидают готовности игрока, затем активируются.</p>
+          <div class="mechanic__example">Пример: слот «Crystal Slots» вращается после нажатия «Сделать ставку».</div>
+        </article>
+        <article class="mechanic">
+          <h3>Онлайн-игры</h3>
+          <p>Игры идут по таймеру и создают эффект живого казино. Успейте сделать ставку до старта.</p>
+          <div class="mechanic__example">Пример: «Рулетка» запускается каждые 60 секунд, ставки принимаются до начала раунда.</div>
+        </article>
+        <article class="mechanic mechanic--activity">
+          <h3>Активность игроков</h3>
+          <ul class="activity-feed" id="activity-feed">
+            <li>Player_102 сделал ставку 300₽</li>
+            <li>User_234 сделал ставку 500₽</li>
+            <li>LuckyFox выиграл 1200₽</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="vip" class="vip glass">
+      <h2 class="section__title">VIP-панель</h2>
+      <p class="section__subtitle">Повышайте уровень и открывайте привилегии программы лояльности.</p>
+      <div class="vip__tiers">
+        <div class="vip__tier">
+          <span class="vip__badge vip__badge--silver">Silver</span>
+          <p>Персональные бонусы и 3% кэшбэк.</p>
+        </div>
+        <div class="vip__tier">
+          <span class="vip__badge vip__badge--gold">Gold</span>
+          <p>Расширенные миссии и 5% кэшбэк.</p>
+        </div>
+        <div class="vip__tier">
+          <span class="vip__badge vip__badge--diamond">Diamond</span>
+          <p>Эксклюзивные турниры и 10% кэшбэк.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="missions" class="missions glass">
+      <h2 class="section__title">Дневные миссии</h2>
+      <div class="missions__grid">
+        <article class="mission">
+          <h3>Сделай 3 ставки</h3>
+          <p>Получите +300 NeoCoins за активность.</p>
+        </article>
+        <article class="mission">
+          <h3>Выиграй в 2 оффлайн игры</h3>
+          <p>Заберите +500 NeoCoins и сундук сюрприз.</p>
+        </article>
+        <article class="mission">
+          <h3>Активируй VIP бонус</h3>
+          <p>Получите доступ к уникальной награде.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer glass">
+    <p>© 2024 NeoCasino. Все права защищены.</p>
+  </footer>
+
+  <div class="live-ticker" aria-live="polite">
+    <div class="live-ticker__content" id="live-ticker"></div>
+  </div>
+
+  <div class="support-bubble">
+    <button class="support-bubble__button" aria-label="Открыть чат поддержки">💬</button>
+  </div>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>
