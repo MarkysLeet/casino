@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeoCasino — Личный кабинет</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="page page--dashboard">
+  <div class="floating-gifts" aria-hidden="true">
+    <div class="gift gift--one"></div>
+    <div class="gift gift--two"></div>
+    <div class="gift gift--three"></div>
+  </div>
+
+  <div class="dashboard">
+    <aside class="sidebar glass">
+      <div class="brand">
+        <span class="brand__logo">🪙</span>
+        <span class="brand__name">NeoCasino</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="#profile" class="sidebar__link is-active"><span>Профиль</span></a>
+        <a href="#security" class="sidebar__link"><span>Безопасность</span></a>
+        <a href="#notifications" class="sidebar__link"><span>Уведомления</span></a>
+        <a href="#missions" class="sidebar__link"><span>Миссии</span></a>
+        <a href="index.html" class="sidebar__link"><span>К играм</span></a>
+      </nav>
+      <button class="sidebar__support btn btn--ghost">Поддержка</button>
+    </aside>
+
+    <div class="dashboard__content">
+      <header class="dashboard__header glass">
+        <div class="dashboard__welcome">
+          <p class="dashboard__greeting">Добро пожаловать, <span id="player-name">Анастасия</span></p>
+          <p class="dashboard__status">Ваш уровень: <strong>Diamond</strong></p>
+        </div>
+        <div class="dashboard__theme-toggle">
+          <label class="toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <span>Тёмный режим</span>
+          </label>
+        </div>
+      </header>
+
+      <section id="profile" class="section">
+        <div class="profile-card glass">
+          <div class="profile-card__avatar">
+            <img src="https://i.pravatar.cc/120?img=5" alt="Аватар игрока" />
+          </div>
+          <div class="profile-card__info">
+            <h2 class="profile-card__name">NeoAna</h2>
+            <p class="profile-card__level">Уровень 42</p>
+            <p class="profile-card__id">ID: #NC-1823</p>
+          </div>
+          <div class="balance-card glass">
+            <p class="balance-card__label">Баланс</p>
+            <p class="balance-card__value"><span id="balance-value">57 200</span> ₽</p>
+            <div class="balance-card__actions">
+              <button class="btn btn--primary">Пополнить</button>
+              <button class="btn btn--secondary">Вывести</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="security" class="section glass">
+        <h2 class="section__title">Безопасность</h2>
+        <div class="settings-grid">
+          <div class="setting">
+            <h3>Двухфакторная аутентификация</h3>
+            <p>Повышайте безопасность, добавив дополнительный фактор входа.</p>
+            <button class="btn btn--outline">Настроить</button>
+          </div>
+          <div class="setting">
+            <h3>Смена пароля</h3>
+            <p>Регулярно обновляйте пароль для защиты аккаунта.</p>
+            <button class="btn btn--outline">Изменить</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="notifications" class="section glass">
+        <h2 class="section__title">Настройки уведомлений</h2>
+        <div class="settings-list">
+          <label class="switch">
+            <span>Пуш-уведомления о выигрышах</span>
+            <input type="checkbox" checked />
+            <span class="switch__slider"></span>
+          </label>
+          <label class="switch">
+            <span>Email-рассылки с бонусами</span>
+            <input type="checkbox" />
+            <span class="switch__slider"></span>
+          </label>
+          <label class="switch">
+            <span>Напоминания о миссиях</span>
+            <input type="checkbox" checked />
+            <span class="switch__slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <section id="missions" class="section section--columns">
+        <article class="vip-panel glass">
+          <h2 class="section__title">Программа лояльности</h2>
+          <ul class="vip-panel__levels">
+            <li class="vip-panel__level is-active"><span>Silver</span><span>3% кэшбэк</span></li>
+            <li class="vip-panel__level"><span>Gold</span><span>5% кэшбэк</span></li>
+            <li class="vip-panel__level"><span>Diamond</span><span>10% кэшбэк</span></li>
+          </ul>
+        </article>
+        <article class="missions glass">
+          <h2 class="section__title">Дневные миссии</h2>
+          <ul class="missions__list">
+            <li class="missions__item"><span>Сделай 3 ставки — получи бонус!</span><span class="missions__reward">+300 NeoCoins</span></li>
+            <li class="missions__item"><span>Выиграй в 2 оффлайн игры подряд</span><span class="missions__reward">+500 NeoCoins</span></li>
+            <li class="missions__item"><span>Активируй VIP бонус</span><span class="missions__reward">Сундук удачи</span></li>
+          </ul>
+        </article>
+      </section>
+    </div>
+  </div>
+
+  <div class="support-bubble">
+    <button class="support-bubble__button" aria-label="Открыть чат поддержки">💬</button>
+  </div>
+  <script src="assets/scripts.js"></script>
+</body>
+</html>
