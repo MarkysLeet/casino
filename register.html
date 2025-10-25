@@ -16,7 +16,6 @@
   <div class="page-wrap page-wrap--auth">
     <header class="site-header site-header--simple reveal" id="top">
       <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
-        <div class="logo-mark" aria-hidden="true">🐾</div>
         <div class="logo-text">
           <span class="logo-title">Aura Memoria</span>
           <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
@@ -36,8 +35,9 @@
             aria-label="Select language"
             data-i18n-aria-label="header.languageToggle"
           >
+            <span class="language-menu__globe" aria-hidden="true"></span>
             <span class="language-menu__current" data-language-label>EN</span>
-            <span class="language-menu__chevron" aria-hidden="true">▾</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
           </button>
           <ul class="language-menu__list" role="menu" hidden>
             <li>
@@ -94,6 +94,25 @@
           <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
           <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
         </button>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
       </div>
     </header>
 
@@ -105,7 +124,7 @@
             Join our community to book visits, plan memorials, and share stories of cherished companions.
           </p>
         </header>
-        <form class="auth-card__form" novalidate>
+        <form class="auth-card__form" data-form="register" novalidate>
           <div class="form-group">
             <label for="register-name" data-i18n="register.nameLabel">Full name</label>
             <input
@@ -180,7 +199,6 @@
 
     <footer class="site-footer site-footer--simple reveal">
       <div class="footer-brand">
-        <div class="logo-mark" aria-hidden="true">🐾</div>
         <span class="logo-title">Aura Memoria</span>
       </div>
       <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>

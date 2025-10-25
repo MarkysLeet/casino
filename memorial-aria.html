@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Aria's song</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light" data-page="memorial-aria">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html#services" data-i18n="nav.services">Services</a>
+        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
+        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__globe" aria-hidden="true"></span>
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="memorial-detail">
+      <section class="memorial-detail__hero reveal" aria-labelledby="aria-title">
+        <div class="memorial-detail__content">
+          <a class="back-link" href="memorial.html" data-i18n="memorial.detail.back">← Back to Memorial Park</a>
+          <h1 id="aria-title" data-i18n="memorial.aria.title">Aria — Celestial Songkeeper</h1>
+          <p class="memorial-detail__family" data-i18n="memorial.aria.family">Family member of the Schneider home</p>
+          <p data-i18n="memorial.aria.summary">
+            Aria greeted morning light with lilting harmonies that matched the nearby church bells. She perched on shoulders
+            during family breakfasts and whispered lullabies each evening.
+          </p>
+        </div>
+        <div class="memorial-detail__portrait" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1511824075015-18f3d26609cc?auto=format&fit=crop&w=900&q=80"
+            alt="Aria the parrot spreading wings"
+          />
+        </div>
+      </section>
+
+      <section class="memorial-detail__story reveal" aria-labelledby="aria-story">
+        <div class="memorial-detail__column">
+          <h2 id="aria-story" data-i18n="memorial.aria.storyTitle">Moments we cherish</h2>
+          <p data-i18n="memorial.aria.story">
+            Her songs guided the family’s breathing meditations. Aria learned verses in four languages, weaving them into dawn
+            serenades. She loved to press her head against the youngest sibling’s forehead, humming until the day felt brave.
+          </p>
+          <blockquote data-i18n="memorial.aria.quote">“She turned every worry into a melody of hope.”</blockquote>
+        </div>
+        <div class="memorial-detail__column">
+          <ul class="memory-facts">
+            <li>
+              <span data-i18n="memorial.aria.fact1.title">Favorite scent</span>
+              <strong data-i18n="memorial.aria.fact1.value">Citrus blossoms at dawn</strong>
+            </li>
+            <li>
+              <span data-i18n="memorial.aria.fact2.title">Beloved ritual</span>
+              <strong data-i18n="memorial.aria.fact2.value">Evening starlight duet</strong>
+            </li>
+            <li>
+              <span data-i18n="memorial.aria.fact3.title">Guardian words</span>
+              <strong data-i18n="memorial.aria.fact3.value">“Her chorus held our family steady.”</strong>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="memorial-gallery-detail reveal" aria-labelledby="aria-gallery">
+        <h2 id="aria-gallery" data-i18n="memorial.aria.galleryTitle">Gallery of melodies</h2>
+        <div class="memorial-gallery-detail__grid">
+          <figure>
+            <img src="https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=800&q=80" alt="Parrot perched on branch" />
+            <figcaption data-i18n="memorial.aria.gallery1">Morning rehearsal in the botanical atrium</figcaption>
+          </figure>
+          <figure>
+            <img src="https://images.unsplash.com/photo-1508675801602-040a3d2b2110?auto=format&fit=crop&w=800&q=80" alt="Family listening to music" />
+            <figcaption data-i18n="memorial.aria.gallery2">Family listening to her twilight aria</figcaption>
+          </figure>
+          <figure>
+            <img src="https://images.unsplash.com/photo-1526312426976-f4d754fa9bd6?auto=format&fit=crop&w=800&q=80" alt="Lantern release" />
+            <figcaption data-i18n="memorial.aria.gallery3">Lantern release echoing her final song</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>

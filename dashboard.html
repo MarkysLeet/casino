@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Personal cabinet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light" data-page="dashboard">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html#services" data-i18n="nav.services">Services</a>
+        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
+        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__globe" aria-hidden="true"></span>
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="dashboard-hero reveal" aria-labelledby="dashboard-heading">
+        <div class="dashboard-hero__content">
+          <span class="section-kicker" data-i18n="dashboard.kicker">Personal cabinet</span>
+          <h1 id="dashboard-heading" data-user-greeting></h1>
+          <p data-i18n="dashboard.subtitle">Your serene space for every shared journey.</p>
+          <div class="dashboard-hero__tags">
+            <span data-i18n="dashboard.tag.calm">Calm visits</span>
+            <span data-i18n="dashboard.tag.memory">Tender memories</span>
+            <span data-i18n="dashboard.tag.green">Harmony with nature</span>
+          </div>
+        </div>
+        <aside class="dashboard-hero__card">
+          <h2 data-i18n="dashboard.nextVisit.title">Upcoming visit</h2>
+          <p class="dashboard-hero__date" data-next-visit></p>
+          <p class="dashboard-hero__note" data-i18n="dashboard.nextVisit.note">
+            We reserved a tranquil room with warm lighting and soft music for you and your companion.
+          </p>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            data-manage-appointments
+            data-i18n="dashboard.nextVisit.manage"
+          >
+            Manage appointments
+          </button>
+        </aside>
+      </section>
+
+      <section class="dashboard-grid reveal" aria-labelledby="history-title">
+        <article class="dashboard-card dashboard-card--profile">
+          <h2 class="dashboard-card__title" data-i18n="dashboard.profile.title">Guest profile</h2>
+          <dl class="dashboard-card__list">
+            <div>
+              <dt data-i18n="dashboard.profile.name">Name</dt>
+              <dd data-user-name></dd>
+            </div>
+            <div>
+              <dt data-i18n="dashboard.profile.memberSince">Member since</dt>
+              <dd data-member-since></dd>
+            </div>
+            <div>
+              <dt data-i18n="dashboard.profile.favoriteDrink">Tea ritual</dt>
+              <dd data-i18n="dashboard.profile.favoriteDrinkValue">Golden chamomile with sage honey</dd>
+            </div>
+            <div>
+              <dt data-i18n="dashboard.profile.preferredDoctor">Preferred doctor</dt>
+              <dd data-i18n="dashboard.profile.preferredDoctorValue">Dr. Elizaveta Serin</dd>
+            </div>
+          </dl>
+          <button class="btn btn--inline" type="button" data-i18n="dashboard.profile.edit">Update preferences</button>
+        </article>
+
+        <article class="dashboard-card" aria-labelledby="history-title">
+          <h2 id="history-title" class="dashboard-card__title" data-i18n="dashboard.history.title">Visit history</h2>
+          <ul class="timeline">
+            <li>
+              <span class="timeline__date">12.08.2025</span>
+              <div class="timeline__content">
+                <h3 data-i18n="dashboard.history.item1.title">Wellness examination</h3>
+                <p data-i18n="dashboard.history.item1.note">Gentle check-in, holistic aromatherapy, and updated health plan.</p>
+              </div>
+            </li>
+            <li>
+              <span class="timeline__date">22.05.2025</span>
+              <div class="timeline__content">
+                <h3 data-i18n="dashboard.history.item2.title">Memorial garden ceremony</h3>
+                <p data-i18n="dashboard.history.item2.note">Planted a moonlit sage tree with family blessings.</p>
+              </div>
+            </li>
+            <li>
+              <span class="timeline__date">18.01.2025</span>
+              <div class="timeline__content">
+                <h3 data-i18n="dashboard.history.item3.title">Tea circle gathering</h3>
+                <p data-i18n="dashboard.history.item3.note">Shared stories with the community and received guided meditation recordings.</p>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+        <article class="dashboard-card" aria-labelledby="insight-title">
+          <h2 id="insight-title" class="dashboard-card__title" data-i18n="dashboard.insights.title">Wellbeing insights</h2>
+          <ul class="insight-list">
+            <li data-i18n="dashboard.insights.item1">Remember to stretch together at sunrise for gentle joint care.</li>
+            <li data-i18n="dashboard.insights.item2">Bring your companion’s favorite blanket for each visit to anchor them in comfort.</li>
+            <li data-i18n="dashboard.insights.item3">Write a short gratitude note after each walk to keep your shared memories glowing.</li>
+          </ul>
+          <button class="btn btn--ghost" type="button" data-i18n="dashboard.insights.cta">Download tailored plan</button>
+        </article>
+
+        <article class="dashboard-card dashboard-card--notes" aria-labelledby="notes-title">
+          <h2 id="notes-title" class="dashboard-card__title" data-i18n="dashboard.notes.title">Shared notes</h2>
+          <p data-i18n="dashboard.notes.description">Leave a whisper of remembrance or a joyful update for our keepers.</p>
+          <form class="note-form" data-form="note" novalidate>
+            <label class="visually-hidden" for="note-message" data-i18n="dashboard.notes.field">Share a note</label>
+            <textarea id="note-message" name="message" rows="3" placeholder=""
+              data-i18n-placeholder="dashboard.notes.placeholder"></textarea>
+            <button class="btn btn--primary" type="submit" data-i18n="dashboard.notes.submit">Send</button>
+          </form>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>

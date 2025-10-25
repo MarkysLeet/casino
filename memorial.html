@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Memorial park</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light" data-page="memorial">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html#services" data-i18n="nav.services">Services</a>
+        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
+        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__globe" aria-hidden="true"></span>
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="memorial-main">
+      <section class="memorial-hero reveal" aria-labelledby="memorial-title">
+        <div class="memorial-hero__content">
+          <span class="section-kicker" data-i18n="memorial.kicker">Memorial park</span>
+          <h1 id="memorial-title" data-i18n="memorial.title">Stories carried by wind and light</h1>
+          <p data-i18n="memorial.subtitle">
+            Walk along the sage-lined pathways where every pet is celebrated through music, scent, and handwritten letters from
+            their family.
+          </p>
+          <div class="memorial-hero__info">
+            <span data-i18n="memorial.info.hours">Open daily for quiet reflection 07:00 – 23:00</span>
+            <span data-i18n="memorial.info.ceremony">Ceremonies guided at dawn, noon, and moonrise</span>
+          </div>
+        </div>
+        <div class="memorial-hero__visual" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=900&q=80"
+            alt="Sunlit memorial garden with flowers"
+          />
+        </div>
+      </section>
+
+      <section class="memorial-gallery reveal" aria-labelledby="gallery-title">
+        <header>
+          <h2 id="gallery-title" data-i18n="memorial.gallery.title">Families of light</h2>
+          <p data-i18n="memorial.gallery.subtitle">Select a companion to enter their dedicated remembrance space.</p>
+        </header>
+        <div class="memorial-gallery__grid">
+          <a class="memory-card" href="memorial-luna.html">
+            <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=700&q=80" alt="Luna the husky" />
+            <div class="memory-card__body">
+              <h3 data-i18n="memorial.luna.name">Luna</h3>
+              <p data-i18n="memorial.luna.caption">Dancing snow-heart, family of the Volkovs</p>
+            </div>
+          </a>
+          <a class="memory-card" href="memorial-miro.html">
+            <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=700&q=80" alt="Miro the cat" />
+            <div class="memory-card__body">
+              <h3 data-i18n="memorial.miro.name">Miro</h3>
+              <p data-i18n="memorial.miro.caption">Sunbeam poet, cherished by the Demir family</p>
+            </div>
+          </a>
+          <a class="memory-card" href="memorial-aria.html">
+            <img src="https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=700&q=80" alt="Aria the parrot" />
+            <div class="memory-card__body">
+              <h3 data-i18n="memorial.aria.name">Aria</h3>
+              <p data-i18n="memorial.aria.caption">Celestial singer, part of the Schneider home</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section class="memorial-rituals reveal" aria-labelledby="ritual-title">
+        <div>
+          <h2 id="ritual-title" data-i18n="memorial.rituals.title">Rituals of remembrance</h2>
+          <p data-i18n="memorial.rituals.copy">
+            Keepers compose fragrant envelopes, light amber lanterns, and guide families through storytelling circles beneath the
+            willow canopy. Every tribute is recorded in our auric library for generations to revisit.
+          </p>
+        </div>
+        <ul class="memorial-rituals__list">
+          <li data-i18n="memorial.rituals.item1">Petal pathways illuminated by soft candlelight</li>
+          <li data-i18n="memorial.rituals.item2">Hand-bound books capturing whispered memories</li>
+          <li data-i18n="memorial.rituals.item3">Sound bath ceremonies harmonized with favorite melodies</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>

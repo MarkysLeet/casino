@@ -3,6 +3,8 @@ document.documentElement.classList.remove('no-js');
 document.addEventListener('DOMContentLoaded', () => {
   const THEME_KEY = 'aura-memoria-theme';
   const LANG_KEY = 'aura-memoria-lang';
+  const USERS_KEY = 'aura-memoria-users';
+  const CURRENT_USER_KEY = 'aura-memoria-current-user';
   const themeToggle = document.getElementById('theme-toggle');
   const languageMenu = document.querySelector('[data-language-menu]');
   const languageToggle = languageMenu ? languageMenu.querySelector('.language-menu__toggle') : null;
@@ -10,6 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const languageLabel = languageMenu ? languageMenu.querySelector('[data-language-label]') : null;
   const languageOptions = languageMenu ? Array.from(languageMenu.querySelectorAll('.language-menu__option')) : [];
   const revealElements = document.querySelectorAll('.reveal');
+  const contactForm = document.querySelector('[data-form="contact"]');
+  const registerForm = document.querySelector('[data-form="register"]');
+  const loginForm = document.querySelector('[data-form="login"]');
+  const bookingForm = document.querySelector('[data-form="booking"]');
+  const noteForm = document.querySelector('[data-form="note"]');
+  const manageAppointmentsBtn = document.querySelector('[data-manage-appointments]');
+  const bookingModal = document.querySelector('[data-booking-modal]');
+  const bookingOpeners = document.querySelectorAll('[data-booking-open]');
+  const bookingClosers = document.querySelectorAll('[data-booking-close]');
+  const authElements = document.querySelectorAll('[data-auth-visible]');
+  const logoutButtons = document.querySelectorAll('[data-action="logout"]');
   const page = document.body.dataset.page || 'home';
 
   const translations = {
@@ -17,9 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
       'meta.homeTitle': 'Aura Memoria — Where care and memory live side by side',
       'meta.loginTitle': 'Aura Memoria — Sign in',
       'meta.registerTitle': 'Aura Memoria — Create account',
+      'meta.dashboardTitle': 'Aura Memoria — Personal cabinet',
+      'meta.clinicTitle': 'Aura Memoria — Veterinary center',
+      'meta.memorialTitle': 'Aura Memoria — Memorial park',
+      "meta.memorialLunaTitle": "Aura Memoria — Luna's story",
+      "meta.memorialMiroTitle": "Aura Memoria — Miro's story",
+      "meta.memorialAriaTitle": "Aura Memoria — Aria's song",
       'header.tagline': 'Care • Memory • Nature',
       'header.login': 'Sign in',
       'header.register': 'Create account',
+      'header.dashboard': 'Personal cabinet',
+      'header.logout': 'Sign out',
       'header.languageToggle': 'Select language',
       'header.home': 'Home',
       'nav.services': 'Services',
@@ -34,8 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
       'services.title': 'A sanctuary for every chapter of life',
       'services.clinic.title': 'Veterinary Center',
       'services.clinic.copy': 'Comprehensive care guided by compassion, modern diagnostics, and a calm environment for every visit.',
+      'services.clinic.link': 'Discover more',
       'services.memorial.title': 'Memorial Park',
       'services.memorial.copy': 'Personalized remembrance ceremonies, cremation services, and timeless tributes embraced by serene gardens.',
+      'services.memorial.link': 'Visit the park',
       'services.park.title': 'Recreation Grove',
       'services.park.copy': 'Quiet walks, gentle tea terraces, and shared moments beneath emerald canopies with the pets you love.',
       'memory.quote': '“In the whisper of leaves we hear their everlasting love.”',
@@ -94,14 +117,167 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.submit': 'Create account',
       'register.switchPrompt': 'Already have an account?',
       'register.switchLink': 'Sign in',
+      'dashboard.kicker': 'Personal cabinet',
+      'dashboard.subtitle': 'Your serene space for every shared journey.',
+      'dashboard.tag.calm': 'Calm visits',
+      'dashboard.tag.memory': 'Tender memories',
+      'dashboard.tag.green': 'Harmony with nature',
+      'dashboard.greeting': 'Welcome back, {name}!',
+      'dashboard.nextVisit.title': 'Upcoming visit',
+      'dashboard.nextVisit.note': 'We reserved a tranquil room with warm lighting and soft music for you and your companion.',
+      'dashboard.nextVisit.manage': 'Manage appointments',
+      'dashboard.nextVisit.none': 'No visit scheduled yet — choose your moment on the clinic page.',
+      'dashboard.profile.title': 'Guest profile',
+      'dashboard.profile.name': 'Name',
+      'dashboard.profile.memberSince': 'Member since',
+      'dashboard.profile.favoriteDrink': 'Tea ritual',
+      'dashboard.profile.favoriteDrinkValue': 'Golden chamomile with sage honey',
+      'dashboard.profile.preferredDoctor': 'Preferred doctor',
+      'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
+      'dashboard.profile.edit': 'Update preferences',
+      'dashboard.history.title': 'Visit history',
+      'dashboard.history.item1.title': 'Wellness examination',
+      'dashboard.history.item1.note': 'Gentle check-in, holistic aromatherapy, and updated health plan.',
+      'dashboard.history.item2.title': 'Memorial garden ceremony',
+      'dashboard.history.item2.note': 'Planted a moonlit sage tree with family blessings.',
+      'dashboard.history.item3.title': 'Tea circle gathering',
+      'dashboard.history.item3.note': 'Shared stories with the community and received guided meditation recordings.',
+      'dashboard.insights.title': 'Wellbeing insights',
+      'dashboard.insights.item1': 'Remember to stretch together at sunrise for gentle joint care.',
+      'dashboard.insights.item2': 'Bring your companion’s favorite blanket for each visit to anchor them in comfort.',
+      'dashboard.insights.item3': 'Write a short gratitude note after each walk to keep your shared memories glowing.',
+      'dashboard.insights.cta': 'Download tailored plan',
+      'dashboard.notes.title': 'Shared notes',
+      'dashboard.notes.description': 'Leave a whisper of remembrance or a joyful update for our keepers.',
+      'dashboard.notes.field': 'Share a note',
+      'dashboard.notes.placeholder': 'Tell us how to prepare the space for your next visit…',
+      'dashboard.notes.submit': 'Send',
+      'clinic.kicker': 'Veterinary center',
+      'clinic.title': 'Gentle medicine surrounded by light',
+      'clinic.subtitle': 'Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.',
+      'clinic.booking.cta': 'Book a visit',
+      'clinic.learnMore': 'Meet the doctor',
+      'clinic.doctor.name': 'Dr. Elizaveta Serin',
+      'clinic.doctor.role': 'Chief Veterinary Therapist',
+      'clinic.doctor.bio': 'A graduate of the Vienna Veterinary Institute, Dr. Serin guides each visit with mindfulness, aroma therapy, and integrative medicine tailored to every companion. Her sessions begin with shared breathing rituals that calm both guardian and pet.',
+      'clinic.doctor.highlight1': 'Certified in grief-sensitive veterinary support',
+      'clinic.doctor.highlight2': 'Creates personalized herbal recovery plans',
+      'clinic.doctor.highlight3': 'Hosts twilight tea circles for anxious guests',
+      'clinic.doctor.button': 'Reserve with Dr. Serin',
+      'clinic.therapy.title': 'Spaces tuned to healing',
+      'clinic.therapy.copy': 'From moonlit hydrotherapy pools to crystal-infused diagnostics, every detail honors balance, scent, and gentle touch.',
+      'clinic.therapy.room': 'Aurora treatment room',
+      'clinic.therapy.roomCopy': 'Infrared warmth, forest soundscapes, and a private terrace for aftercare tea.',
+      'clinic.therapy.lab': 'Biolight laboratory',
+      'clinic.therapy.labCopy': 'Rapid diagnostics illuminated by soft biophilic lighting and artisan ceramics.',
+      'clinic.therapy.rest': 'Calm renewal lounge',
+      'clinic.therapy.restCopy': 'Weighted blankets, guided breathing, and bespoke sound healing playlists.',
+      'clinic.booking.title': 'Schedule your visit',
+      'clinic.booking.intro': 'Choose a time that feels right. Our caretakers will confirm with a warm message within the hour.',
+      'clinic.booking.date': 'Preferred date',
+      'clinic.booking.time': 'Preferred time',
+      'clinic.booking.guardian': 'Guardian name',
+      'clinic.booking.guardianPlaceholder': 'Your full name',
+      'clinic.booking.contact': 'Contact details',
+      'clinic.booking.contactPlaceholder': '+7 999 000 00 00',
+      'clinic.booking.notes': 'Notes for Dr. Serin',
+      'clinic.booking.notesPlaceholder': 'Share any special needs or cherished rituals…',
+      'clinic.booking.submit': 'Confirm request',
+      'clinic.booking.close': 'Close booking window',
+      'memorial.kicker': 'Memorial park',
+      'memorial.title': 'Stories carried by wind and light',
+      'memorial.subtitle': 'Walk along the sage-lined pathways where every pet is celebrated through music, scent, and handwritten letters from their family.',
+      'memorial.info.hours': 'Open daily for quiet reflection 07:00 – 23:00',
+      'memorial.info.ceremony': 'Ceremonies guided at dawn, noon, and moonrise',
+      'memorial.gallery.title': 'Families of light',
+      'memorial.gallery.subtitle': 'Select a companion to enter their dedicated remembrance space.',
+      'memorial.luna.name': 'Luna',
+      'memorial.luna.caption': 'Dancing snow-heart, family of the Volkovs',
+      'memorial.miro.name': 'Miro',
+      'memorial.miro.caption': 'Sunbeam poet, cherished by the Demir family',
+      'memorial.aria.name': 'Aria',
+      'memorial.aria.caption': 'Celestial singer, part of the Schneider home',
+      'memorial.rituals.title': 'Rituals of remembrance',
+      'memorial.rituals.copy': 'Keepers compose fragrant envelopes, light amber lanterns, and guide families through storytelling circles beneath the willow canopy. Every tribute is recorded in our auric library for generations to revisit.',
+      'memorial.rituals.item1': 'Petal pathways illuminated by soft candlelight',
+      'memorial.rituals.item2': 'Hand-bound books capturing whispered memories',
+      'memorial.rituals.item3': 'Sound bath ceremonies harmonized with favorite melodies',
+      'memorial.detail.back': '← Back to Memorial Park',
+      'memorial.luna.title': 'Luna — Keeper of Northern Lights',
+      'memorial.luna.family': 'Family member of the Volkov home',
+      'memorial.luna.summary': 'Luna’s paws carved constellations in every snowy path. She taught her family to chase dawn, laugh at storm clouds, and rest against birch trees when the world felt fast.',
+      'memorial.luna.storyTitle': 'Moments we cherish',
+      'memorial.luna.story': 'Luna adored the silver bell tied to her collar; each chime meant another adventure. She greeted every guest with a gentle paw press before guiding them to the cedar bench where tea waited. Her final night was spent watching northern lights with the family bundled close.',
+      'memorial.luna.quote': '“She reminded us that loyalty is a warm lantern in winter.”',
+      'memorial.luna.fact1.title': 'Favorite scent',
+      'memorial.luna.fact1.value': 'White tea with pine resin',
+      'memorial.luna.fact2.title': 'Beloved ritual',
+      'memorial.luna.fact2.value': 'Stargazing walks at midnight',
+      'memorial.luna.fact3.title': 'Guardian words',
+      'memorial.luna.fact3.value': '“Her howl was our family choir.”',
+      'memorial.luna.galleryTitle': 'Gallery of glow',
+      'memorial.luna.gallery1': 'Morning pause before the cedar trail',
+      'memorial.luna.gallery2': 'Family tea by the frozen lake',
+      'memorial.luna.gallery3': 'Lantern ceremony honoring her adventures',
+      'memorial.miro.title': 'Miro — Poet of Sunbeams',
+      'memorial.miro.family': 'Family member of the Demir home',
+      'memorial.miro.summary': 'Miro composed silent poems with his slow blinks. He curled beside sketchbooks, napped on piano lids, and announced dinner with a single melodic trill.',
+      'memorial.miro.storyTitle': 'Moments we cherish',
+      'memorial.miro.story': 'Each afternoon Miro led the family to the garden for five minutes of quiet sun. He loved lying on illustrated storybooks, flicking pages with his tail when it was time for the next chapter. Rainy nights meant jazz records and a lap shared between two siblings.',
+      'memorial.miro.quote': '“He taught us that patience shines brighter than any chandelier.”',
+      'memorial.miro.fact1.title': 'Favorite scent',
+      'memorial.miro.fact1.value': 'Orange blossom ink',
+      'memorial.miro.fact2.title': 'Beloved ritual',
+      'memorial.miro.fact2.value': 'Window-seat storytelling',
+      'memorial.miro.fact3.title': 'Guardian words',
+      'memorial.miro.fact3.value': '“His purr painted our home with sunlight.”',
+      'memorial.miro.galleryTitle': 'Gallery of soft verses',
+      'memorial.miro.gallery1': 'Sunrise reflections on the atelier sill',
+      'memorial.miro.gallery2': 'Lanterns crafted from his haiku notes',
+      'memorial.miro.gallery3': 'Evening reading nook with warm tea',
+      'memorial.aria.title': 'Aria — Celestial Songkeeper',
+      'memorial.aria.family': 'Family member of the Schneider home',
+      'memorial.aria.summary': 'Aria greeted morning light with lilting harmonies that matched the nearby church bells. She perched on shoulders during family breakfasts and whispered lullabies each evening.',
+      'memorial.aria.storyTitle': 'Moments we cherish',
+      'memorial.aria.story': 'Her songs guided the family’s breathing meditations. Aria learned verses in four languages, weaving them into dawn serenades. She loved to press her head against the youngest sibling’s forehead, humming until the day felt brave.',
+      'memorial.aria.quote': '“She turned every worry into a melody of hope.”',
+      'memorial.aria.fact1.title': 'Favorite scent',
+      'memorial.aria.fact1.value': 'Citrus blossoms at dawn',
+      'memorial.aria.fact2.title': 'Beloved ritual',
+      'memorial.aria.fact2.value': 'Evening starlight duet',
+      'memorial.aria.fact3.title': 'Guardian words',
+      'memorial.aria.fact3.value': '“Her chorus held our family steady.”',
+      'memorial.aria.galleryTitle': 'Gallery of melodies',
+      'memorial.aria.gallery1': 'Morning rehearsal in the botanical atrium',
+      'memorial.aria.gallery2': 'Family listening to her twilight aria',
+      'memorial.aria.gallery3': 'Lantern release echoing her final song',
+      'toast.register.success': 'Account created — welcome to Aura Memoria.',
+      'toast.register.exists': 'An account with that email already exists.',
+      'toast.register.mismatch': 'Passwords do not match — please try again.',
+      'toast.login.success': 'Welcome back. Your memories await.',
+      'toast.login.error': 'We could not find that email and password combination.',
+      'toast.logout.success': 'You have signed out. Our lantern will await your return.',
+      'toast.contact.success': 'Message sent with warmth. We will reach out shortly.',
+      'toast.booking.success': 'Your visit request has been received. Expect a confirmation soon.',
+      'toast.note.success': 'Your note has been shared with our keepers.',
+      'toast.auth.required': 'Please sign in to continue this journey.',
+      'toast.manageAppointments': 'Our concierge will be in touch soon to adjust your visit.',
     },
     ru: {
       'meta.homeTitle': 'Aura Memoria — Где забота и память живут рядом',
       'meta.loginTitle': 'Aura Memoria — Вход',
       'meta.registerTitle': 'Aura Memoria — Регистрация',
+      'meta.dashboardTitle': 'Aura Memoria — Личный кабинет',
+      'meta.clinicTitle': 'Aura Memoria — Ветеринарный центр',
+      'meta.memorialTitle': 'Aura Memoria — Мемориальный парк',
+      'meta.memorialLunaTitle': 'Aura Memoria — История Луны',
+      'meta.memorialMiroTitle': 'Aura Memoria — История Миро',
+      'meta.memorialAriaTitle': 'Aura Memoria — Песнь Арии',
       'header.tagline': 'Забота • Память • Природа',
       'header.login': 'Войти',
       'header.register': 'Создать аккаунт',
+      'header.dashboard': 'Личный кабинет',
+      'header.logout': 'Выйти',
       'header.languageToggle': 'Выбрать язык',
       'header.home': 'Главная',
       'nav.services': 'Услуги',
@@ -116,8 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
       'services.title': 'Пространство для каждого этапа жизни',
       'services.clinic.title': 'Ветеринарный центр',
       'services.clinic.copy': 'Комплексная забота с сочувствием, современной диагностикой и спокойной атмосферой каждого визита.',
+      'services.clinic.link': 'Узнать подробнее',
       'services.memorial.title': 'Мемориальный парк',
       'services.memorial.copy': 'Персональные церемонии прощания, кремация и вечные памятные знаки в объятиях тихих садов.',
+      'services.memorial.link': 'Посетить парк',
       'services.park.title': 'Рекреационная роща',
       'services.park.copy': 'Тихие прогулки, чайные террасы и разделённые моменты под изумрудной кроной с любимыми питомцами.',
       'memory.quote': '«В шёпоте листьев слышим их вечную любовь.»',
@@ -176,14 +354,167 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.submit': 'Создать аккаунт',
       'register.switchPrompt': 'Уже есть аккаунт?',
       'register.switchLink': 'Войти',
+      'dashboard.kicker': 'Личный кабинет',
+      'dashboard.subtitle': 'Тихое пространство для каждого совместного пути.',
+      'dashboard.tag.calm': 'Спокойные визиты',
+      'dashboard.tag.memory': 'Нежные воспоминания',
+      'dashboard.tag.green': 'Гармония с природой',
+      'dashboard.greeting': 'С возвращением, {name}!',
+      'dashboard.nextVisit.title': 'Ближайший визит',
+      'dashboard.nextVisit.note': 'Мы подготовили комнату с мягким светом и музыкой специально для вас и питомца.',
+      'dashboard.nextVisit.manage': 'Управлять записями',
+      'dashboard.nextVisit.none': 'Визит ещё не назначен — выберите удобное время на странице центра.',
+      'dashboard.profile.title': 'Профиль гостя',
+      'dashboard.profile.name': 'Имя',
+      'dashboard.profile.memberSince': 'С нами с',
+      'dashboard.profile.favoriteDrink': 'Чайный ритуал',
+      'dashboard.profile.favoriteDrinkValue': 'Золотая ромашка с шалфейным мёдом',
+      'dashboard.profile.preferredDoctor': 'Любимый доктор',
+      'dashboard.profile.preferredDoctorValue': 'Др. Елизавета Серин',
+      'dashboard.profile.edit': 'Обновить предпочтения',
+      'dashboard.history.title': 'История посещений',
+      'dashboard.history.item1.title': 'Профилактический осмотр',
+      'dashboard.history.item1.note': 'Нежный приём, ароматерапия и обновлённый план здоровья.',
+      'dashboard.history.item2.title': 'Церемония в мемориальном саду',
+      'dashboard.history.item2.note': 'Посадили лунный шалфей вместе с семьёй.',
+      'dashboard.history.item3.title': 'Чайный круг',
+      'dashboard.history.item3.note': 'Поделились историями и получили медитации для дома.',
+      'dashboard.insights.title': 'Советы благополучия',
+      'dashboard.insights.item1': 'Растягивайтесь вместе на рассвете для заботы о суставах.',
+      'dashboard.insights.item2': 'Приносите любимый плед питомца, чтобы ему было спокойнее.',
+      'dashboard.insights.item3': 'Пишите благодарность после каждой прогулки, чтобы память сияла.',
+      'dashboard.insights.cta': 'Скачать персональный план',
+      'dashboard.notes.title': 'Совместные заметки',
+      'dashboard.notes.description': 'Оставьте тёплое воспоминание или важную деталь для наших хранителей.',
+      'dashboard.notes.field': 'Поделиться заметкой',
+      'dashboard.notes.placeholder': 'Расскажите, как подготовить пространство к вашему визиту…',
+      'dashboard.notes.submit': 'Отправить',
+      'clinic.kicker': 'Ветеринарный центр',
+      'clinic.title': 'Нежная медицина в окружении света',
+      'clinic.subtitle': 'Медицинское крыло Aura Memoria сочетает технологии и ритуалы спа, чтобы каждый визит был спокойным.',
+      'clinic.booking.cta': 'Записаться',
+      'clinic.learnMore': 'Познакомиться с доктором',
+      'clinic.doctor.name': 'Др. Елизавета Серин',
+      'clinic.doctor.role': 'Главный ветеринарный терапевт',
+      'clinic.doctor.bio': 'Выпускница Венского ветеринарного института, доктор Серин проводит приёмы с внимательностью, ароматерапией и интегративной медициной. Каждая сессия начинается с совместного дыхания, чтобы успокоить хранителя и питомца.',
+      'clinic.doctor.highlight1': 'Сертифицированный специалист по поддержке в период утрат',
+      'clinic.doctor.highlight2': 'Составляет персональные травяные планы восстановления',
+      'clinic.doctor.highlight3': 'Проводит вечерние чайные круги для тревожных гостей',
+      'clinic.doctor.button': 'Записаться к доктору Серин',
+      'clinic.therapy.title': 'Пространства, настроенные на исцеление',
+      'clinic.therapy.copy': 'От гидротерапии при лунном свете до кристально-инфузионной диагностики — каждая деталь служит равновесию, аромату и мягкому прикосновению.',
+      'clinic.therapy.room': 'Комната «Аврора»',
+      'clinic.therapy.roomCopy': 'Инфракрасное тепло, лесные звуки и приватная терраса для чая после сеанса.',
+      'clinic.therapy.lab': 'Лаборатория «Биосвет»',
+      'clinic.therapy.labCopy': 'Быстрая диагностика в мягком биофильном освещении и ручной керамике.',
+      'clinic.therapy.rest': 'Гостиная тихого восстановления',
+      'clinic.therapy.restCopy': 'Утяжелённые пледы, дыхательные практики и индивидуальные плейлисты.',
+      'clinic.booking.title': 'Запланируйте визит',
+      'clinic.booking.intro': 'Выберите подходящее время. Наши кураторы свяжутся с тёплым подтверждением в течение часа.',
+      'clinic.booking.date': 'Желаемая дата',
+      'clinic.booking.time': 'Желаемое время',
+      'clinic.booking.guardian': 'Имя хранителя',
+      'clinic.booking.guardianPlaceholder': 'Ваше полное имя',
+      'clinic.booking.contact': 'Контакты',
+      'clinic.booking.contactPlaceholder': '+7 999 000 00 00',
+      'clinic.booking.notes': 'Заметки для доктора Серин',
+      'clinic.booking.notesPlaceholder': 'Поделитесь особыми потребностями или любимыми ритуалами…',
+      'clinic.booking.submit': 'Подтвердить заявку',
+      'clinic.booking.close': 'Закрыть окно бронирования',
+      'memorial.kicker': 'Мемориальный парк',
+      'memorial.title': 'Истории, которые несут ветер и свет',
+      'memorial.subtitle': 'Пройдитесь по тропам шалфея, где каждого питомца чтят музыкой, ароматами и письмами семьи.',
+      'memorial.info.hours': 'Открыто ежедневно для тихого созерцания 07:00 – 23:00',
+      'memorial.info.ceremony': 'Церемонии на рассвете, в полдень и при луне',
+      'memorial.gallery.title': 'Семьи света',
+      'memorial.gallery.subtitle': 'Выберите спутника, чтобы войти в его пространство памяти.',
+      'memorial.luna.name': 'Луна',
+      'memorial.luna.caption': 'Танцующее снежное сердце семьи Волковых',
+      'memorial.miro.name': 'Миро',
+      'memorial.miro.caption': 'Поэт солнечных лучей, любимец семьи Демир',
+      'memorial.aria.name': 'Ария',
+      'memorial.aria.caption': 'Небесная певица дома Шнайдеров',
+      'memorial.rituals.title': 'Ритуалы памяти',
+      'memorial.rituals.copy': 'Хранители собирают ароматные конверты, зажигают янтарные фонари и ведут семьи через круги воспоминаний под ивами. Каждый обряд записан в нашей аурной библиотеке.',
+      'memorial.rituals.item1': 'Дорожки из лепестков в мягком свечении',
+      'memorial.rituals.item2': 'Ручные книги, хранящие шёпот воспоминаний',
+      'memorial.rituals.item3': 'Звуковые купания с любимыми мелодиями',
+      'memorial.detail.back': '← Вернуться в Мемориальный парк',
+      'memorial.luna.title': 'Луна — хранительница северного сияния',
+      'memorial.luna.family': 'Член семьи Волковых',
+      'memorial.luna.summary': 'Следы Луны в снегу складывались в созвездия. Она учила семью встречать рассвет, смеяться над бурями и отдыхать у берёз.',
+      'memorial.luna.storyTitle': 'Моменты, что мы бережём',
+      'memorial.luna.story': 'Луна обожала серебряный колокольчик на ошейнике — каждый звон значил новое приключение. Она приветствовала гостей мягким прикосновением лапы и вела к кедровой скамье. Последнюю ночь провела, глядя на северное сияние с родными.',
+      'memorial.luna.quote': '«Она напоминала, что верность — тёплый фонарь зимой.»',
+      'memorial.luna.fact1.title': 'Любимый аромат',
+      'memorial.luna.fact1.value': 'Белый чай с сосновой смолой',
+      'memorial.luna.fact2.title': 'Дорогой ритуал',
+      'memorial.luna.fact2.value': 'Прогулки под звёздами в полночь',
+      'memorial.luna.fact3.title': 'Слова семьи',
+      'memorial.luna.fact3.value': '«Её вой был нашим семейным хором.»',
+      'memorial.luna.galleryTitle': 'Галерея сияния',
+      'memorial.luna.gallery1': 'Утренний привал перед кедровой тропой',
+      'memorial.luna.gallery2': 'Семейный чай у замёрзшего озера',
+      'memorial.luna.gallery3': 'Церемония фонарей в честь её приключений',
+      'memorial.miro.title': 'Миро — поэт солнечных лучей',
+      'memorial.miro.family': 'Член семьи Демир',
+      'memorial.miro.summary': 'Миро сочинял молчаливые стихи медленными морганиями. Он дремал на пианино и созывал всех к ужину одним мелодичным трелем.',
+      'memorial.miro.storyTitle': 'Моменты, что мы бережём',
+      'memorial.miro.story': 'Каждый день Миро выводил семью в сад на пять минут солнечной тишины. Он любил лежать на иллюстрированных книгах, переворачивая страницы хвостом. В дождливые ночи слушал джаз и делил колени двух сестёр.',
+      'memorial.miro.quote': '«Он учил нас терпению — светлее любого люстра.»',
+      'memorial.miro.fact1.title': 'Любимый аромат',
+      'memorial.miro.fact1.value': 'Апельсиновый цвет и чернила',
+      'memorial.miro.fact2.title': 'Дорогой ритуал',
+      'memorial.miro.fact2.value': 'Истории на подоконнике',
+      'memorial.miro.fact3.title': 'Слова семьи',
+      'memorial.miro.fact3.value': '«Его мурлыканье окрашивало дом солнечным светом.»',
+      'memorial.miro.galleryTitle': 'Галерея мягких стихов',
+      'memorial.miro.gallery1': 'Рассветные отражения на подоконнике',
+      'memorial.miro.gallery2': 'Фонари из его хайку',
+      'memorial.miro.gallery3': 'Вечерний уголок с тёплым чаем',
+      'memorial.aria.title': 'Ария — хранительница небесной песни',
+      'memorial.aria.family': 'Член семьи Шнайдеров',
+      'memorial.aria.summary': 'Ария встречала утро мелодиями, подхватывая звон церковных колоколов. Она сидела на плечах за завтраком и шептала колыбельные по вечерам.',
+      'memorial.aria.storyTitle': 'Моменты, что мы бережём',
+      'memorial.aria.story': 'Её песни направляли семейные дыхательные практики. Ария знала куплеты на четырёх языках и вплетала их в рассветные серенады. Она касалась лбом младшего ребёнка, напевая храбрость новому дню.',
+      'memorial.aria.quote': '«Она превращала любую тревогу в мелодию надежды.»',
+      'memorial.aria.fact1.title': 'Любимый аромат',
+      'memorial.aria.fact1.value': 'Цветы цитруса на заре',
+      'memorial.aria.fact2.title': 'Дорогой ритуал',
+      'memorial.aria.fact2.value': 'Вечерний дуэт под звёздами',
+      'memorial.aria.fact3.title': 'Слова семьи',
+      'memorial.aria.fact3.value': '«Её хор удерживал наш дом устойчивым.»',
+      'memorial.aria.galleryTitle': 'Галерея мелодий',
+      'memorial.aria.gallery1': 'Утренняя репетиция в ботаническом атриуме',
+      'memorial.aria.gallery2': 'Семья слушает её сумеречную арию',
+      'memorial.aria.gallery3': 'Запуск фонарей в честь её последней песни',
+      'toast.register.success': 'Аккаунт создан — добро пожаловать в Aura Memoria.',
+      'toast.register.exists': 'Аккаунт с такой почтой уже существует.',
+      'toast.register.mismatch': 'Пароли не совпадают — попробуйте ещё раз.',
+      'toast.login.success': 'Рады видеть вас снова. Воспоминания ждут.',
+      'toast.login.error': 'Не удалось найти такую пару почты и пароля.',
+      'toast.logout.success': 'Вы вышли. Светильник будет ждать вашего возвращения.',
+      'toast.contact.success': 'Сообщение отправлено с теплом. Мы свяжемся в ближайшее время.',
+      'toast.booking.success': 'Запрос на визит получен. Ждите подтверждение.',
+      'toast.note.success': 'Ваша заметка передана хранителям.',
+      'toast.auth.required': 'Пожалуйста, войдите, чтобы продолжить путь.',
+      'toast.manageAppointments': 'Наш консьерж скоро свяжется, чтобы скорректировать визит.',
     },
     tr: {
       'meta.homeTitle': 'Aura Memoria — Şefkat ve anı yan yana yaşatıyoruz',
       'meta.loginTitle': 'Aura Memoria — Giriş',
       'meta.registerTitle': 'Aura Memoria — Kayıt',
+      'meta.dashboardTitle': 'Aura Memoria — Kişisel alan',
+      'meta.clinicTitle': 'Aura Memoria — Veteriner merkezi',
+      'meta.memorialTitle': 'Aura Memoria — Anı parkı',
+      "meta.memorialLunaTitle": "Aura Memoria — Luna'nın hikayesi",
+      "meta.memorialMiroTitle": "Aura Memoria — Miro'nun hikayesi",
+      "meta.memorialAriaTitle": "Aura Memoria — Aria'nın şarkısı",
       'header.tagline': 'Şefkat • Anı • Doğa',
       'header.login': 'Giriş yap',
       'header.register': 'Hesap oluştur',
+      'header.dashboard': 'Kişisel alan',
+      'header.logout': 'Çıkış yap',
       'header.languageToggle': 'Dili seçin',
       'header.home': 'Ana sayfa',
       'nav.services': 'Hizmetler',
@@ -196,10 +527,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'hero.secondaryCta': 'Hizmetleri keşfet',
       'services.kicker': 'Özümüz',
       'services.title': 'Hayatın her evresi için bir sığınak',
-      'services.clinic.title': 'Veteriner Merkezi',
+      'services.clinic.title': 'Veteriner merkezi',
       'services.clinic.copy': 'Her ziyarette şefkat, modern teşhisler ve sakin bir ortamla kapsamlı bakım.',
-      'services.memorial.title': 'Anı Parkı',
+      'services.clinic.link': 'Daha fazlası',
+      'services.memorial.title': 'Anı parkı',
       'services.memorial.copy': 'Kişiye özel vedalar, kremasyon hizmetleri ve huzurlu bahçelerde zamansız anıtlar.',
+      'services.memorial.link': 'Parkı ziyaret et',
       'services.park.title': 'Dinlenme Koruluğu',
       'services.park.copy': 'Sevdiklerinizle yeşil gölgelerde dingin yürüyüşler, çay terasları ve paylaşılan anlar.',
       'memory.quote': '“Yaprakların fısıltısında onların sonsuz sevgisini duyarız.”',
@@ -258,14 +591,167 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.submit': 'Hesap oluştur',
       'register.switchPrompt': 'Zaten hesabınız var mı?',
       'register.switchLink': 'Giriş yapın',
+      'dashboard.kicker': 'Kişisel alan',
+      'dashboard.subtitle': 'Her ortak yolculuk için huzurlu alanınız.',
+      'dashboard.tag.calm': 'Sakin ziyaretler',
+      'dashboard.tag.memory': 'Nazik anılar',
+      'dashboard.tag.green': 'Doğa ile uyum',
+      'dashboard.greeting': 'Tekrar hoş geldiniz, {name}!',
+      'dashboard.nextVisit.title': 'Yaklaşan randevu',
+      'dashboard.nextVisit.note': 'Sizin ve dostunuz için yumuşak ışıklı, müzikli bir oda hazırladık.',
+      'dashboard.nextVisit.manage': 'Randevuları yönet',
+      'dashboard.nextVisit.none': 'Henüz bir ziyaret planlanmadı — klinik sayfasından zaman seçebilirsiniz.',
+      'dashboard.profile.title': 'Misafir profili',
+      'dashboard.profile.name': 'İsim',
+      'dashboard.profile.memberSince': 'Bizimle',
+      'dashboard.profile.favoriteDrink': 'Çay ritüeli',
+      'dashboard.profile.favoriteDrinkValue': 'Adaçaylı altın papatya',
+      'dashboard.profile.preferredDoctor': 'Tercih edilen doktor',
+      'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
+      'dashboard.profile.edit': 'Tercihleri güncelle',
+      'dashboard.history.title': 'Ziyaret geçmişi',
+      'dashboard.history.item1.title': 'Sağlık kontrolü',
+      'dashboard.history.item1.note': 'Nazik karşılama, aromaterapi ve güncellenen sağlık planı.',
+      'dashboard.history.item2.title': 'Anı bahçesi töreni',
+      'dashboard.history.item2.note': 'Aileyle birlikte ay ışığı adaçayı dikildi.',
+      'dashboard.history.item3.title': 'Çay çemberi buluşması',
+      'dashboard.history.item3.note': 'Toplulukla paylaşılan hikâyeler ve rehberli meditasyon kayıtları.',
+      'dashboard.insights.title': 'İyilik ipuçları',
+      'dashboard.insights.item1': 'Güneş doğarken birlikte esneyin, eklemlere iyi gelir.',
+      'dashboard.insights.item2': 'Her ziyarette dostunuzun en sevdiği battaniyeyi getirin.',
+      'dashboard.insights.item3': 'Her yürüyüşten sonra kısa bir şükran notu yazın.',
+      'dashboard.insights.cta': 'Kişisel planı indir',
+      'dashboard.notes.title': 'Paylaşılan notlar',
+      'dashboard.notes.description': 'Bekçilerimize sıcak bir anı ya da dilek bırakın.',
+      'dashboard.notes.field': 'Bir not paylaş',
+      'dashboard.notes.placeholder': 'Bir sonraki ziyaretiniz için alanı nasıl hazırlayalım…',
+      'dashboard.notes.submit': 'Gönder',
+      'clinic.kicker': 'Veteriner merkezi',
+      'clinic.title': 'Işıkla çevrili nazik tıp',
+      'clinic.subtitle': 'Aura Memoria\'nın tıbbi kanadı modern teşhisi spa benzeri ritüellerle birleştirir.',
+      'clinic.booking.cta': 'Randevu al',
+      'clinic.learnMore': 'Doktorla tanış',
+      'clinic.doctor.name': 'Dr. Elizaveta Serin',
+      'clinic.doctor.role': 'Baş veteriner terapist',
+      'clinic.doctor.bio': 'Viyana Veteriner Enstitüsü mezunu Dr. Serin her ziyareti farkındalık, aromaterapi ve misafire özel bütünsel tıp ile yönetir. Seanslar, bakıcı ve dostu sakinleştiren ortak nefes ritüeli ile başlar.',
+      'clinic.doctor.highlight1': 'Kayba duyarlı veteriner destek sertifikası',
+      'clinic.doctor.highlight2': 'Kişiye özel bitkisel iyileşme planları hazırlar',
+      'clinic.doctor.highlight3': 'Kaygılı misafirler için alacakaranlık çay buluşmaları düzenler',
+      'clinic.doctor.button': 'Dr. Serin ile rezervasyon yap',
+      'clinic.therapy.title': 'Şifaya ayarlı alanlar',
+      'clinic.therapy.copy': 'Ay ışığında hidroterapi havuzlarından kristal destekli teşhise kadar her detay denge ve nazik dokunuş içindir.',
+      'clinic.therapy.room': 'Aurora tedavi odası',
+      'clinic.therapy.roomCopy': 'Kızılötesi sıcaklık, orman sesleri ve seans sonrası çay terası.',
+      'clinic.therapy.lab': 'Biyolight laboratuvarı',
+      'clinic.therapy.labCopy': 'Yumuşak biyofilik ışık ve el yapımı seramiklerle hızlı teşhis.',
+      'clinic.therapy.rest': 'Sakin yenilenme salonu',
+      'clinic.therapy.restCopy': 'Ağırlıklı battaniyeler, nefes egzersizleri ve özel çalma listeleri.',
+      'clinic.booking.title': 'Ziyaretinizi planlayın',
+      'clinic.booking.intro': 'Size uygun zamanı seçin. Görevlilerimiz sıcak bir mesajla kısa sürede onaylayacak.',
+      'clinic.booking.date': 'Tercih edilen tarih',
+      'clinic.booking.time': 'Tercih edilen saat',
+      'clinic.booking.guardian': 'Bakıcı adı',
+      'clinic.booking.guardianPlaceholder': 'Tam adınız',
+      'clinic.booking.contact': 'İletişim bilgileri',
+      'clinic.booking.contactPlaceholder': '+90 555 000 00 00',
+      'clinic.booking.notes': 'Dr. Serin\'e notlar',
+      'clinic.booking.notesPlaceholder': 'Özel ihtiyaçlar veya sevdiği ritüeller…',
+      'clinic.booking.submit': 'Talebi onayla',
+      'clinic.booking.close': 'Rezervasyon penceresini kapat',
+      'memorial.kicker': 'Anı parkı',
+      'memorial.title': 'Rüzgârın ve ışığın taşıdığı hikâyeler',
+      'memorial.subtitle': 'Her evcil dostun müzik, koku ve el yazısı mektuplarla onurlandırıldığı adaçayı yollarında yürüyün.',
+      'memorial.info.hours': 'Sessiz anılar için her gün 07:00 – 23:00 arası açık',
+      'memorial.info.ceremony': 'Şafakta, öğle vakti ve ay ışığında törenler',
+      'memorial.gallery.title': 'Işık aileleri',
+      'memorial.gallery.subtitle': 'Özel anı alanına girmek için bir dost seçin.',
+      'memorial.luna.name': 'Luna',
+      'memorial.luna.caption': 'Kar kalpli dansçı, Volkov ailesinin üyesi',
+      'memorial.miro.name': 'Miro',
+      'memorial.miro.caption': 'Güneş ışığı şairi, Demir ailesinin gözdesi',
+      'memorial.aria.name': 'Aria',
+      'memorial.aria.caption': 'Göksel şarkıcı, Schneider ailesinin parçası',
+      'memorial.rituals.title': 'Anı ritüelleri',
+      'memorial.rituals.copy': 'Görevliler koku zarfları hazırlar, kehribar fenerler yakar ve söğütlerin altında hikâye halkaları düzenler. Her anı, gelecek nesiller için aurik kütüphanemizde saklanır.',
+      'memorial.rituals.item1': 'Yumuşak mum ışığında aydınlanan yaprak yollar',
+      'memorial.rituals.item2': 'Fısıldanan anıları toplayan el yapımı defterler',
+      'memorial.rituals.item3': 'Sevilen melodilerle uyumlanan ses banyosu törenleri',
+      'memorial.detail.back': '← Anı parkına dön',
+      'memorial.luna.title': 'Luna — Kuzey ışıklarının bekçisi',
+      'memorial.luna.family': 'Volkov ailesinin üyesi',
+      'memorial.luna.summary': 'Luna\'nın patileri karda takımyıldızlar çizdi. Ailesine şafağı kovalamayı, fırtınalara gülmeyi ve hızlanan dünyada huşlara yaslanmayı öğretti.',
+      'memorial.luna.storyTitle': 'Hatırladığımız anlar',
+      'memorial.luna.story': 'Luna boynundaki gümüş çanı çok severdi; her çınlama yeni macera demekti. Misafirleri nazikçe patisiyle selamlayıp çay bekleyen sedir bankına götürürdü. Son gecesini ailece kuzey ışıklarını izleyerek geçirdi.',
+      'memorial.luna.quote': '“Bize sadakatin kışta sıcak bir fener olduğunu hatırlattı.”',
+      'memorial.luna.fact1.title': 'En sevdiği koku',
+      'memorial.luna.fact1.value': 'Çam reçineli beyaz çay',
+      'memorial.luna.fact2.title': 'Sevdiği ritüel',
+      'memorial.luna.fact2.value': 'Gece yarısı yıldız yürüyüşleri',
+      'memorial.luna.fact3.title': 'Aile sözleri',
+      'memorial.luna.fact3.value': '“Uluması aile koromuzdu.”',
+      'memorial.luna.galleryTitle': 'Işıltı galerisi',
+      'memorial.luna.gallery1': 'Sedir yolundan önce sabah molası',
+      'memorial.luna.gallery2': 'Dondurulmuş göl kenarında aile çayı',
+      'memorial.luna.gallery3': 'Maceralarını onurlandıran fener töreni',
+      'memorial.miro.title': 'Miro — güneş ışığı şairi',
+      'memorial.miro.family': 'Demir ailesinin üyesi',
+      'memorial.miro.summary': 'Miro yavaş göz kırpmalarıyla sessiz şiirler yazardı. Eskiz defterlerinin yanında kıvrılır, piyano kapağında uyur ve akşam yemeklerini melodik bir trill ile duyururdu.',
+      'memorial.miro.storyTitle': 'Hatırladığımız anlar',
+      'memorial.miro.story': 'Her öğleden sonra Miro aileyi beş dakikalık güneş sessizliği için bahçeye götürürdü. Resimli kitapların üzerinde yatmayı, zamanı geldiğinde kuyruğuyla sayfayı çevirmeyi severdi. Yağmurlu geceler caz plakları ve paylaşılan bir kucak demekti.',
+      'memorial.miro.quote': '“Bize sabrın her avizeden parlak olduğunu öğretti.”',
+      'memorial.miro.fact1.title': 'En sevdiği koku',
+      'memorial.miro.fact1.value': 'Portakal çiçeği mürekkebi',
+      'memorial.miro.fact2.title': 'Sevdiği ritüel',
+      'memorial.miro.fact2.value': 'Pencere kenarında hikâye saati',
+      'memorial.miro.fact3.title': 'Aile sözleri',
+      'memorial.miro.fact3.value': '“Mırlaması evimizi güneşle boyardı.”',
+      'memorial.miro.galleryTitle': 'Yumuşak dizeler galerisi',
+      'memorial.miro.gallery1': 'Atölye pervazında gün doğumu yansımaları',
+      'memorial.miro.gallery2': 'Haiku notlarından yapılan fenerler',
+      'memorial.miro.gallery3': 'Sıcak çayla akşam okuma köşesi',
+      'memorial.aria.title': 'Aria — göksel şarkı bekçisi',
+      'memorial.aria.family': 'Schneider ailesinin üyesi',
+      'memorial.aria.summary': 'Aria sabah ışığını çevredeki çanlarla uyumlu ezgilerle karşılardı. Aile kahvaltılarında omuzlara konar, akşamları ninniler fısıldardı.',
+      'memorial.aria.storyTitle': 'Hatırladığımız anlar',
+      'memorial.aria.story': 'Şarkıları ailenin nefes meditasyonlarını yönlendirirdi. Aria dört dilde mısralar öğrendi ve onları şafak serenatlarına dokudu. En küçük kardeşin alnına başını yaslayıp günü cesur kılana dek mırıldanmayı severdi.',
+      'memorial.aria.quote': '“Her endişeyi umut melodisine dönüştürdü.”',
+      'memorial.aria.fact1.title': 'En sevdiği koku',
+      'memorial.aria.fact1.value': 'Şafakta narenciye çiçekleri',
+      'memorial.aria.fact2.title': 'Sevdiği ritüel',
+      'memorial.aria.fact2.value': 'Akşam yıldız düeti',
+      'memorial.aria.fact3.title': 'Aile sözleri',
+      'memorial.aria.fact3.value': '“Korosu ailemizi ayakta tuttu.”',
+      'memorial.aria.galleryTitle': 'Ezgi galerisi',
+      'memorial.aria.gallery1': 'Botanik atriyumda sabah provası',
+      'memorial.aria.gallery2': 'Ailenin alacakaranlık aryasını dinlemesi',
+      'memorial.aria.gallery3': 'Son şarkısını yansıtan fener bırakma',
+      'toast.register.success': 'Hesabınız oluşturuldu — Aura Memoria\'ya hoş geldiniz.',
+      'toast.register.exists': 'Bu e-posta ile bir hesap zaten var.',
+      'toast.register.mismatch': 'Parolalar eşleşmiyor — lütfen tekrar deneyin.',
+      'toast.login.success': 'Tekrar hoş geldiniz. Anılarınız sizi bekliyor.',
+      'toast.login.error': 'Bu e-posta ve parola eşleşmesi bulunamadı.',
+      'toast.logout.success': 'Çıkış yaptınız. Fenerimiz dönüşünüzü bekleyecek.',
+      'toast.contact.success': 'Mesajınız sıcaklıkla gönderildi. Kısa süre içinde size ulaşacağız.',
+      'toast.booking.success': 'Randevu talebiniz alındı. Yakında onay gelecektir.',
+      'toast.note.success': 'Notunuz bekçilerimize ulaştı.',
+      'toast.auth.required': 'Lütfen devam etmek için giriş yapın.',
+      'toast.manageAppointments': 'Konuk görevlilerimiz ziyaretinizi ayarlamak için sizinle iletişime geçecek.',
     },
     de: {
       'meta.homeTitle': 'Aura Memoria – Wo Fürsorge und Erinnerung Seite an Seite leben',
       'meta.loginTitle': 'Aura Memoria – Anmeldung',
       'meta.registerTitle': 'Aura Memoria – Konto erstellen',
+      'meta.dashboardTitle': 'Aura Memoria – Persönlicher Bereich',
+      'meta.clinicTitle': 'Aura Memoria – Tierärztliches Zentrum',
+      'meta.memorialTitle': 'Aura Memoria – Gedenkpark',
+      'meta.memorialLunaTitle': 'Aura Memoria – Lunas Geschichte',
+      'meta.memorialMiroTitle': 'Aura Memoria – Miros Geschichte',
+      'meta.memorialAriaTitle': 'Aura Memoria – Arias Lied',
       'header.tagline': 'Fürsorge • Erinnerung • Natur',
       'header.login': 'Anmelden',
       'header.register': 'Konto erstellen',
+      'header.dashboard': 'Persönlicher Bereich',
+      'header.logout': 'Abmelden',
       'header.languageToggle': 'Sprache auswählen',
       'header.home': 'Startseite',
       'nav.services': 'Leistungen',
@@ -280,8 +766,10 @@ document.addEventListener('DOMContentLoaded', () => {
       'services.title': 'Ein Refugium für jede Lebensphase',
       'services.clinic.title': 'Tierärztliches Zentrum',
       'services.clinic.copy': 'Umfassende Betreuung mit Mitgefühl, moderner Diagnostik und einer ruhigen Atmosphäre bei jedem Besuch.',
+      'services.clinic.link': 'Mehr erfahren',
       'services.memorial.title': 'Gedenkpark',
       'services.memorial.copy': 'Individuelle Abschiedszeremonien, Kremationsdienste und zeitlose Erinnerungsorte in sanften Gärten.',
+      'services.memorial.link': 'Park besuchen',
       'services.park.title': 'Erholungswald',
       'services.park.copy': 'Stille Spaziergänge, sanfte Teeterrassen und geteilte Momente unter smaragdgrünen Kronen mit Ihren Lieblingen.',
       'memory.quote': '„Im Flüstern der Blätter hören wir ihre ewige Liebe.“',
@@ -340,13 +828,312 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.submit': 'Konto erstellen',
       'register.switchPrompt': 'Bereits ein Konto?',
       'register.switchLink': 'Anmelden',
+      'dashboard.kicker': 'Persönlicher Bereich',
+      'dashboard.subtitle': 'Ihr ruhiger Raum für jede gemeinsame Reise.',
+      'dashboard.tag.calm': 'Sanfte Besuche',
+      'dashboard.tag.memory': 'Zarte Erinnerungen',
+      'dashboard.tag.green': 'Harmonie mit der Natur',
+      'dashboard.greeting': 'Willkommen zurück, {name}!',
+      'dashboard.nextVisit.title': 'Bevorstehender Termin',
+      'dashboard.nextVisit.note': 'Wir haben einen Raum mit warmem Licht und leiser Musik für Sie und Ihren Begleiter vorbereitet.',
+      'dashboard.nextVisit.manage': 'Termine verwalten',
+      'dashboard.nextVisit.none': 'Noch kein Termin geplant – wählen Sie Ihre Zeit auf der Klinikseite.',
+      'dashboard.profile.title': 'Gästeprofil',
+      'dashboard.profile.name': 'Name',
+      'dashboard.profile.memberSince': 'Mitglied seit',
+      'dashboard.profile.favoriteDrink': 'Tee-Ritual',
+      'dashboard.profile.favoriteDrinkValue': 'Goldene Kamille mit Salbeihonig',
+      'dashboard.profile.preferredDoctor': 'Bevorzugte Ärztin',
+      'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
+      'dashboard.profile.edit': 'Präferenzen aktualisieren',
+      'dashboard.history.title': 'Besuchshistorie',
+      'dashboard.history.item1.title': 'Wellness-Untersuchung',
+      'dashboard.history.item1.note': 'Sanfter Empfang, Aromatherapie und aktualisierter Gesundheitsplan.',
+      'dashboard.history.item2.title': 'Zeremonie im Gedenkgarten',
+      'dashboard.history.item2.note': 'Gemeinsam einen Mondschein-Salbei gepflanzt.',
+      'dashboard.history.item3.title': 'Teekreis am Abend',
+      'dashboard.history.item3.note': 'Geschichten geteilt und geführte Meditationen erhalten.',
+      'dashboard.insights.title': 'Wohlfühltipps',
+      'dashboard.insights.item1': 'Dehnen Sie sich im Sonnenaufgang – das stärkt sanft die Gelenke.',
+      'dashboard.insights.item2': 'Bringen Sie für jeden Besuch die Lieblingsdecke Ihres Gefährten mit.',
+      'dashboard.insights.item3': 'Schreiben Sie nach jedem Spaziergang einen kurzen Dankbarkeitsgruß.',
+      'dashboard.insights.cta': 'Individuellen Plan herunterladen',
+      'dashboard.notes.title': 'Geteilte Notizen',
+      'dashboard.notes.description': 'Hinterlassen Sie unseren Hütern eine warme Nachricht oder Bitte.',
+      'dashboard.notes.field': 'Eine Notiz teilen',
+      'dashboard.notes.placeholder': 'Wie dürfen wir den Raum für Ihren nächsten Besuch vorbereiten…',
+      'dashboard.notes.submit': 'Senden',
+      'clinic.kicker': 'Tierärztliches Zentrum',
+      'clinic.title': 'Sanfte Medizin im Licht',
+      'clinic.subtitle': 'Das medizinische Flügel von Aura Memoria verbindet moderne Diagnostik mit Spa-Ritualen für einen ruhigen Termin.',
+      'clinic.booking.cta': 'Termin buchen',
+      'clinic.learnMore': 'Ärztin kennenlernen',
+      'clinic.doctor.name': 'Dr. Elizaveta Serin',
+      'clinic.doctor.role': 'Leitende Veterinärtherapeutin',
+      'clinic.doctor.bio': 'Die Absolventin des Wiener Veterinärinstituts führt jeden Besuch mit Achtsamkeit, Aromatherapie und individueller integrativer Medizin. Jede Sitzung beginnt mit gemeinsamen Atemritualen, die Mensch und Tier beruhigen.',
+      'clinic.doctor.highlight1': 'Zertifiziert in trauerbegleitender Tiermedizin',
+      'clinic.doctor.highlight2': 'Erstellt persönliche Kräuterpläne für die Heilung',
+      'clinic.doctor.highlight3': 'Moderiert Teekreise in der Dämmerung für sensible Gäste',
+      'clinic.doctor.button': 'Termin bei Dr. Serin reservieren',
+      'clinic.therapy.title': 'Räume für Heilung',
+      'clinic.therapy.copy': 'Von Mondschein-Hydrotherapie bis zu kristallgestützten Diagnosen – jedes Detail ehrt Balance, Duft und Berührung.',
+      'clinic.therapy.room': 'Aurora-Behandlungsraum',
+      'clinic.therapy.roomCopy': 'Infrarote Wärme, Waldklänge und eine private Terrasse für den Nachsorgetee.',
+      'clinic.therapy.lab': 'Biolicht-Labor',
+      'clinic.therapy.labCopy': 'Schnelle Diagnostik im sanften, biophilen Licht und handgefertigter Keramik.',
+      'clinic.therapy.rest': 'Salon der stillen Erneuerung',
+      'clinic.therapy.restCopy': 'Gewichtsdecken, Atemanleitungen und maßgeschneiderte Klanglandschaften.',
+      'clinic.booking.title': 'Termin planen',
+      'clinic.booking.intro': 'Wählen Sie den passenden Moment. Unsere Betreuer melden sich innerhalb einer Stunde mit warmer Bestätigung.',
+      'clinic.booking.date': 'Wunschtermin',
+      'clinic.booking.time': 'Wunschzeit',
+      'clinic.booking.guardian': 'Name des Begleiters',
+      'clinic.booking.guardianPlaceholder': 'Ihr vollständiger Name',
+      'clinic.booking.contact': 'Kontakt',
+      'clinic.booking.contactPlaceholder': '+49 170 000 00 00',
+      'clinic.booking.notes': 'Notizen für Dr. Serin',
+      'clinic.booking.notesPlaceholder': 'Besondere Bedürfnisse oder beruhigende Rituale…',
+      'clinic.booking.submit': 'Anfrage bestätigen',
+      'clinic.booking.close': 'Buchungsfenster schließen',
+      'memorial.kicker': 'Gedenkpark',
+      'memorial.title': 'Geschichten, getragen von Wind und Licht',
+      'memorial.subtitle': 'Wandeln Sie auf salbeigesäumten Pfaden, auf denen jedes Tier mit Musik, Düften und Briefen geehrt wird.',
+      'memorial.info.hours': 'Täglich geöffnet für leises Gedenken 07:00 – 23:00 Uhr',
+      'memorial.info.ceremony': 'Zeremonien bei Morgengrauen, Mittag und Mondaufgang',
+      'memorial.gallery.title': 'Familien des Lichts',
+      'memorial.gallery.subtitle': 'Wählen Sie einen Gefährten und betreten Sie seinen Erinnerungsraum.',
+      'memorial.luna.name': 'Luna',
+      'memorial.luna.caption': 'Tanzendes Schneeherz der Familie Wolkow',
+      'memorial.miro.name': 'Miro',
+      'memorial.miro.caption': 'Sonnenstrahl-Poet, geliebt von Familie Demir',
+      'memorial.aria.name': 'Aria',
+      'memorial.aria.caption': 'Himmlische Sängerin des Hauses Schneider',
+      'memorial.rituals.title': 'Rituale des Gedenkens',
+      'memorial.rituals.copy': 'Hüter bereiten duftende Umschläge vor, entzünden bernsteinfarbene Laternen und führen Familien unter Weiden durch Erzählkreise. Jede Ehrung wird in unserer aurischen Bibliothek bewahrt.',
+      'memorial.rituals.item1': 'Blütenpfade im sanften Kerzenschein',
+      'memorial.rituals.item2': 'Handgebundene Bücher für geflüsterte Erinnerungen',
+      'memorial.rituals.item3': 'Klangbäder mit ihren Lieblingsmelodien',
+      'memorial.detail.back': '← Zurück zum Gedenkpark',
+      'memorial.luna.title': 'Luna – Hüterin des Nordlichts',
+      'memorial.luna.family': 'Familienmitglied der Wolkows',
+      'memorial.luna.summary': 'Lunas Pfoten zeichneten Sternbilder in den Schnee. Sie lehrte ihre Familie, die Morgenröte zu jagen, über Stürme zu lachen und sich an Birken zu lehnen.',
+      'memorial.luna.storyTitle': 'Momente, die wir bewahren',
+      'memorial.luna.story': 'Luna liebte das silberne Glöckchen an ihrem Halsband; jedes Klingen bedeutete ein neues Abenteuer. Gäste begrüßte sie mit einer sanften Pfote und führte sie zur Zedernbank, wo Tee wartete. Ihre letzte Nacht verbrachte sie unter dem Nordlicht, eng umarmt von der Familie.',
+      'memorial.luna.quote': '„Sie erinnerte uns daran, dass Loyalität eine warme Laterne im Winter ist.“',
+      'memorial.luna.fact1.title': 'Lieblingsduft',
+      'memorial.luna.fact1.value': 'Weißer Tee mit Harz',
+      'memorial.luna.fact2.title': 'Liebster Ritus',
+      'memorial.luna.fact2.value': 'Mitternächtliche Sternenspaziergänge',
+      'memorial.luna.fact3.title': 'Worte der Familie',
+      'memorial.luna.fact3.value': '„Ihr Heulen war unser Familienchor.“',
+      'memorial.luna.galleryTitle': 'Galerie des Glühens',
+      'memorial.luna.gallery1': 'Morgendliche Pause vor dem Zedernpfad',
+      'memorial.luna.gallery2': 'Familientee am zugefrorenen See',
+      'memorial.luna.gallery3': 'Laternenzeremonie zu Ehren ihrer Abenteuer',
+      'memorial.miro.title': 'Miro – Poet der Sonnenstrahlen',
+      'memorial.miro.family': 'Familienmitglied der Demirs',
+      'memorial.miro.summary': 'Miro verfasste stille Gedichte mit langsamen Blinzeln. Er schlief auf dem Klavierdeckel und kündigte das Abendessen mit einem melodischen Triller an.',
+      'memorial.miro.storyTitle': 'Momente, die wir bewahren',
+      'memorial.miro.story': 'Jeden Nachmittag führte Miro die Familie für fünf Minuten Sonnenstille in den Garten. Er lag gern auf Bilderbüchern und blätterte mit dem Schwanz weiter. Regentage bedeuteten Jazzplatten und einen geteilten Schoß.',
+      'memorial.miro.quote': '„Er lehrte uns, dass Geduld heller strahlt als jede Deckenleuchte.“',
+      'memorial.miro.fact1.title': 'Lieblingsduft',
+      'memorial.miro.fact1.value': 'Orangenblüten-Tinte',
+      'memorial.miro.fact2.title': 'Liebster Ritus',
+      'memorial.miro.fact2.value': 'Geschichten am Fensterplatz',
+      'memorial.miro.fact3.title': 'Worte der Familie',
+      'memorial.miro.fact3.value': '„Sein Schnurren malte unser Zuhause in Sonnenlicht.“',
+      'memorial.miro.galleryTitle': 'Galerie sanfter Verse',
+      'memorial.miro.gallery1': 'Sonnenaufgang im Atelierfenster',
+      'memorial.miro.gallery2': 'Laternen aus seinen Haikus',
+      'memorial.miro.gallery3': 'Leseecke am Abend mit warmem Tee',
+      'memorial.aria.title': 'Aria – Hüterin des Himmelslieds',
+      'memorial.aria.family': 'Familienmitglied der Schneiders',
+      'memorial.aria.summary': 'Aria begrüßte das Morgenlicht mit Melodien, die den Kirchenglocken glichen. Sie saß bei Frühstücken auf den Schultern und flüsterte jeden Abend Wiegenlieder.',
+      'memorial.aria.storyTitle': 'Momente, die wir bewahren',
+      'memorial.aria.story': 'Ihre Lieder führten die Atemmeditationen der Familie. Aria beherrschte Verse in vier Sprachen und verwob sie in die Morgenserenaden. Sie drückte ihre Stirn an die der jüngsten Geschwister und summte, bis der Tag Mut fasste.',
+      'memorial.aria.quote': '„Sie verwandelte jede Sorge in eine Melodie der Hoffnung.“',
+      'memorial.aria.fact1.title': 'Lieblingsduft',
+      'memorial.aria.fact1.value': 'Zitrusblüten im Morgengrauen',
+      'memorial.aria.fact2.title': 'Liebster Ritus',
+      'memorial.aria.fact2.value': 'Abendlicher Sternenduett',
+      'memorial.aria.fact3.title': 'Worte der Familie',
+      'memorial.aria.fact3.value': '„Ihr Chor hielt unsere Familie zusammen.“',
+      'memorial.aria.galleryTitle': 'Galerie der Melodien',
+      'memorial.aria.gallery1': 'Morgenprobe im botanischen Atrium',
+      'memorial.aria.gallery2': 'Familie lauscht ihrer Abend-Arie',
+      'memorial.aria.gallery3': 'Laternenzug, der ihr letztes Lied spiegelt',
+      'toast.register.success': 'Konto erstellt – willkommen bei Aura Memoria.',
+      'toast.register.exists': 'Für diese E-Mail existiert bereits ein Konto.',
+      'toast.register.mismatch': 'Die Passwörter stimmen nicht überein – bitte erneut versuchen.',
+      'toast.login.success': 'Schön, dass Sie wieder da sind. Ihre Erinnerungen warten.',
+      'toast.login.error': 'Diese Kombination aus E-Mail und Passwort wurde nicht gefunden.',
+      'toast.logout.success': 'Sie haben sich abgemeldet. Unsere Laterne wartet auf Ihre Rückkehr.',
+      'toast.contact.success': 'Nachricht warm gesendet. Wir melden uns zeitnah.',
+      'toast.booking.success': 'Ihre Terminanfrage ist eingegangen. Eine Bestätigung folgt bald.',
+      'toast.note.success': 'Ihre Notiz ist bei unseren Hütern angekommen.',
+      'toast.auth.required': 'Bitte melden Sie sich an, um fortzufahren.',
+      'toast.manageAppointments': 'Unser Concierge wird sich melden, um Ihren Besuch anzupassen.',
     },
   };
+
+  let currentLanguage = 'en';
+  let currentDictionary = translations.en;
+  let currentUser = null;
+  let hasDashboardWarning = false;
 
   const titleKeyByPage = {
     home: 'meta.homeTitle',
     login: 'meta.loginTitle',
     register: 'meta.registerTitle',
+    dashboard: 'meta.dashboardTitle',
+    clinic: 'meta.clinicTitle',
+    memorial: 'meta.memorialTitle',
+    'memorial-luna': 'meta.memorialLunaTitle',
+    'memorial-miro': 'meta.memorialMiroTitle',
+    'memorial-aria': 'meta.memorialAriaTitle',
+  };
+
+  const toastStack = (() => {
+    const stack = document.createElement('div');
+    stack.className = 'toast-stack';
+    stack.setAttribute('aria-live', 'polite');
+    stack.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(stack);
+    return stack;
+  })();
+
+  const showToast = (key, replacements = {}) => {
+    const template = (currentDictionary && currentDictionary[key]) || translations.en[key] || key;
+    let message = template;
+    Object.entries(replacements).forEach(([token, value]) => {
+      message = message.replace(new RegExp(`{${token}}`, 'g'), value);
+    });
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toastStack.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add('is-visible');
+    });
+
+    setTimeout(() => {
+      toast.classList.remove('is-visible');
+      setTimeout(() => {
+        toast.remove();
+      }, 400);
+    }, 3400);
+  };
+
+  const loadUsers = () => {
+    try {
+      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    } catch (error) {
+      console.warn('Failed to parse saved users', error);
+      return [];
+    }
+  };
+
+  const saveUsers = (users) => {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  };
+
+  const normalizeEmail = (email) => (email || '').trim().toLowerCase();
+
+  const findUser = (email) => {
+    const all = loadUsers();
+    const target = normalizeEmail(email);
+    return all.find((user) => normalizeEmail(user.email) === target) || null;
+  };
+
+  const getCurrentUserEmail = () => localStorage.getItem(CURRENT_USER_KEY);
+  const setCurrentUserEmail = (email) => localStorage.setItem(CURRENT_USER_KEY, normalizeEmail(email));
+  const clearCurrentUserEmail = () => localStorage.removeItem(CURRENT_USER_KEY);
+
+  const refreshCurrentUser = () => {
+    currentUser = findUser(getCurrentUserEmail());
+    return currentUser;
+  };
+
+  const updateAuthUI = () => {
+    const isSignedIn = Boolean(currentUser);
+    authElements.forEach((element) => {
+      const targetState = element.dataset.authVisible;
+      const shouldShow = (targetState === 'signed-in' && isSignedIn) || (targetState === 'signed-out' && !isSignedIn);
+      element.toggleAttribute('hidden', !shouldShow);
+    });
+    document.body.classList.toggle('is-authenticated', isSignedIn);
+  };
+
+  const formatDateForDisplay = (value) => {
+    if (!value) return '';
+    try {
+      const formatter = new Intl.DateTimeFormat(currentLanguage || 'en', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+      return formatter.format(new Date(value));
+    } catch (error) {
+      return value;
+    }
+  };
+
+  const formatDateTimeForDisplay = (dateValue, timeValue) => {
+    if (!dateValue || !timeValue) return '';
+    try {
+      const date = new Date(`${dateValue}T${timeValue}`);
+      const formatter = new Intl.DateTimeFormat(currentLanguage || 'en', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      return formatter.format(date);
+    } catch (error) {
+      return `${dateValue} ${timeValue}`;
+    }
+  };
+
+  const hydrateDashboard = () => {
+    if (page !== 'dashboard') return;
+    if (!currentUser) {
+      if (!hasDashboardWarning) {
+        hasDashboardWarning = true;
+        showToast('toast.auth.required');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 900);
+      }
+      return;
+    }
+
+    const greeting = document.querySelector('[data-user-greeting]');
+    const nameSlots = document.querySelectorAll('[data-user-name]');
+    const memberSinceSlot = document.querySelector('[data-member-since]');
+    const nextVisitSlot = document.querySelector('[data-next-visit]');
+
+    if (greeting && currentDictionary['dashboard.greeting']) {
+      greeting.textContent = currentDictionary['dashboard.greeting'].replace('{name}', currentUser.name || currentUser.email);
+    }
+
+    nameSlots.forEach((slot) => {
+      slot.textContent = currentUser.name || currentUser.email;
+    });
+
+    if (memberSinceSlot) {
+      memberSinceSlot.textContent = formatDateForDisplay(currentUser.createdAt || new Date().toISOString());
+    }
+
+    if (nextVisitSlot) {
+      if (currentUser.upcomingVisit && currentUser.upcomingVisit.date && currentUser.upcomingVisit.time) {
+        nextVisitSlot.textContent = formatDateTimeForDisplay(currentUser.upcomingVisit.date, currentUser.upcomingVisit.time);
+      } else if (currentDictionary['dashboard.nextVisit.none']) {
+        nextVisitSlot.textContent = currentDictionary['dashboard.nextVisit.none'];
+      }
+    }
   };
 
   const applyTheme = (theme) => {
@@ -419,6 +1206,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const setLanguage = (lang) => {
     const resolvedLang = translations[lang] ? lang : 'en';
+    currentLanguage = resolvedLang;
+    currentDictionary = translations[resolvedLang] || translations.en;
     document.documentElement.lang = resolvedLang;
     languageOptions.forEach((option) => {
       const isActive = option.dataset.lang === resolvedLang;
@@ -427,14 +1216,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     updateLanguageLabel(resolvedLang);
     applyLanguageStrings(resolvedLang);
+    hydrateDashboard();
     return resolvedLang;
   };
+
+  refreshCurrentUser();
 
   const savedLang = localStorage.getItem(LANG_KEY) || 'en';
   const initialLang = setLanguage(savedLang);
   if (initialLang !== savedLang) {
     localStorage.setItem(LANG_KEY, initialLang);
   }
+
+  updateAuthUI();
+  hydrateDashboard();
 
   if (languageList) {
     languageList.hidden = true;
@@ -509,6 +1304,201 @@ document.addEventListener('DOMContentLoaded', () => {
       closeLanguageMenu();
       if (languageToggle) {
         languageToggle.focus();
+      }
+    });
+  });
+
+  const openBookingModal = () => {
+    if (!bookingModal) return;
+    bookingModal.removeAttribute('hidden');
+    document.body.classList.add('has-modal');
+    const focusTarget = bookingModal.querySelector('input, textarea, button');
+    if (focusTarget) {
+      setTimeout(() => focusTarget.focus(), 50);
+    }
+  };
+
+  const closeBookingModal = () => {
+    if (!bookingModal) return;
+    bookingModal.setAttribute('hidden', '');
+    document.body.classList.remove('has-modal');
+  };
+
+  const requireAuth = () => {
+    if (currentUser) return true;
+    showToast('toast.auth.required');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 700);
+    return false;
+  };
+
+  const handleBookingRequest = () => {
+    if (!requireAuth()) return;
+    openBookingModal();
+  };
+
+  bookingOpeners.forEach((button) => {
+    button.addEventListener('click', handleBookingRequest);
+  });
+
+  bookingClosers.forEach((button) => {
+    button.addEventListener('click', closeBookingModal);
+  });
+
+  if (bookingModal) {
+    bookingModal.addEventListener('click', (event) => {
+      if (event.target === bookingModal) {
+        closeBookingModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && bookingModal && !bookingModal.hasAttribute('hidden')) {
+      closeBookingModal();
+    }
+  });
+
+  if (manageAppointmentsBtn) {
+    manageAppointmentsBtn.addEventListener('click', handleBookingRequest);
+  }
+
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!requireAuth()) return;
+      const formData = new FormData(bookingForm);
+      const date = formData.get('date');
+      const time = formData.get('time');
+      if (!date || !time) {
+        return;
+      }
+
+      const users = loadUsers();
+      const normalizedEmail = normalizeEmail(currentUser.email);
+      const index = users.findIndex((user) => normalizeEmail(user.email) === normalizedEmail);
+      if (index !== -1) {
+        users[index] = {
+          ...users[index],
+          upcomingVisit: {
+            date,
+            time,
+          },
+        };
+        saveUsers(users);
+        currentUser = users[index];
+      }
+
+      bookingForm.reset();
+      closeBookingModal();
+      hydrateDashboard();
+      showToast('toast.booking.success');
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      contactForm.reset();
+      showToast('toast.contact.success');
+    });
+  }
+
+  if (noteForm) {
+    noteForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!requireAuth()) return;
+      const message = (new FormData(noteForm).get('message') || '').toString().trim();
+      if (!message) {
+        const field = noteForm.querySelector('textarea');
+        if (field) field.focus();
+        return;
+      }
+      noteForm.reset();
+      showToast('toast.note.success');
+    });
+  }
+
+  if (registerForm) {
+    registerForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(registerForm);
+      const name = (data.get('name') || '').toString().trim();
+      const email = normalizeEmail(data.get('email'));
+      const phone = (data.get('phone') || '').toString().trim();
+      const password = (data.get('password') || '').toString();
+      const confirm = (data.get('confirm') || '').toString();
+
+      if (password !== confirm) {
+        showToast('toast.register.mismatch');
+        return;
+      }
+
+      if (!email || !password) {
+        return;
+      }
+
+      if (findUser(email)) {
+        showToast('toast.register.exists');
+        return;
+      }
+
+      const users = loadUsers();
+      users.push({
+        name: name || email,
+        email,
+        phone,
+        password,
+        createdAt: new Date().toISOString(),
+        upcomingVisit: null,
+      });
+      saveUsers(users);
+      showToast('toast.register.success');
+      registerForm.reset();
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 900);
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(loginForm);
+      const email = normalizeEmail(data.get('email'));
+      const password = (data.get('password') || '').toString();
+      const user = findUser(email);
+      if (!user || user.password !== password) {
+        showToast('toast.login.error');
+        return;
+      }
+
+      setCurrentUserEmail(email);
+      currentUser = user;
+      hasDashboardWarning = false;
+      updateAuthUI();
+      hydrateDashboard();
+      showToast('toast.login.success');
+      loginForm.reset();
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 900);
+    });
+  }
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      clearCurrentUserEmail();
+      currentUser = null;
+      hasDashboardWarning = false;
+      updateAuthUI();
+      hydrateDashboard();
+      showToast('toast.logout.success');
+      if (page === 'dashboard') {
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 600);
       }
     });
   });

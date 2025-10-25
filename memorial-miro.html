@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Miro's story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light" data-page="memorial-miro">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html#services" data-i18n="nav.services">Services</a>
+        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
+        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__globe" aria-hidden="true"></span>
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="memorial-detail">
+      <section class="memorial-detail__hero reveal" aria-labelledby="miro-title">
+        <div class="memorial-detail__content">
+          <a class="back-link" href="memorial.html" data-i18n="memorial.detail.back">← Back to Memorial Park</a>
+          <h1 id="miro-title" data-i18n="memorial.miro.title">Miro — Poet of Sunbeams</h1>
+          <p class="memorial-detail__family" data-i18n="memorial.miro.family">Family member of the Demir home</p>
+          <p data-i18n="memorial.miro.summary">
+            Miro composed silent poems with his slow blinks. He curled beside sketchbooks, napped on piano lids, and announced
+            dinner with a single melodic trill that echoed through the house.
+          </p>
+        </div>
+        <div class="memorial-detail__portrait" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=900&q=80"
+            alt="Miro the cat lounging"
+          />
+        </div>
+      </section>
+
+      <section class="memorial-detail__story reveal" aria-labelledby="miro-story">
+        <div class="memorial-detail__column">
+          <h2 id="miro-story" data-i18n="memorial.miro.storyTitle">Moments we cherish</h2>
+          <p data-i18n="memorial.miro.story">
+            Each afternoon Miro led the family to the garden for five minutes of quiet sun. He loved lying on illustrated story
+            books, flicking pages with his tail when it was time for the next chapter. Rainy nights meant jazz records and a lap
+            shared between two siblings.
+          </p>
+          <blockquote data-i18n="memorial.miro.quote">“He taught us that patience shines brighter than any chandelier.”</blockquote>
+        </div>
+        <div class="memorial-detail__column">
+          <ul class="memory-facts">
+            <li>
+              <span data-i18n="memorial.miro.fact1.title">Favorite scent</span>
+              <strong data-i18n="memorial.miro.fact1.value">Orange blossom ink</strong>
+            </li>
+            <li>
+              <span data-i18n="memorial.miro.fact2.title">Beloved ritual</span>
+              <strong data-i18n="memorial.miro.fact2.value">Window-seat storytelling</strong>
+            </li>
+            <li>
+              <span data-i18n="memorial.miro.fact3.title">Guardian words</span>
+              <strong data-i18n="memorial.miro.fact3.value">“His purr painted our home with sunlight.”</strong>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="memorial-gallery-detail reveal" aria-labelledby="miro-gallery">
+        <h2 id="miro-gallery" data-i18n="memorial.miro.galleryTitle">Gallery of soft verses</h2>
+        <div class="memorial-gallery-detail__grid">
+          <figure>
+            <img src="https://images.unsplash.com/photo-1519241047957-be31d7379a5d?auto=format&fit=crop&w=800&q=80" alt="Cat lounging on window sill" />
+            <figcaption data-i18n="memorial.miro.gallery1">Sunrise reflections on the atelier sill</figcaption>
+          </figure>
+          <figure>
+            <img src="https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=800&q=80" alt="Lantern ceremony" />
+            <figcaption data-i18n="memorial.miro.gallery2">Lanterns crafted from his haiku notes</figcaption>
+          </figure>
+          <figure>
+            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=800&q=80" alt="Family reading together" />
+            <figcaption data-i18n="memorial.miro.gallery3">Evening reading nook with warm tea</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>

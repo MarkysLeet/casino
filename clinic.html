@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Veterinary center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light" data-page="clinic">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html#services" data-i18n="nav.services">Services</a>
+        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
+        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__globe" aria-hidden="true"></span>
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="clinic-main">
+      <section class="clinic-hero reveal" aria-labelledby="clinic-title">
+        <div class="clinic-hero__content">
+          <span class="section-kicker" data-i18n="clinic.kicker">Veterinary center</span>
+          <h1 id="clinic-title" data-i18n="clinic.title">Gentle medicine surrounded by light</h1>
+          <p data-i18n="clinic.subtitle">
+            Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.
+          </p>
+          <div class="clinic-hero__actions">
+            <button class="btn btn--primary" type="button" data-booking-open data-i18n="clinic.booking.cta">Book a visit</button>
+            <a class="btn btn--ghost" href="#doctor" data-i18n="clinic.learnMore">Meet the doctor</a>
+          </div>
+        </div>
+        <div class="clinic-hero__visual" aria-hidden="true">
+          <div class="clinic-hero__gradient"></div>
+          <img
+            src="https://images.unsplash.com/photo-1596496050264-3b1e0b37d4a6?auto=format&fit=crop&w=900&q=80"
+            alt="Vet caring for a calm dog"
+          />
+        </div>
+      </section>
+
+      <section class="doctor reveal" id="doctor" aria-labelledby="doctor-title">
+        <div class="doctor__portrait">
+          <img
+            src="https://images.unsplash.com/photo-1550831107-1553da8c8464?auto=format&fit=crop&w=900&q=80"
+            alt="Portrait of Dr. Elizaveta Serin"
+          />
+        </div>
+        <div class="doctor__bio">
+          <h2 id="doctor-title" data-i18n="clinic.doctor.name">Dr. Elizaveta Serin</h2>
+          <p class="doctor__role" data-i18n="clinic.doctor.role">Chief Veterinary Therapist</p>
+          <p data-i18n="clinic.doctor.bio">
+            A graduate of the Vienna Veterinary Institute, Dr. Serin guides each visit with mindfulness, aroma therapy, and
+            integrative medicine tailored to every companion. Her sessions begin with shared breathing rituals that calm both
+            guardian and pet.
+          </p>
+          <ul class="doctor__list">
+            <li data-i18n="clinic.doctor.highlight1">Certified in grief-sensitive veterinary support</li>
+            <li data-i18n="clinic.doctor.highlight2">Creates personalized herbal recovery plans</li>
+            <li data-i18n="clinic.doctor.highlight3">Hosts twilight tea circles for anxious guests</li>
+          </ul>
+          <button class="btn btn--inline" type="button" data-booking-open data-i18n="clinic.doctor.button">Reserve with Dr. Serin</button>
+        </div>
+      </section>
+
+      <section class="clinic-extras reveal" aria-labelledby="therapy-title">
+        <div>
+          <h2 id="therapy-title" data-i18n="clinic.therapy.title">Spaces tuned to healing</h2>
+          <p data-i18n="clinic.therapy.copy">
+            From moonlit hydrotherapy pools to crystal-infused diagnostics, every detail honors balance, scent, and gentle touch.
+          </p>
+        </div>
+        <div class="clinic-extras__grid">
+          <article>
+            <h3 data-i18n="clinic.therapy.room">Aurora treatment room</h3>
+            <p data-i18n="clinic.therapy.roomCopy">Infrared warmth, forest soundscapes, and a private terrace for aftercare tea.</p>
+          </article>
+          <article>
+            <h3 data-i18n="clinic.therapy.lab">Biolight laboratory</h3>
+            <p data-i18n="clinic.therapy.labCopy">Rapid diagnostics illuminated by soft biophilic lighting and artisan ceramics.</p>
+          </article>
+          <article>
+            <h3 data-i18n="clinic.therapy.rest">Calm renewal lounge</h3>
+            <p data-i18n="clinic.therapy.restCopy">Weighted blankets, guided breathing, and bespoke sound healing playlists.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <div class="booking-modal" data-booking-modal hidden>
+    <div class="booking-modal__backdrop" data-booking-close></div>
+    <div class="booking-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="booking-title">
+      <button
+        class="booking-modal__close"
+        type="button"
+        data-booking-close
+        aria-label="Close"
+        data-i18n-aria-label="clinic.booking.close"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+      <h2 id="booking-title" data-i18n="clinic.booking.title">Schedule your visit</h2>
+      <p class="booking-modal__intro" data-i18n="clinic.booking.intro">
+        Choose a time that feels right. Our caretakers will confirm with a warm message within the hour.
+      </p>
+      <form class="booking-form" data-form="booking" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="booking-date" data-i18n="clinic.booking.date">Preferred date</label>
+            <input id="booking-date" name="date" type="date" required />
+          </div>
+          <div class="form-group">
+            <label for="booking-time" data-i18n="clinic.booking.time">Preferred time</label>
+            <input id="booking-time" name="time" type="time" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="booking-name" data-i18n="clinic.booking.guardian">Guardian name</label>
+          <input id="booking-name" name="guardian" type="text" required placeholder="" data-i18n-placeholder="clinic.booking.guardianPlaceholder" />
+        </div>
+        <div class="form-group">
+          <label for="booking-contact" data-i18n="clinic.booking.contact">Contact details</label>
+          <input id="booking-contact" name="contact" type="tel" required placeholder="" data-i18n-placeholder="clinic.booking.contactPlaceholder" />
+        </div>
+        <div class="form-group">
+          <label for="booking-notes" data-i18n="clinic.booking.notes">Notes for Dr. Serin</label>
+          <textarea id="booking-notes" name="notes" rows="3" placeholder="" data-i18n-placeholder="clinic.booking.notesPlaceholder"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit" data-i18n="clinic.booking.submit">Confirm request</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>

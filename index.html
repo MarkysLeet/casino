@@ -13,7 +13,6 @@
   <div class="page-wrap">
     <header class="site-header reveal" id="top">
       <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
-        <div class="logo-mark" aria-hidden="true">🐾</div>
         <div class="logo-text">
           <span class="logo-title">Aura Memoria</span>
           <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
@@ -35,8 +34,9 @@
             aria-label="Select language"
             data-i18n-aria-label="header.languageToggle"
           >
+            <span class="language-menu__globe" aria-hidden="true"></span>
             <span class="language-menu__current" data-language-label>EN</span>
-            <span class="language-menu__chevron" aria-hidden="true">▾</span>
+            <span class="language-menu__chevron" aria-hidden="true"></span>
           </button>
           <ul class="language-menu__list" role="menu" hidden>
             <li>
@@ -93,7 +93,33 @@
           <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
           <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
         </button>
-        <a class="btn btn--header" href="login.html" data-i18n="header.login">Sign in</a>
+        <a
+          class="btn btn--header"
+          href="login.html"
+          data-i18n="header.login"
+          data-auth-visible="signed-out"
+        >
+          Sign in
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="dashboard.html"
+          data-i18n="header.dashboard"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Personal cabinet
+        </a>
+        <button
+          class="header-link header-link--muted"
+          type="button"
+          data-action="logout"
+          data-i18n="header.logout"
+          data-auth-visible="signed-in"
+          hidden
+        >
+          Sign out
+        </button>
       </div>
     </header>
 
@@ -121,16 +147,18 @@
           <h2 id="services-title" data-i18n="services.title">A sanctuary for every chapter of life</h2>
         </header>
         <div class="services__grid">
-          <article class="service-card" id="clinic">
+          <a class="service-card" id="clinic" href="clinic.html">
             <div class="service-card__icon" aria-hidden="true">🩺</div>
             <h3 data-i18n="services.clinic.title">Veterinary Center</h3>
             <p data-i18n="services.clinic.copy">Comprehensive care guided by compassion, modern diagnostics, and a calm environment for every visit.</p>
-          </article>
-          <article class="service-card">
+            <span class="service-card__link" data-i18n="services.clinic.link">Discover more</span>
+          </a>
+          <a class="service-card" href="memorial.html">
             <div class="service-card__icon" aria-hidden="true">🌿</div>
             <h3 data-i18n="services.memorial.title">Memorial Park</h3>
             <p data-i18n="services.memorial.copy">Personalized remembrance ceremonies, cremation services, and timeless tributes embraced by serene gardens.</p>
-          </article>
+            <span class="service-card__link" data-i18n="services.memorial.link">Visit the park</span>
+          </a>
           <article class="service-card" id="park">
             <div class="service-card__icon" aria-hidden="true">☕</div>
             <h3 data-i18n="services.park.title">Recreation Grove</h3>
@@ -193,7 +221,7 @@
               <p><a href="mailto:hello@auramemoria.com" data-i18n="contact.write.email">hello@auramemoria.com</a></p>
             </div>
           </div>
-          <form class="contact__form" novalidate>
+          <form class="contact__form" data-form="contact" novalidate>
             <div class="form-group">
               <label for="name" data-i18n="contact.form.name">Name</label>
               <input
@@ -235,7 +263,6 @@
 
     <footer class="site-footer reveal">
       <div class="footer-brand">
-        <div class="logo-mark" aria-hidden="true">🐾</div>
         <span class="logo-title">Aura Memoria</span>
       </div>
       <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
