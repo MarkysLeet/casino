@@ -1,191 +1,168 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeoCasino — почувствуй азарт</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Aura Memoria — Where care and memory live side by side</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
-<body class="page page--home">
-  <div class="floating-gifts" aria-hidden="true">
-    <div class="gift gift--one"></div>
-    <div class="gift gift--two"></div>
-    <div class="gift gift--three"></div>
+<body class="theme-light">
+  <div class="page-wrap">
+    <header class="site-header reveal" id="top">
+      <div class="logo-group">
+        <div class="logo-mark" aria-hidden="true">🐾</div>
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle">Care • Memory • Nature</span>
+        </div>
+      </div>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#memory">Memory</a>
+        <a href="#park">Park</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-switch" role="group" aria-label="Language selector">
+          <button class="language-switch__btn" data-lang="ru">RU</button>
+          <button class="language-switch__btn" data-lang="tr">TR</button>
+          <button class="language-switch__btn is-active" data-lang="en">EN</button>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero reveal" aria-labelledby="hero-title">
+        <div class="hero__background" aria-hidden="true"></div>
+        <div class="hero__content">
+          <h1 id="hero-title">Where care and memory live side by side.</h1>
+          <p>Aura Memoria unites veterinary care, love, and everlasting remembrance in harmony with nature and light.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#contact">Book an Appointment</a>
+            <a class="btn btn--ghost" href="#services">Explore Services</a>
+          </div>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <div class="hero__circle hero__circle--one"></div>
+          <div class="hero__circle hero__circle--two"></div>
+          <div class="hero__silhouette"></div>
+        </div>
+      </section>
+
+      <section class="services reveal" id="services" aria-labelledby="services-title">
+        <header class="section-header">
+          <span class="section-kicker">Our Essence</span>
+          <h2 id="services-title">A sanctuary for every chapter of life</h2>
+        </header>
+        <div class="services__grid">
+          <article class="service-card" id="clinic">
+            <div class="service-card__icon" aria-hidden="true">🩺</div>
+            <h3>Veterinary Center</h3>
+            <p>Comprehensive care guided by compassion, modern diagnostics, and a calm environment for every visit.</p>
+          </article>
+          <article class="service-card">
+            <div class="service-card__icon" aria-hidden="true">🌿</div>
+            <h3>Memorial Park</h3>
+            <p>Personalized remembrance ceremonies, cremation services, and timeless tributes embraced by serene gardens.</p>
+          </article>
+          <article class="service-card" id="park">
+            <div class="service-card__icon" aria-hidden="true">☕</div>
+            <h3>Recreation Grove</h3>
+            <p>Quiet walks, gentle tea terraces, and shared moments beneath emerald canopies with the pets you love.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="memory highlight reveal" id="memory" aria-labelledby="memory-title">
+        <div class="highlight__content">
+          <h2 id="memory-title">“In the whisper of leaves we hear their everlasting love.”</h2>
+          <p>Our memorial keepers craft tributes that honor the joy, loyalty, and light our companions bring into our lives.</p>
+          <a class="btn btn--outline" href="#stories">Learn more</a>
+        </div>
+      </section>
+
+      <section class="stories reveal" id="stories" aria-labelledby="stories-title">
+        <header class="section-header">
+          <span class="section-kicker">Stories of Memory</span>
+          <h2 id="stories-title">Echoes of love continuing to bloom</h2>
+        </header>
+        <div class="stories__list">
+          <article class="story-card">
+            <h3>Sunlit Path for Luna</h3>
+            <p>How a gentle garden ceremony helped a family celebrate their husky’s adventurous spirit.</p>
+            <button class="link-more" type="button">Coming soon</button>
+          </article>
+          <article class="story-card">
+            <h3>The Cedar Bench</h3>
+            <p>A community-built tribute spot where visitors leave handwritten notes for companions passed.</p>
+            <button class="link-more" type="button">Coming soon</button>
+          </article>
+          <article class="story-card">
+            <h3>Tea at Dusk</h3>
+            <p>Weekly gatherings blending mindfulness, art therapy, and quiet moments with friends.</p>
+            <button class="link-more" type="button">Coming soon</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact reveal" id="contact" aria-labelledby="contact-title">
+        <header class="section-header">
+          <span class="section-kicker">Connect</span>
+          <h2 id="contact-title">We are here to listen and to help</h2>
+        </header>
+        <div class="contact__layout">
+          <div class="contact__details">
+            <div class="detail">
+              <h3>Visit</h3>
+              <p>Golden Grove Lane 12, Serene District</p>
+              <p>Open daily 8:00 – 22:00</p>
+            </div>
+            <div class="detail">
+              <h3>Call</h3>
+              <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+              <p><a href="tel:+905551234567">+90 555 123 45 67</a></p>
+            </div>
+            <div class="detail">
+              <h3>Write</h3>
+              <p><a href="mailto:hello@auramemoria.com">hello@auramemoria.com</a></p>
+            </div>
+          </div>
+          <form class="contact__form" novalidate>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="How can we support you?" required></textarea>
+            </div>
+            <button class="btn btn--primary" type="submit">Send message</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <div class="footer-brand">
+        <div class="logo-mark" aria-hidden="true">🐾</div>
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p>© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top">Back to top</a>
+    </footer>
   </div>
 
-  <header class="topbar glass">
-    <div class="brand">
-      <span class="brand__logo">🪙</span>
-      <span class="brand__name">NeoCasino</span>
-    </div>
-    <nav class="topbar__nav">
-      <a href="auth.html">Войти</a>
-      <a href="dashboard.html">Личный кабинет</a>
-      <a href="#vip">VIP</a>
-      <a href="#missions">Миссии</a>
-    </nav>
-    <button class="btn btn--primary">Играть сейчас</button>
-  </header>
-
-  <main class="main">
-    <section class="hero glass">
-      <div class="hero__content">
-        <h1>NeoCasino — почувствуй азарт</h1>
-        <p>Современное казино с геймифицированным интерфейсом, живой активностью и эксклюзивными бонусами.</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="auth.html">Начать</a>
-          <a class="btn btn--ghost" href="#games">Исследовать игры</a>
-        </div>
-      </div>
-      <div class="hero__art">
-        <div class="hero__orb"></div>
-        <div class="hero__glow"></div>
-      </div>
-    </section>
-
-    <section id="games" class="games glass">
-      <header class="section__header">
-        <h2 class="section__title">Категории игр</h2>
-        <div class="switcher">
-          <button class="switcher__btn is-active" data-mode="online">Онлайн</button>
-          <button class="switcher__btn" data-mode="offline">Оффлайн</button>
-        </div>
-      </header>
-      <div class="games__grid">
-        <article class="game-card" data-type="online">
-          <div class="game-card__icon">🎰</div>
-          <h3>Fruit Spin</h3>
-          <p>Сочные призы и мгновенные вращения.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.8</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-        <article class="game-card" data-type="online">
-          <div class="game-card__icon">🎲</div>
-          <h3>Рулетка</h3>
-          <p>Новый запуск каждые 60 секунд.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.6</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-        <article class="game-card" data-type="offline">
-          <div class="game-card__icon">🃏</div>
-          <h3>BlackJack Neo</h3>
-          <p>Раунд стартует сразу после ставки.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.9</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-        <article class="game-card" data-type="offline">
-          <div class="game-card__icon">🎡</div>
-          <h3>Wheel Rush</h3>
-          <p>Оффлайн-механика с мгновенным стартом.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.4</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-        <article class="game-card" data-type="online">
-          <div class="game-card__icon">🏆</div>
-          <h3>Neo Tournament</h3>
-          <p>Живые ставки и рейтинги в реальном времени.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.7</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-        <article class="game-card" data-type="offline">
-          <div class="game-card__icon">💎</div>
-          <h3>Crystal Slots</h3>
-          <p>Активация после внесения ставки.</p>
-          <div class="game-card__meta">
-            <span class="rating">★ 4.5</span>
-            <button class="btn btn--secondary">Играть</button>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="mechanics glass">
-      <h2 class="section__title">Механики игр</h2>
-      <div class="mechanics__grid">
-        <article class="mechanic">
-          <h3>Оффлайн-игры</h3>
-          <p>Раунд запускается только после внесения ставки. Слот-машины ожидают готовности игрока, затем активируются.</p>
-          <div class="mechanic__example">Пример: слот «Crystal Slots» вращается после нажатия «Сделать ставку».</div>
-        </article>
-        <article class="mechanic">
-          <h3>Онлайн-игры</h3>
-          <p>Игры идут по таймеру и создают эффект живого казино. Успейте сделать ставку до старта.</p>
-          <div class="mechanic__example">Пример: «Рулетка» запускается каждые 60 секунд, ставки принимаются до начала раунда.</div>
-        </article>
-        <article class="mechanic mechanic--activity">
-          <h3>Активность игроков</h3>
-          <ul class="activity-feed" id="activity-feed">
-            <li>Player_102 сделал ставку 300₽</li>
-            <li>User_234 сделал ставку 500₽</li>
-            <li>LuckyFox выиграл 1200₽</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section id="vip" class="vip glass">
-      <h2 class="section__title">VIP-панель</h2>
-      <p class="section__subtitle">Повышайте уровень и открывайте привилегии программы лояльности.</p>
-      <div class="vip__tiers">
-        <div class="vip__tier">
-          <span class="vip__badge vip__badge--silver">Silver</span>
-          <p>Персональные бонусы и 3% кэшбэк.</p>
-        </div>
-        <div class="vip__tier">
-          <span class="vip__badge vip__badge--gold">Gold</span>
-          <p>Расширенные миссии и 5% кэшбэк.</p>
-        </div>
-        <div class="vip__tier">
-          <span class="vip__badge vip__badge--diamond">Diamond</span>
-          <p>Эксклюзивные турниры и 10% кэшбэк.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="missions" class="missions glass">
-      <h2 class="section__title">Дневные миссии</h2>
-      <div class="missions__grid">
-        <article class="mission">
-          <h3>Сделай 3 ставки</h3>
-          <p>Получите +300 NeoCoins за активность.</p>
-        </article>
-        <article class="mission">
-          <h3>Выиграй в 2 оффлайн игры</h3>
-          <p>Заберите +500 NeoCoins и сундук сюрприз.</p>
-        </article>
-        <article class="mission">
-          <h3>Активируй VIP бонус</h3>
-          <p>Получите доступ к уникальной награде.</p>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer glass">
-    <p>© 2024 NeoCasino. Все права защищены.</p>
-  </footer>
-
-  <div class="live-ticker" aria-live="polite">
-    <div class="live-ticker__content" id="live-ticker"></div>
-  </div>
-
-  <div class="support-bubble">
-    <button class="support-bubble__button" aria-label="Открыть чат поддержки">💬</button>
-  </div>
-
-  <script src="assets/scripts.js"></script>
+  <script src="assets/scripts.js" defer></script>
 </body>
 </html>
