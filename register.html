@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Memoria — Create account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="theme-light auth-body" data-page="register">
+  <div class="page-wrap page-wrap--auth">
+    <header class="site-header site-header--simple reveal" id="top">
+      <div class="logo-group">
+        <div class="logo-mark" aria-hidden="true">🐾</div>
+        <div class="logo-text">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+      </div>
+      <nav class="site-nav site-nav--compact" aria-label="Main navigation">
+        <a href="index.html" data-i18n="header.home">Home</a>
+        <a href="login.html" data-i18n="header.login">Sign in</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-switch" role="group" aria-label="Language selector">
+          <button class="language-switch__btn" data-lang="ru">RU</button>
+          <button class="language-switch__btn" data-lang="tr">TR</button>
+          <button class="language-switch__btn" data-lang="de">DE</button>
+          <button class="language-switch__btn is-active" data-lang="en">EN</button>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
+          <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="auth-main reveal" aria-labelledby="register-title">
+      <section class="auth-card">
+        <header class="auth-card__header">
+          <h1 class="auth-card__title" id="register-title" data-i18n="register.title">Create your Aura Memoria account</h1>
+          <p class="auth-card__subtitle" data-i18n="register.subtitle">
+            Join our community to book visits, plan memorials, and share stories of cherished companions.
+          </p>
+        </header>
+        <form class="auth-card__form" novalidate>
+          <div class="form-group">
+            <label for="register-name" data-i18n="register.nameLabel">Full name</label>
+            <input
+              id="register-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              placeholder="Alexei Petrov"
+              required
+              data-i18n-placeholder="register.namePlaceholder"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-email" data-i18n="register.emailLabel">Email</label>
+            <input
+              id="register-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+              data-i18n-placeholder="register.emailPlaceholder"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-phone" data-i18n="register.phoneLabel">Phone (optional)</label>
+            <input
+              id="register-phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="+7 999 000 00 00"
+              data-i18n-placeholder="register.phonePlaceholder"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="register-password" data-i18n="register.passwordLabel">Create password</label>
+              <input
+                id="register-password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Create a password"
+                required
+                data-i18n-placeholder="register.passwordPlaceholder"
+              />
+            </div>
+            <div class="form-group">
+              <label for="register-confirm" data-i18n="register.confirmLabel">Confirm password</label>
+              <input
+                id="register-confirm"
+                name="confirm"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Repeat password"
+                required
+                data-i18n-placeholder="register.confirmPlaceholder"
+              />
+            </div>
+          </div>
+          <div class="auth-card__actions">
+            <button class="btn btn--primary" type="submit" data-i18n="register.submit">Create account</button>
+          </div>
+        </form>
+        <p class="auth-card__switch">
+          <span data-i18n="register.switchPrompt">Already have an account?</span>
+          <a href="login.html" data-i18n="register.switchLink">Sign in</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer site-footer--simple reveal">
+      <div class="footer-brand">
+        <div class="logo-mark" aria-hidden="true">🐾</div>
+        <span class="logo-title">Aura Memoria</span>
+      </div>
+      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+    </footer>
+  </div>
+
+  <script src="assets/scripts.js" defer></script>
+</body>
+</html>
