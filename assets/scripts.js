@@ -4,7 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const THEME_KEY = 'aura-memoria-theme';
   const LANG_KEY = 'aura-memoria-lang';
   const themeToggle = document.getElementById('theme-toggle');
-  const languageButtons = document.querySelectorAll('.language-switch__btn');
+  const languageMenu = document.querySelector('[data-language-menu]');
+  const languageToggle = languageMenu ? languageMenu.querySelector('.language-menu__toggle') : null;
+  const languageList = languageMenu ? languageMenu.querySelector('.language-menu__list') : null;
+  const languageLabel = languageMenu ? languageMenu.querySelector('[data-language-label]') : null;
+  const languageOptions = languageMenu ? Array.from(languageMenu.querySelectorAll('.language-menu__option')) : [];
   const revealElements = document.querySelectorAll('.reveal');
   const page = document.body.dataset.page || 'home';
 
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.tagline': 'Care • Memory • Nature',
       'header.login': 'Sign in',
       'header.register': 'Create account',
+      'header.languageToggle': 'Select language',
       'header.home': 'Home',
       'nav.services': 'Services',
       'nav.memory': 'Memory',
@@ -97,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.tagline': 'Забота • Память • Природа',
       'header.login': 'Войти',
       'header.register': 'Создать аккаунт',
+      'header.languageToggle': 'Выбрать язык',
       'header.home': 'Главная',
       'nav.services': 'Услуги',
       'nav.memory': 'Память',
@@ -178,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.tagline': 'Şefkat • Anı • Doğa',
       'header.login': 'Giriş yap',
       'header.register': 'Hesap oluştur',
+      'header.languageToggle': 'Dili seçin',
       'header.home': 'Ana sayfa',
       'nav.services': 'Hizmetler',
       'nav.memory': 'Hatıra',
@@ -259,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.tagline': 'Fürsorge • Erinnerung • Natur',
       'header.login': 'Anmelden',
       'header.register': 'Konto erstellen',
+      'header.languageToggle': 'Sprache auswählen',
       'header.home': 'Startseite',
       'nav.services': 'Leistungen',
       'nav.memory': 'Erinnerung',
@@ -399,14 +407,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const updateLanguageLabel = (lang) => {
+    if (!languageMenu || !languageToggle) return;
+    const activeOption = languageOptions.find((option) => option.dataset.lang === lang);
+    const label = activeOption?.dataset.label || lang.toUpperCase();
+    if (languageLabel) {
+      languageLabel.textContent = label;
+    }
+    languageToggle.setAttribute('data-active-lang', lang);
+  };
+
   const setLanguage = (lang) => {
     const resolvedLang = translations[lang] ? lang : 'en';
     document.documentElement.lang = resolvedLang;
-    languageButtons.forEach((btn) => {
-      const isActive = btn.dataset.lang === resolvedLang;
-      btn.classList.toggle('is-active', isActive);
-      btn.setAttribute('aria-pressed', String(isActive));
+    languageOptions.forEach((option) => {
+      const isActive = option.dataset.lang === resolvedLang;
+      option.classList.toggle('is-active', isActive);
+      option.setAttribute('aria-checked', String(isActive));
     });
+    updateLanguageLabel(resolvedLang);
     applyLanguageStrings(resolvedLang);
     return resolvedLang;
   };
@@ -417,11 +436,80 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(LANG_KEY, initialLang);
   }
 
-  languageButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const lang = btn.dataset.lang;
+  if (languageList) {
+    languageList.hidden = true;
+  }
+  if (languageToggle) {
+    languageToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  let isLanguageMenuOpen = false;
+
+  const closeLanguageMenu = () => {
+    if (!languageMenu) return;
+    isLanguageMenuOpen = false;
+    languageMenu.classList.remove('is-open');
+    if (languageToggle) {
+      languageToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (languageList) {
+      languageList.hidden = true;
+    }
+  };
+
+  const openLanguageMenu = () => {
+    if (!languageMenu) return;
+    isLanguageMenuOpen = true;
+    languageMenu.classList.add('is-open');
+    if (languageToggle) {
+      languageToggle.setAttribute('aria-expanded', 'true');
+    }
+    if (languageList) {
+      languageList.hidden = false;
+    }
+  };
+
+  if (languageMenu && languageToggle) {
+    languageToggle.addEventListener('click', () => {
+      if (isLanguageMenuOpen) {
+        closeLanguageMenu();
+      } else {
+        openLanguageMenu();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!isLanguageMenuOpen) return;
+      if (!languageMenu.contains(event.target)) {
+        closeLanguageMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!isLanguageMenuOpen) return;
+      if (event.key === 'Escape') {
+        closeLanguageMenu();
+        languageToggle.focus();
+      }
+    });
+
+    languageMenu.addEventListener('focusout', (event) => {
+      if (!isLanguageMenuOpen) return;
+      if (!event.relatedTarget || !languageMenu.contains(event.relatedTarget)) {
+        closeLanguageMenu();
+      }
+    });
+  }
+
+  languageOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      const lang = option.dataset.lang;
       const resolvedLang = setLanguage(lang);
       localStorage.setItem(LANG_KEY, resolvedLang);
+      closeLanguageMenu();
+      if (languageToggle) {
+        languageToggle.focus();
+      }
     });
   });
 

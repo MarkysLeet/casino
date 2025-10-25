@@ -26,18 +26,74 @@
         <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
       <div class="header-controls">
-        <div class="language-switch" role="group" aria-label="Language selector">
-          <button class="language-switch__btn" data-lang="ru">RU</button>
-          <button class="language-switch__btn" data-lang="tr">TR</button>
-          <button class="language-switch__btn" data-lang="de">DE</button>
-          <button class="language-switch__btn is-active" data-lang="en">EN</button>
+        <div class="language-menu" data-language-menu>
+          <button
+            class="language-menu__toggle"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Select language"
+            data-i18n-aria-label="header.languageToggle"
+          >
+            <span class="language-menu__current" data-language-label>EN</span>
+            <span class="language-menu__chevron" aria-hidden="true">▾</span>
+          </button>
+          <ul class="language-menu__list" role="menu" hidden>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="en"
+                data-label="EN"
+              >
+                English
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="ru"
+                data-label="RU"
+              >
+                Русский
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="tr"
+                data-label="TR"
+              >
+                Türkçe
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked="false"
+                class="language-menu__option"
+                data-lang="de"
+                data-label="DE"
+              >
+                Deutsch
+              </button>
+            </li>
+          </ul>
         </div>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" type="button">
           <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀️</span>
           <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
         </button>
-        <a class="header-link" href="login.html" data-i18n="header.login">Sign in</a>
-        <a class="btn btn--header" href="register.html" data-i18n="header.register">Create account</a>
+        <a class="btn btn--header" href="login.html" data-i18n="header.login">Sign in</a>
       </div>
     </header>
 
