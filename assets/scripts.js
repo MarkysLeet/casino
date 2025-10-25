@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerForm = document.querySelector('[data-form="register"]');
   const loginForm = document.querySelector('[data-form="login"]');
   const bookingForm = document.querySelector('[data-form="booking"]');
-  const noteForm = document.querySelector('[data-form="note"]');
   const manageAppointmentsBtn = document.querySelector('[data-manage-appointments]');
   const bookingModal = document.querySelector('[data-booking-modal]');
   const bookingOpeners = document.querySelectorAll('[data-booking-open]');
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Home',
       'nav.services': 'Services',
       'nav.memory': 'Memory',
-      'nav.park': 'Park',
       'nav.contact': 'Contact',
       'hero.title': 'Where care and memory live side by side.',
       'hero.subtitle': 'Aura Memoria unites veterinary care, love, and everlasting remembrance in harmony with nature and light.',
@@ -119,9 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.switchLink': 'Sign in',
       'dashboard.kicker': 'Personal cabinet',
       'dashboard.subtitle': 'Your serene space for every shared journey.',
-      'dashboard.tag.calm': 'Calm visits',
-      'dashboard.tag.memory': 'Tender memories',
-      'dashboard.tag.green': 'Harmony with nature',
       'dashboard.greeting': 'Welcome back, {name}!',
       'dashboard.nextVisit.title': 'Upcoming visit',
       'dashboard.nextVisit.note': 'We reserved a tranquil room with warm lighting and soft music for you and your companion.',
@@ -147,15 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Bring your companion’s favorite blanket for each visit to anchor them in comfort.',
       'dashboard.insights.item3': 'Write a short gratitude note after each walk to keep your shared memories glowing.',
       'dashboard.insights.cta': 'Download tailored plan',
-      'dashboard.notes.title': 'Shared notes',
-      'dashboard.notes.description': 'Leave a whisper of remembrance or a joyful update for our keepers.',
-      'dashboard.notes.field': 'Share a note',
-      'dashboard.notes.placeholder': 'Tell us how to prepare the space for your next visit…',
-      'dashboard.notes.submit': 'Send',
       'clinic.kicker': 'Veterinary center',
       'clinic.title': 'Gentle medicine surrounded by light',
       'clinic.subtitle': 'Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.',
       'clinic.booking.cta': 'Book a visit',
+      'clinic.booking.authCta': 'Sign in to book',
       'clinic.learnMore': 'Meet the doctor',
       'clinic.doctor.name': 'Dr. Elizaveta Serin',
       'clinic.doctor.role': 'Chief Veterinary Therapist',
@@ -164,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'clinic.doctor.highlight2': 'Creates personalized herbal recovery plans',
       'clinic.doctor.highlight3': 'Hosts twilight tea circles for anxious guests',
       'clinic.doctor.button': 'Reserve with Dr. Serin',
+      'clinic.doctor.loginPrompt': 'Sign in to reserve',
       'clinic.therapy.title': 'Spaces tuned to healing',
       'clinic.therapy.copy': 'From moonlit hydrotherapy pools to crystal-infused diagnostics, every detail honors balance, scent, and gentle touch.',
       'clinic.therapy.room': 'Aurora treatment room',
@@ -259,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'toast.logout.success': 'You have signed out. Our lantern will await your return.',
       'toast.contact.success': 'Message sent with warmth. We will reach out shortly.',
       'toast.booking.success': 'Your visit request has been received. Expect a confirmation soon.',
-      'toast.note.success': 'Your note has been shared with our keepers.',
       'toast.auth.required': 'Please sign in to continue this journey.',
       'toast.manageAppointments': 'Our concierge will be in touch soon to adjust your visit.',
     },
@@ -282,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Главная',
       'nav.services': 'Услуги',
       'nav.memory': 'Память',
-      'nav.park': 'Парк',
       'nav.contact': 'Контакты',
       'hero.title': 'Где забота и память живут рядом.',
       'hero.subtitle': 'Aura Memoria объединяет ветеринарную помощь, любовь и вечную память в гармонии с природой и светом.',
@@ -356,9 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.switchLink': 'Войти',
       'dashboard.kicker': 'Личный кабинет',
       'dashboard.subtitle': 'Тихое пространство для каждого совместного пути.',
-      'dashboard.tag.calm': 'Спокойные визиты',
-      'dashboard.tag.memory': 'Нежные воспоминания',
-      'dashboard.tag.green': 'Гармония с природой',
       'dashboard.greeting': 'С возвращением, {name}!',
       'dashboard.nextVisit.title': 'Ближайший визит',
       'dashboard.nextVisit.note': 'Мы подготовили комнату с мягким светом и музыкой специально для вас и питомца.',
@@ -384,15 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Приносите любимый плед питомца, чтобы ему было спокойнее.',
       'dashboard.insights.item3': 'Пишите благодарность после каждой прогулки, чтобы память сияла.',
       'dashboard.insights.cta': 'Скачать персональный план',
-      'dashboard.notes.title': 'Совместные заметки',
-      'dashboard.notes.description': 'Оставьте тёплое воспоминание или важную деталь для наших хранителей.',
-      'dashboard.notes.field': 'Поделиться заметкой',
-      'dashboard.notes.placeholder': 'Расскажите, как подготовить пространство к вашему визиту…',
-      'dashboard.notes.submit': 'Отправить',
       'clinic.kicker': 'Ветеринарный центр',
       'clinic.title': 'Нежная медицина в окружении света',
       'clinic.subtitle': 'Медицинское крыло Aura Memoria сочетает технологии и ритуалы спа, чтобы каждый визит был спокойным.',
       'clinic.booking.cta': 'Записаться',
+      'clinic.booking.authCta': 'Войдите, чтобы записаться',
       'clinic.learnMore': 'Познакомиться с доктором',
       'clinic.doctor.name': 'Др. Елизавета Серин',
       'clinic.doctor.role': 'Главный ветеринарный терапевт',
@@ -401,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'clinic.doctor.highlight2': 'Составляет персональные травяные планы восстановления',
       'clinic.doctor.highlight3': 'Проводит вечерние чайные круги для тревожных гостей',
       'clinic.doctor.button': 'Записаться к доктору Серин',
+      'clinic.doctor.loginPrompt': 'Войдите, чтобы записаться к доктору',
       'clinic.therapy.title': 'Пространства, настроенные на исцеление',
       'clinic.therapy.copy': 'От гидротерапии при лунном свете до кристально-инфузионной диагностики — каждая деталь служит равновесию, аромату и мягкому прикосновению.',
       'clinic.therapy.room': 'Комната «Аврора»',
@@ -496,7 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'toast.logout.success': 'Вы вышли. Светильник будет ждать вашего возвращения.',
       'toast.contact.success': 'Сообщение отправлено с теплом. Мы свяжемся в ближайшее время.',
       'toast.booking.success': 'Запрос на визит получен. Ждите подтверждение.',
-      'toast.note.success': 'Ваша заметка передана хранителям.',
       'toast.auth.required': 'Пожалуйста, войдите, чтобы продолжить путь.',
       'toast.manageAppointments': 'Наш консьерж скоро свяжется, чтобы скорректировать визит.',
     },
@@ -519,7 +502,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Ana sayfa',
       'nav.services': 'Hizmetler',
       'nav.memory': 'Hatıra',
-      'nav.park': 'Park',
       'nav.contact': 'İletişim',
       'hero.title': 'Şefkat ve anı yan yana yaşatıyoruz.',
       'hero.subtitle': 'Aura Memoria veteriner bakımı, sevgiyi ve sonsuz hatırayı doğa ve ışıkla uyum içinde bir araya getirir.',
@@ -593,9 +575,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.switchLink': 'Giriş yapın',
       'dashboard.kicker': 'Kişisel alan',
       'dashboard.subtitle': 'Her ortak yolculuk için huzurlu alanınız.',
-      'dashboard.tag.calm': 'Sakin ziyaretler',
-      'dashboard.tag.memory': 'Nazik anılar',
-      'dashboard.tag.green': 'Doğa ile uyum',
       'dashboard.greeting': 'Tekrar hoş geldiniz, {name}!',
       'dashboard.nextVisit.title': 'Yaklaşan randevu',
       'dashboard.nextVisit.note': 'Sizin ve dostunuz için yumuşak ışıklı, müzikli bir oda hazırladık.',
@@ -621,15 +600,11 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Her ziyarette dostunuzun en sevdiği battaniyeyi getirin.',
       'dashboard.insights.item3': 'Her yürüyüşten sonra kısa bir şükran notu yazın.',
       'dashboard.insights.cta': 'Kişisel planı indir',
-      'dashboard.notes.title': 'Paylaşılan notlar',
-      'dashboard.notes.description': 'Bekçilerimize sıcak bir anı ya da dilek bırakın.',
-      'dashboard.notes.field': 'Bir not paylaş',
-      'dashboard.notes.placeholder': 'Bir sonraki ziyaretiniz için alanı nasıl hazırlayalım…',
-      'dashboard.notes.submit': 'Gönder',
       'clinic.kicker': 'Veteriner merkezi',
       'clinic.title': 'Işıkla çevrili nazik tıp',
       'clinic.subtitle': 'Aura Memoria\'nın tıbbi kanadı modern teşhisi spa benzeri ritüellerle birleştirir.',
       'clinic.booking.cta': 'Randevu al',
+      'clinic.booking.authCta': 'Randevu için giriş yapın',
       'clinic.learnMore': 'Doktorla tanış',
       'clinic.doctor.name': 'Dr. Elizaveta Serin',
       'clinic.doctor.role': 'Baş veteriner terapist',
@@ -638,6 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'clinic.doctor.highlight2': 'Kişiye özel bitkisel iyileşme planları hazırlar',
       'clinic.doctor.highlight3': 'Kaygılı misafirler için alacakaranlık çay buluşmaları düzenler',
       'clinic.doctor.button': 'Dr. Serin ile rezervasyon yap',
+      'clinic.doctor.loginPrompt': 'Rezervasyon için giriş yapın',
       'clinic.therapy.title': 'Şifaya ayarlı alanlar',
       'clinic.therapy.copy': 'Ay ışığında hidroterapi havuzlarından kristal destekli teşhise kadar her detay denge ve nazik dokunuş içindir.',
       'clinic.therapy.room': 'Aurora tedavi odası',
@@ -733,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'toast.logout.success': 'Çıkış yaptınız. Fenerimiz dönüşünüzü bekleyecek.',
       'toast.contact.success': 'Mesajınız sıcaklıkla gönderildi. Kısa süre içinde size ulaşacağız.',
       'toast.booking.success': 'Randevu talebiniz alındı. Yakında onay gelecektir.',
-      'toast.note.success': 'Notunuz bekçilerimize ulaştı.',
       'toast.auth.required': 'Lütfen devam etmek için giriş yapın.',
       'toast.manageAppointments': 'Konuk görevlilerimiz ziyaretinizi ayarlamak için sizinle iletişime geçecek.',
     },
@@ -756,7 +731,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Startseite',
       'nav.services': 'Leistungen',
       'nav.memory': 'Erinnerung',
-      'nav.park': 'Park',
       'nav.contact': 'Kontakt',
       'hero.title': 'Wo Fürsorge und Erinnerung Seite an Seite leben.',
       'hero.subtitle': 'Aura Memoria vereint Tiermedizin, Liebe und ewiges Gedenken im Einklang mit Natur und Licht.',
@@ -830,9 +804,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'register.switchLink': 'Anmelden',
       'dashboard.kicker': 'Persönlicher Bereich',
       'dashboard.subtitle': 'Ihr ruhiger Raum für jede gemeinsame Reise.',
-      'dashboard.tag.calm': 'Sanfte Besuche',
-      'dashboard.tag.memory': 'Zarte Erinnerungen',
-      'dashboard.tag.green': 'Harmonie mit der Natur',
       'dashboard.greeting': 'Willkommen zurück, {name}!',
       'dashboard.nextVisit.title': 'Bevorstehender Termin',
       'dashboard.nextVisit.note': 'Wir haben einen Raum mit warmem Licht und leiser Musik für Sie und Ihren Begleiter vorbereitet.',
@@ -858,15 +829,11 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Bringen Sie für jeden Besuch die Lieblingsdecke Ihres Gefährten mit.',
       'dashboard.insights.item3': 'Schreiben Sie nach jedem Spaziergang einen kurzen Dankbarkeitsgruß.',
       'dashboard.insights.cta': 'Individuellen Plan herunterladen',
-      'dashboard.notes.title': 'Geteilte Notizen',
-      'dashboard.notes.description': 'Hinterlassen Sie unseren Hütern eine warme Nachricht oder Bitte.',
-      'dashboard.notes.field': 'Eine Notiz teilen',
-      'dashboard.notes.placeholder': 'Wie dürfen wir den Raum für Ihren nächsten Besuch vorbereiten…',
-      'dashboard.notes.submit': 'Senden',
       'clinic.kicker': 'Tierärztliches Zentrum',
       'clinic.title': 'Sanfte Medizin im Licht',
       'clinic.subtitle': 'Das medizinische Flügel von Aura Memoria verbindet moderne Diagnostik mit Spa-Ritualen für einen ruhigen Termin.',
       'clinic.booking.cta': 'Termin buchen',
+      'clinic.booking.authCta': 'Zum Buchen anmelden',
       'clinic.learnMore': 'Ärztin kennenlernen',
       'clinic.doctor.name': 'Dr. Elizaveta Serin',
       'clinic.doctor.role': 'Leitende Veterinärtherapeutin',
@@ -875,6 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'clinic.doctor.highlight2': 'Erstellt persönliche Kräuterpläne für die Heilung',
       'clinic.doctor.highlight3': 'Moderiert Teekreise in der Dämmerung für sensible Gäste',
       'clinic.doctor.button': 'Termin bei Dr. Serin reservieren',
+      'clinic.doctor.loginPrompt': 'Zum Reservieren anmelden',
       'clinic.therapy.title': 'Räume für Heilung',
       'clinic.therapy.copy': 'Von Mondschein-Hydrotherapie bis zu kristallgestützten Diagnosen – jedes Detail ehrt Balance, Duft und Berührung.',
       'clinic.therapy.room': 'Aurora-Behandlungsraum',
@@ -970,7 +938,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'toast.logout.success': 'Sie haben sich abgemeldet. Unsere Laterne wartet auf Ihre Rückkehr.',
       'toast.contact.success': 'Nachricht warm gesendet. Wir melden uns zeitnah.',
       'toast.booking.success': 'Ihre Terminanfrage ist eingegangen. Eine Bestätigung folgt bald.',
-      'toast.note.success': 'Ihre Notiz ist bei unseren Hütern angekommen.',
       'toast.auth.required': 'Bitte melden Sie sich an, um fortzufahren.',
       'toast.manageAppointments': 'Unser Concierge wird sich melden, um Ihren Besuch anzupassen.',
     },
@@ -1402,21 +1369,6 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       contactForm.reset();
       showToast('toast.contact.success');
-    });
-  }
-
-  if (noteForm) {
-    noteForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      if (!requireAuth()) return;
-      const message = (new FormData(noteForm).get('message') || '').toString().trim();
-      if (!message) {
-        const field = noteForm.querySelector('textarea');
-        if (field) field.focus();
-        return;
-      }
-      noteForm.reset();
-      showToast('toast.note.success');
     });
   }
 

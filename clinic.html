@@ -23,8 +23,7 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="index.html#services" data-i18n="nav.services">Services</a>
-        <a href="index.html#memory" data-i18n="nav.memory">Memory</a>
-        <a href="index.html#park" data-i18n="nav.park">Park</a>
+        <a href="memorial.html" data-i18n="nav.memory">Memory</a>
         <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
       </nav>
       <div class="header-controls">
@@ -135,7 +134,23 @@
             Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.
           </p>
           <div class="clinic-hero__actions">
-            <button class="btn btn--primary" type="button" data-booking-open data-i18n="clinic.booking.cta">Book a visit</button>
+            <button
+              class="btn btn--primary"
+              type="button"
+              data-booking-open
+              data-auth-visible="signed-in"
+              data-i18n="clinic.booking.cta"
+            >
+              Book a visit
+            </button>
+            <a
+              class="btn btn--primary btn--outline"
+              href="login.html"
+              data-auth-visible="signed-out"
+              data-i18n="clinic.booking.authCta"
+            >
+              Sign in to book
+            </a>
             <a class="btn btn--ghost" href="#doctor" data-i18n="clinic.learnMore">Meet the doctor</a>
           </div>
         </div>
@@ -168,7 +183,23 @@
             <li data-i18n="clinic.doctor.highlight2">Creates personalized herbal recovery plans</li>
             <li data-i18n="clinic.doctor.highlight3">Hosts twilight tea circles for anxious guests</li>
           </ul>
-          <button class="btn btn--inline" type="button" data-booking-open data-i18n="clinic.doctor.button">Reserve with Dr. Serin</button>
+          <button
+            class="btn btn--inline"
+            type="button"
+            data-booking-open
+            data-auth-visible="signed-in"
+            data-i18n="clinic.doctor.button"
+          >
+            Reserve with Dr. Serin
+          </button>
+          <a
+            class="btn btn--inline"
+            href="login.html"
+            data-auth-visible="signed-out"
+            data-i18n="clinic.doctor.loginPrompt"
+          >
+            Sign in to reserve
+          </a>
         </div>
       </section>
 
