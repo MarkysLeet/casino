@@ -210,6 +210,15 @@ body.theme-dark .auth-card__subtitle {
   gap: 16px;
   font-family: var(--font-serif);
   letter-spacing: 0.03em;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.logo-group:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+  border-radius: 24px;
 }
 
 .logo-mark {
