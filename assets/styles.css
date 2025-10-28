@@ -1084,7 +1084,8 @@ body.theme-dark .site-footer {
 .dashboard-main,
 .clinic-main,
 .memorial-main,
-.memorial-detail {
+.memorial-detail,
+.about-main {
   display: flex;
   flex-direction: column;
   gap: 64px;
@@ -1094,7 +1095,8 @@ body.theme-dark .site-footer {
 .dashboard-hero,
 .clinic-hero,
 .memorial-hero,
-.memorial-detail__hero {
+.memorial-detail__hero,
+.about-hero {
   display: grid;
   gap: 36px;
   border-radius: var(--radius-large);
@@ -1107,7 +1109,8 @@ body.theme-dark .site-footer {
 
 .dashboard-hero,
 .memorial-hero,
-.memorial-detail__hero {
+.memorial-detail__hero,
+.about-hero {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
 }
 
@@ -1115,6 +1118,18 @@ body.theme-dark .site-footer {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
   position: relative;
   overflow: hidden;
+}
+
+.about-hero {
+  grid-template-columns: minmax(0, 420px) minmax(320px, 1fr);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(140deg, rgba(218, 241, 222, 0.94), rgba(142, 182, 155, 0.42));
+}
+
+body.theme-dark .about-hero {
+  background: linear-gradient(140deg, rgba(19, 46, 53, 0.84), rgba(105, 129, 141, 0.32));
+  border-color: rgba(105, 129, 141, 0.35);
 }
 
 body.theme-dark .dashboard-hero,
@@ -1127,17 +1142,117 @@ body.theme-dark .memorial-detail__hero {
 .dashboard-hero__content,
 .clinic-hero__content,
 .memorial-hero__content,
-.memorial-detail__content {
+.memorial-detail__content,
+.about-hero__text {
   display: grid;
   gap: 20px;
+}
+
+.about-details {
+  display: grid;
+  gap: 32px;
+}
+
+.about-details__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.about-details__card {
+  display: grid;
+  gap: 12px;
+  padding: 28px;
+  border-radius: var(--radius-medium);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(35, 83, 71, 0.15);
+  box-shadow: 0 24px 48px -36px rgba(11, 43, 38, 0.35);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.about-details__card:hover,
+.about-details__card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 36px 64px -40px rgba(11, 43, 38, 0.4);
+}
+
+.about-details__card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+}
+
+.about-details__card p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(22, 56, 50, 0.8);
+}
+
+body.theme-dark .about-details__card {
+  background: rgba(19, 46, 53, 0.72);
+  border-color: rgba(105, 129, 141, 0.2);
+  box-shadow: 0 24px 48px -36px rgba(13, 31, 35, 0.55);
+}
+
+body.theme-dark .about-details__card p {
+  color: rgba(175, 179, 183, 0.85);
 }
 
 .dashboard-hero__content h1,
 .clinic-hero__content h1,
 .memorial-hero__content h1,
-.memorial-detail__content h1 {
+.memorial-detail__content h1,
+.about-hero__text h1 {
   font-family: var(--font-serif);
   font-size: clamp(2rem, 3.4vw, 2.8rem);
+}
+
+.about-hero__text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.about-hero__quote {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: var(--color-base);
+}
+
+body.theme-dark .about-hero__quote {
+  color: rgba(175, 179, 183, 0.9);
+}
+
+.about-hero__image {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  filter: saturate(105%);
+}
+
+.about-hero__image img {
+  width: 100%;
+  max-width: 520px;
+  border-radius: calc(var(--radius-large) - 6px);
+  transform: translate3d(0, var(--parallax-offset, 0px), 0);
+  transition: transform 0.6s ease;
+  filter: drop-shadow(0 30px 60px rgba(11, 43, 38, 0.25));
+  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.95) 65%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.95) 65%, rgba(0, 0, 0, 0) 100%);
+}
+
+body.theme-dark .about-hero__image img {
+  filter: drop-shadow(0 30px 60px rgba(11, 43, 38, 0.35));
+}
+
+.about-hero__caption {
+  margin-top: 16px;
+  font-size: 0.92rem;
+  color: rgba(22, 56, 50, 0.72);
+}
+
+body.theme-dark .about-hero__caption {
+  color: rgba(175, 179, 183, 0.75);
 }
 
 .dashboard-hero__card {
@@ -1766,9 +1881,18 @@ body.theme-dark .toast {
   .dashboard-hero,
   .clinic-hero,
   .memorial-hero,
-  .memorial-detail__hero {
+  .memorial-detail__hero,
+  .about-hero {
     grid-template-columns: 1fr;
     padding: 40px;
+  }
+
+  .about-hero__image {
+    justify-self: center;
+  }
+
+  .about-details__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-hero__card {
@@ -1854,7 +1978,8 @@ body.theme-dark .toast {
   .dashboard-main,
   .clinic-main,
   .memorial-main,
-  .memorial-detail {
+  .memorial-detail,
+  .about-main {
     gap: 48px;
     margin-top: 48px;
   }
@@ -1862,8 +1987,22 @@ body.theme-dark .toast {
   .dashboard-hero,
   .clinic-hero,
   .memorial-hero,
-  .memorial-detail__hero {
+  .memorial-detail__hero,
+  .about-hero {
     padding: 32px;
+  }
+
+  .about-details__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero__text p {
+    font-size: 1rem;
+  }
+
+  .about-hero__text,
+  .about-hero__caption {
+    text-align: center;
   }
 
   .dashboard-card,

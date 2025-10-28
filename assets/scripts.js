@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const languageLabel = languageMenu ? languageMenu.querySelector('[data-language-label]') : null;
   const languageOptions = languageMenu ? Array.from(languageMenu.querySelectorAll('.language-menu__option')) : [];
   const revealElements = document.querySelectorAll('.reveal');
+  const parallaxItems = document.querySelectorAll('[data-parallax]');
   const contactForm = document.querySelector('[data-form="contact"]');
   const registerForm = document.querySelector('[data-form="register"]');
   const loginForm = document.querySelector('[data-form="login"]');
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'meta.dashboardTitle': 'Aura Memoria — Personal cabinet',
       'meta.clinicTitle': 'Aura Memoria — Veterinary center',
       'meta.memorialTitle': 'Aura Memoria — Memorial park',
+      'meta.aboutTitle': 'Aura Memoria — About us',
       "meta.memorialLunaTitle": "Aura Memoria — Luna's story",
       "meta.memorialMiroTitle": "Aura Memoria — Miro's story",
       "meta.memorialAriaTitle": "Aura Memoria — Aria's song",
@@ -44,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Home',
       'nav.services': 'Services',
       'nav.memory': 'Memory',
-      'nav.contact': 'Contact',
+      'nav.about': 'About',
       'hero.title': 'Where care and memory live side by side.',
       'hero.subtitle': 'Aura Memoria unites veterinary care, love, and everlasting remembrance in harmony with nature and light.',
       'hero.primaryCta': 'Book an Appointment',
@@ -71,6 +73,26 @@ document.addEventListener('DOMContentLoaded', () => {
       'stories.card3.title': 'Tea at Dusk',
       'stories.card3.copy': 'Weekly gatherings blending mindfulness, art therapy, and quiet moments with friends.',
       'stories.card.button': 'Coming soon',
+      'about.kicker': 'About Aura Memoria',
+      'about.title': 'A sanctuary shaped by light, care, and memory',
+      'about.body1':
+        'Aura Memoria was created as a single home where veterinary expertise, remembrance rituals, and tranquil green spaces meet without boundaries.',
+      'about.body2':
+        'Every material, scent, and sound is chosen to soften transitions for families and companions, guiding them from attentive treatment to tender celebration.',
+      'about.quote': '“We create a space where light, care, and memory unite as one.”',
+      'about.imageCaption': 'Reception lounge welcoming guests to Aura Memoria',
+      'about.imageAlt': 'Aura Memoria reception hall with sculpted desk and golden logo',
+      'about.details.kicker': 'Our atmosphere',
+      'about.details.title': 'What greets you when you arrive',
+      'about.details.item1.title': 'Serene welcome',
+      'about.details.item1.copy':
+        'Concierge hosts offer herbal infusions, warm lighting, and gentle music to settle every heartbeat.',
+      'about.details.item2.title': 'Connected guidance',
+      'about.details.item2.copy':
+        'Veterinary caretakers and memorial keepers coordinate each step so no moment feels rushed or alone.',
+      'about.details.item3.title': 'Living memories',
+      'about.details.item3.copy':
+        'Indoor gardens, story alcoves, and digital archives invite families to return, remember, and continue traditions.',
       'contact.kicker': 'Connect',
       'contact.title': 'We are here to listen and to help',
       'contact.visit.title': 'Visit',
@@ -261,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'meta.dashboardTitle': 'Aura Memoria — Личный кабинет',
       'meta.clinicTitle': 'Aura Memoria — Ветеринарный центр',
       'meta.memorialTitle': 'Aura Memoria — Мемориальный парк',
+      'meta.aboutTitle': 'Aura Memoria — О нас',
       'meta.memorialLunaTitle': 'Aura Memoria — История Луны',
       'meta.memorialMiroTitle': 'Aura Memoria — История Миро',
       'meta.memorialAriaTitle': 'Aura Memoria — Песнь Арии',
@@ -273,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Главная',
       'nav.services': 'Услуги',
       'nav.memory': 'Память',
-      'nav.contact': 'Контакты',
+      'nav.about': 'О нас',
       'hero.title': 'Где забота и память живут рядом.',
       'hero.subtitle': 'Aura Memoria объединяет ветеринарную помощь, любовь и вечную память в гармонии с природой и светом.',
       'hero.primaryCta': 'Записаться на приём',
@@ -300,6 +323,26 @@ document.addEventListener('DOMContentLoaded', () => {
       'stories.card3.title': 'Чай на закате',
       'stories.card3.copy': 'Еженедельные встречи, сочетающие осознанность, арт-терапию и тихое общение.',
       'stories.card.button': 'Скоро',
+      'about.kicker': 'Об Aura Memoria',
+      'about.title': 'Пространство света, заботы и памяти',
+      'about.body1':
+        'Aura Memoria родилась как единый дом, где ветеринарная забота, ритуалы памяти и зелёные прогулочные зоны существуют без границ.',
+      'about.body2':
+        'Каждый материал, аромат и звук призваны мягко вести семьи и их компаньонов от внимательного лечения к тёплым воспоминаниям.',
+      'about.quote': '«Мы создаём пространство, где свет, забота и память соединяются в одном месте.»',
+      'about.imageCaption': 'Зона ресепшен Aura Memoria приветствует гостей',
+      'about.imageAlt': 'Ресепшен Aura Memoria с мягким светом и золотым логотипом',
+      'about.details.kicker': 'Наша атмосфера',
+      'about.details.title': 'Что встречает вас при входе',
+      'about.details.item1.title': 'Тихое приветствие',
+      'about.details.item1.copy':
+        'Консьерж предлагает травяные настои, мягкий свет и спокойную музыку, чтобы унять любое волнение.',
+      'about.details.item2.title': 'Согласованное сопровождение',
+      'about.details.item2.copy':
+        'Ветеринарные специалисты и хранители памяти координируют каждый шаг, чтобы ни один момент не казался поспешным.',
+      'about.details.item3.title': 'Живые воспоминания',
+      'about.details.item3.copy':
+        'Сады, комнаты историй и цифровой архив приглашают семьи возвращаться и продолжать традиции.',
       'contact.kicker': 'Связаться',
       'contact.title': 'Мы здесь, чтобы слушать и помогать',
       'contact.visit.title': 'Приходите',
@@ -490,6 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'meta.dashboardTitle': 'Aura Memoria — Kişisel alan',
       'meta.clinicTitle': 'Aura Memoria — Veteriner merkezi',
       'meta.memorialTitle': 'Aura Memoria — Anı parkı',
+      'meta.aboutTitle': 'Aura Memoria — Hakkımızda',
       "meta.memorialLunaTitle": "Aura Memoria — Luna'nın hikayesi",
       "meta.memorialMiroTitle": "Aura Memoria — Miro'nun hikayesi",
       "meta.memorialAriaTitle": "Aura Memoria — Aria'nın şarkısı",
@@ -502,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Ana sayfa',
       'nav.services': 'Hizmetler',
       'nav.memory': 'Hatıra',
-      'nav.contact': 'İletişim',
+      'nav.about': 'Hakkımızda',
       'hero.title': 'Şefkat ve anı yan yana yaşatıyoruz.',
       'hero.subtitle': 'Aura Memoria veteriner bakımı, sevgiyi ve sonsuz hatırayı doğa ve ışıkla uyum içinde bir araya getirir.',
       'hero.primaryCta': 'Randevu al',
@@ -529,6 +573,26 @@ document.addEventListener('DOMContentLoaded', () => {
       'stories.card3.title': 'Alacakaranlıkta çay',
       'stories.card3.copy': 'Farkındalık, sanat terapisi ve sakin paylaşımları buluşturan haftalık buluşmalar.',
       'stories.card.button': 'Yakında',
+      'about.kicker': 'Aura Memoria hakkında',
+      'about.title': 'Işığın, şefkatin ve anının buluştuğu sığınak',
+      'about.body1':
+        'Aura Memoria, veteriner uzmanlığının, anma ritüellerinin ve huzurlu yeşil alanların sınır olmadan buluştuğu tek bir yuva olarak tasarlandı.',
+      'about.body2':
+        'Her malzeme, koku ve ses aileleri ve dostlarını özenli tedaviden şefkatli kutlama anlarına yumuşakça taşımak için seçildi.',
+      'about.quote': '“Işığın, şefkatin ve anının tek bir yerde buluştuğu bir alan yaratıyoruz.”',
+      'about.imageCaption': 'Aura Memoria resepsiyon salonu misafirleri karşılıyor',
+      'about.imageAlt': 'Yumuşak ışıklı Aura Memoria resepsiyon alanı ve altın logo',
+      'about.details.kicker': 'Atmosferimiz',
+      'about.details.title': 'Kapıdan içeri adım attığınızda sizi karşılayanlar',
+      'about.details.item1.title': 'Sakin karşılama',
+      'about.details.item1.copy':
+        'Karşılayıcılarımız bitki çayları, sıcak aydınlatma ve yumuşak melodilerle her kalbi sakinleştirir.',
+      'about.details.item2.title': 'Birlikte rehberlik',
+      'about.details.item2.copy':
+        'Veteriner ekipleri ve anı rehberleri her adımı koordine eder, böylece hiçbir an telaşlı ya da yalnız hissettirmez.',
+      'about.details.item3.title': 'Yaşayan anılar',
+      'about.details.item3.copy':
+        'İç bahçeler, hikâye köşeleri ve dijital arşiv aileleri geri dönmeye ve gelenekleri sürdürmeye davet eder.',
       'contact.kicker': 'Bağlanın',
       'contact.title': 'Dinlemek ve destek olmak için buradayız',
       'contact.visit.title': 'Ziyaret edin',
@@ -719,6 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'meta.dashboardTitle': 'Aura Memoria – Persönlicher Bereich',
       'meta.clinicTitle': 'Aura Memoria – Tierärztliches Zentrum',
       'meta.memorialTitle': 'Aura Memoria – Gedenkpark',
+      'meta.aboutTitle': 'Aura Memoria – Über uns',
       'meta.memorialLunaTitle': 'Aura Memoria – Lunas Geschichte',
       'meta.memorialMiroTitle': 'Aura Memoria – Miros Geschichte',
       'meta.memorialAriaTitle': 'Aura Memoria – Arias Lied',
@@ -731,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.home': 'Startseite',
       'nav.services': 'Leistungen',
       'nav.memory': 'Erinnerung',
-      'nav.contact': 'Kontakt',
+      'nav.about': 'Über uns',
       'hero.title': 'Wo Fürsorge und Erinnerung Seite an Seite leben.',
       'hero.subtitle': 'Aura Memoria vereint Tiermedizin, Liebe und ewiges Gedenken im Einklang mit Natur und Licht.',
       'hero.primaryCta': 'Termin buchen',
@@ -758,6 +823,26 @@ document.addEventListener('DOMContentLoaded', () => {
       'stories.card3.title': 'Tee in der Dämmerung',
       'stories.card3.copy': 'Wöchentliche Treffen, die Achtsamkeit, Kunsttherapie und stille Momente mit Freunden verbinden.',
       'stories.card.button': 'Demnächst',
+      'about.kicker': 'Über Aura Memoria',
+      'about.title': 'Ein Refugium aus Licht, Fürsorge und Erinnerung',
+      'about.body1':
+        'Aura Memoria entstand als ein Zuhause, in dem tierärztliche Kompetenz, Abschiedsrituale und ruhige Grünflächen grenzenlos ineinandergreifen.',
+      'about.body2':
+        'Jedes Material, jeder Duft und jeder Klang wurde gewählt, um Familien und Begleiter sanft von achtsamer Behandlung zu liebevollen Erinnerungen zu führen.',
+      'about.quote': '„Wir schaffen einen Ort, an dem Licht, Fürsorge und Erinnerung eins werden.“',
+      'about.imageCaption': 'Empfangsbereich von Aura Memoria heißt Gäste willkommen',
+      'about.imageAlt': 'Empfang von Aura Memoria mit goldenem Logo und sanftem Licht',
+      'about.details.kicker': 'Unsere Atmosphäre',
+      'about.details.title': 'Das erwartet Sie beim Ankommen',
+      'about.details.item1.title': 'Sanfter Empfang',
+      'about.details.item1.copy':
+        'Gastgeber reichen Kräutertee, warmes Licht und leise Musik, damit jeder Herzschlag zur Ruhe kommt.',
+      'about.details.item2.title': 'Verbundenes Begleiten',
+      'about.details.item2.copy':
+        'Tierärztliche Betreuer und Erinnerungshüter stimmen jeden Schritt ab, damit kein Moment gehetzt oder einsam wirkt.',
+      'about.details.item3.title': 'Lebendige Erinnerungen',
+      'about.details.item3.copy':
+        'Innengärten, Erzähl-Nischen und digitale Archive laden Familien ein, zurückzukehren, zu erinnern und Rituale weiterzuführen.',
       'contact.kicker': 'Kontakt',
       'contact.title': 'Wir sind da, um zuzuhören und zu helfen',
       'contact.visit.title': 'Besuchen',
@@ -955,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dashboard: 'meta.dashboardTitle',
     clinic: 'meta.clinicTitle',
     memorial: 'meta.memorialTitle',
+    about: 'meta.aboutTitle',
     'memorial-luna': 'meta.memorialLunaTitle',
     'memorial-miro': 'meta.memorialMiroTitle',
     'memorial-aria': 'meta.memorialAriaTitle',
@@ -1150,6 +1236,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const translation = dictionary[key];
       if (typeof translation === 'undefined') return;
       element.setAttribute('placeholder', translation);
+    });
+
+    document.querySelectorAll('[data-i18n-alt]').forEach((element) => {
+      const key = element.dataset.i18nAlt;
+      if (!key) return;
+      const translation = dictionary[key];
+      if (typeof translation === 'undefined') return;
+      element.setAttribute('alt', translation);
     });
 
     document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
@@ -1454,6 +1548,37 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  if (parallaxItems.length) {
+    let parallaxFrame = null;
+
+    const runParallax = () => {
+      parallaxItems.forEach((item) => {
+        const speed = parseFloat(item.dataset.parallaxSpeed || '0.25');
+        const rect = item.getBoundingClientRect();
+        const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
+        const translate = -(offset * speed);
+        item.style.setProperty('--parallax-offset', `${translate}px`);
+      });
+    };
+
+    const queueParallax = () => {
+      if (parallaxFrame !== null) return;
+      parallaxFrame = window.requestAnimationFrame(() => {
+        runParallax();
+        parallaxFrame = null;
+      });
+    };
+
+    parallaxItems.forEach((item) => {
+      item.style.willChange = 'transform';
+      item.style.setProperty('--parallax-offset', '0px');
+    });
+
+    queueParallax();
+    window.addEventListener('scroll', queueParallax, { passive: true });
+    window.addEventListener('resize', queueParallax);
+  }
 
   const observer = new IntersectionObserver(
     (entries) => {
