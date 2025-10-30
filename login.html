@@ -23,6 +23,8 @@
       </a>
       <nav class="site-nav site-nav--compact" aria-label="Main navigation">
         <a href="index.html" data-i18n="header.home">Home</a>
+        <a href="memorial.html" data-i18n="nav.memory">Memory</a>
+        <a href="about.html" data-i18n="nav.about">About</a>
       </nav>
       <div class="header-controls">
         <div class="language-menu" data-language-menu>
@@ -98,9 +100,20 @@
           href="dashboard.html"
           data-i18n="header.dashboard"
           data-auth-visible="signed-in"
+          data-role-visible="user"
           hidden
         >
           Personal cabinet
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="admin.html"
+          data-i18n="header.adminPanel"
+          data-auth-visible="signed-in"
+          data-role-visible="admin"
+          hidden
+        >
+          Admin panel
         </a>
         <button
           class="header-link header-link--muted"
@@ -125,15 +138,15 @@
         </header>
         <form class="auth-card__form" data-form="login" novalidate>
           <div class="form-group">
-            <label for="login-email" data-i18n="login.emailLabel">Email</label>
+            <label for="login-username" data-i18n="login.loginLabel">Login</label>
             <input
-              id="login-email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              placeholder="you@example.com"
+              id="login-username"
+              name="login"
+              type="text"
+              autocomplete="username"
+              placeholder="aurora"
               required
-              data-i18n-placeholder="login.emailPlaceholder"
+              data-i18n-placeholder="login.loginPlaceholder"
             />
           </div>
           <div class="form-group">
@@ -161,11 +174,21 @@
     </main>
 
     <footer class="site-footer site-footer--simple reveal">
-      <div class="footer-brand">
-        <span class="logo-title">Aura Memoria</span>
+      <div class="site-footer__inner">
+        <div class="footer-brand">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="index.html" data-i18n="header.home">Home</a>
+          <a href="memorial.html" data-i18n="nav.memory">Memory</a>
+          <a href="about.html" data-i18n="nav.about">About</a>
+        </nav>
+        <div class="footer-meta">
+          <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+          <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+        </div>
       </div>
-      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
-      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
     </footer>
   </div>
 

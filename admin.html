@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aura Memoria — About us</title>
+  <title>Aura Memoria — Admin panel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -12,7 +12,7 @@
   />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
-<body class="theme-light" data-page="about">
+<body class="theme-light" data-page="admin">
   <div class="page-wrap">
     <header class="site-header reveal" id="top">
       <a class="logo-group" href="index.html" aria-label="Aura Memoria home">
@@ -42,50 +42,22 @@
           </button>
           <ul class="language-menu__list" role="menu" hidden>
             <li>
-              <button
-                type="button"
-                role="menuitemradio"
-                aria-checked="false"
-                class="language-menu__option"
-                data-lang="en"
-                data-label="EN"
-              >
+              <button type="button" role="menuitemradio" aria-checked="false" class="language-menu__option" data-lang="en" data-label="EN">
                 English
               </button>
             </li>
             <li>
-              <button
-                type="button"
-                role="menuitemradio"
-                aria-checked="false"
-                class="language-menu__option"
-                data-lang="ru"
-                data-label="RU"
-              >
+              <button type="button" role="menuitemradio" aria-checked="false" class="language-menu__option" data-lang="ru" data-label="RU">
                 Русский
               </button>
             </li>
             <li>
-              <button
-                type="button"
-                role="menuitemradio"
-                aria-checked="false"
-                class="language-menu__option"
-                data-lang="tr"
-                data-label="TR"
-              >
+              <button type="button" role="menuitemradio" aria-checked="false" class="language-menu__option" data-lang="tr" data-label="TR">
                 Türkçe
               </button>
             </li>
             <li>
-              <button
-                type="button"
-                role="menuitemradio"
-                aria-checked="false"
-                class="language-menu__option"
-                data-lang="de"
-                data-label="DE"
-              >
+              <button type="button" role="menuitemradio" aria-checked="false" class="language-menu__option" data-lang="de" data-label="DE">
                 Deutsch
               </button>
             </li>
@@ -136,60 +108,70 @@
       </div>
     </header>
 
-    <main class="about-main">
-      <section class="about-hero reveal" aria-labelledby="about-title">
-        <div class="about-hero__text">
-          <span class="section-kicker" data-i18n="about.kicker">About Aura Memoria</span>
-          <h1 id="about-title" data-i18n="about.title">A sanctuary shaped by light, care, and memory</h1>
-          <p data-i18n="about.body1">
-            Aura Memoria was created as a single home where veterinary expertise, remembrance rituals, and tranquil green spaces
-            meet without boundaries.
+    <main class="admin-main">
+      <section class="admin-hero reveal" aria-labelledby="admin-title">
+        <div>
+          <span class="section-kicker" data-i18n="admin.kicker">Administrator</span>
+          <h1 id="admin-title" data-i18n="admin.title">Management panel</h1>
+          <p data-i18n="admin.subtitle">
+            Review every guest appointment, confirm serene visits, and keep the schedule flowing gently.
           </p>
-          <p data-i18n="about.body2">
-            Every material, scent, and sound is chosen to soften transitions for families and companions, guiding them from
-            attentive treatment to tender celebration.
-          </p>
-          <blockquote class="about-hero__quote" data-i18n="about.quote">
-            “We create a space where light, care, and memory unite as one.”
-          </blockquote>
         </div>
-        <figure class="about-hero__image" data-parallax data-parallax-speed="0.2">
-          <img
-            src="https://i.imgur.com/S1QPHlL.png"
-            alt="Aura Memoria reception hall with sculpted desk and golden logo"
-            data-i18n-alt="about.imageAlt"
-            loading="lazy"
-          />
-          <figcaption class="about-hero__caption" data-i18n="about.imageCaption">
-            Reception lounge welcoming guests to Aura Memoria
-          </figcaption>
-        </figure>
       </section>
 
-      <section class="about-details reveal" aria-labelledby="about-details-title">
-        <header class="section-header">
-          <span class="section-kicker" data-i18n="about.details.kicker">Our atmosphere</span>
-          <h2 id="about-details-title" data-i18n="about.details.title">What greets you when you arrive</h2>
-        </header>
-        <div class="about-details__grid">
-          <article class="about-details__card">
-            <h3 data-i18n="about.details.item1.title">Serene welcome</h3>
-            <p data-i18n="about.details.item1.copy">
-              Concierge hosts offer herbal infusions, warm lighting, and gentle music to settle every heartbeat.
-            </p>
-          </article>
-          <article class="about-details__card">
-            <h3 data-i18n="about.details.item2.title">Connected guidance</h3>
-            <p data-i18n="about.details.item2.copy">
-              Veterinary caretakers and memorial keepers coordinate each step so no moment feels rushed or alone.
-            </p>
-          </article>
-          <article class="about-details__card">
-            <h3 data-i18n="about.details.item3.title">Living memories</h3>
-            <p data-i18n="about.details.item3.copy">
-              Indoor gardens, story alcoves, and digital archives invite families to return, remember, and continue traditions.
-            </p>
-          </article>
+      <section class="admin-controls reveal" aria-label="Appointment controls">
+        <div class="admin-control">
+          <label for="admin-filter-status" data-i18n="admin.filter.status">Filter by status</label>
+          <select id="admin-filter-status" data-admin-filter-status>
+            <option value="all" data-i18n="admin.filter.statusAll">All statuses</option>
+            <option value="pending" data-i18n="admin.filter.statusPending">Awaiting confirmation</option>
+            <option value="confirmed" data-i18n="admin.filter.statusConfirmed">Confirmed</option>
+            <option value="cancelled" data-i18n="admin.filter.statusCancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="admin-control">
+          <label for="admin-filter-user" data-i18n="admin.filter.user">Filter by guest</label>
+          <select id="admin-filter-user" data-admin-filter-user>
+            <option value="all" data-i18n="admin.filter.userAll">All guests</option>
+          </select>
+        </div>
+        <div class="admin-control">
+          <label for="admin-filter-date" data-i18n="admin.filter.date">Filter by date</label>
+          <input id="admin-filter-date" type="date" data-admin-filter-date />
+        </div>
+        <div class="admin-control">
+          <label for="admin-sort" data-i18n="admin.sort.label">Sort by</label>
+          <select id="admin-sort" data-admin-sort>
+            <option value="dateAsc" data-i18n="admin.sort.dateAsc">Date — oldest first</option>
+            <option value="dateDesc" data-i18n="admin.sort.dateDesc">Date — newest first</option>
+            <option value="status" data-i18n="admin.sort.status">Status</option>
+            <option value="guest" data-i18n="admin.sort.guest">Guest name</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="admin-table-section reveal" aria-labelledby="admin-table-title">
+        <div class="admin-table__header">
+          <h2 id="admin-table-title" data-i18n="admin.table.title">Guest appointments</h2>
+          <p data-i18n="admin.table.subtitle">Confirm, reschedule, or cancel with a gentle touch.</p>
+        </div>
+        <div class="admin-table__wrapper">
+          <table class="admin-table" data-admin-table>
+            <thead>
+              <tr>
+                <th data-i18n="admin.table.guest">Guest</th>
+                <th data-i18n="admin.table.service">Service</th>
+                <th data-i18n="admin.table.datetime">Date & time</th>
+                <th data-i18n="admin.table.status">Status</th>
+                <th data-i18n="admin.table.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody data-admin-table-body>
+              <tr data-admin-empty>
+                <td colspan="5" data-i18n="admin.table.empty">No appointments yet.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </main>

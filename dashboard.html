@@ -108,9 +108,20 @@
           href="dashboard.html"
           data-i18n="header.dashboard"
           data-auth-visible="signed-in"
+          data-role-visible="user"
           hidden
         >
           Personal cabinet
+        </a>
+        <a
+          class="btn btn--header btn--outline"
+          href="admin.html"
+          data-i18n="header.adminPanel"
+          data-auth-visible="signed-in"
+          data-role-visible="admin"
+          hidden
+        >
+          Admin panel
         </a>
         <button
           class="header-link header-link--muted"
@@ -152,10 +163,14 @@
       <section class="dashboard-grid reveal" aria-labelledby="history-title">
         <article class="dashboard-card dashboard-card--profile">
           <h2 class="dashboard-card__title" data-i18n="dashboard.profile.title">Guest profile</h2>
-          <dl class="dashboard-card__list">
+          <dl class="dashboard-card__list dashboard-card__list--grid">
             <div>
-              <dt data-i18n="dashboard.profile.name">Name</dt>
-              <dd data-user-name></dd>
+              <dt data-i18n="dashboard.profile.firstName">First name</dt>
+              <dd data-user-first></dd>
+            </div>
+            <div>
+              <dt data-i18n="dashboard.profile.lastName">Last name</dt>
+              <dd data-user-last></dd>
             </div>
             <div>
               <dt data-i18n="dashboard.profile.memberSince">Member since</dt>
@@ -214,12 +229,48 @@
     </main>
 
     <footer class="site-footer reveal">
-      <div class="footer-brand">
-        <span class="logo-title">Aura Memoria</span>
+      <div class="site-footer__inner">
+        <div class="footer-brand">
+          <span class="logo-title">Aura Memoria</span>
+          <span class="logo-subtitle" data-i18n="header.tagline">Care • Memory • Nature</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="index.html#services" data-i18n="nav.services">Services</a>
+          <a href="memorial.html" data-i18n="nav.memory">Memory</a>
+          <a href="about.html" data-i18n="nav.about">About</a>
+        </nav>
+        <div class="footer-meta">
+          <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
+          <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+        </div>
       </div>
-      <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
-      <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
     </footer>
+  </div>
+
+  <div class="appointments-modal" data-appointments-modal hidden>
+    <div class="appointments-modal__backdrop" data-appointments-close></div>
+    <div class="appointments-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="appointments-title">
+      <header class="appointments-modal__header">
+        <div>
+          <h2 id="appointments-title" data-i18n="dashboard.appointments.title">Your appointments</h2>
+          <p data-i18n="dashboard.appointments.subtitle">Manage every visit with gentle adjustments.</p>
+        </div>
+        <button
+          class="appointments-modal__close"
+          type="button"
+          data-appointments-close
+          aria-label="Close"
+          data-i18n-aria-label="dashboard.appointments.close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+      <div class="appointments-modal__body" data-appointments-list>
+        <p class="appointments-modal__empty" data-appointments-empty data-i18n="dashboard.appointments.empty">
+          No appointments yet. Book a serene visit to see it here.
+        </p>
+      </div>
+    </div>
   </div>
 
   <script src="assets/scripts.js" defer></script>

@@ -22,8 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookingOpeners = document.querySelectorAll('[data-booking-open]');
   const bookingClosers = document.querySelectorAll('[data-booking-close]');
   const authElements = document.querySelectorAll('[data-auth-visible]');
+  const roleElements = document.querySelectorAll('[data-role-visible]');
   const logoutButtons = document.querySelectorAll('[data-action="logout"]');
+  const appointmentsModal = document.querySelector('[data-appointments-modal]');
+  const appointmentsList = appointmentsModal ? appointmentsModal.querySelector('[data-appointments-list]') : null;
+  const appointmentsEmptyState = appointmentsModal ? appointmentsModal.querySelector('[data-appointments-empty]') : null;
+  const appointmentsCloseButtons = appointmentsModal
+    ? Array.from(appointmentsModal.querySelectorAll('[data-appointments-close]'))
+    : [];
+  const adminFilterStatus = document.querySelector('[data-admin-filter-status]');
+  const adminFilterUser = document.querySelector('[data-admin-filter-user]');
+  const adminFilterDate = document.querySelector('[data-admin-filter-date]');
+  const adminSort = document.querySelector('[data-admin-sort]');
+  const adminTableBody = document.querySelector('[data-admin-table-body]');
+  const adminEmptyRow = document.querySelector('[data-admin-empty]');
   const page = document.body.dataset.page || 'home';
+
+  const ADMIN_LOGIN = 'admin';
+  const ADMIN_PASSWORD = 'admin';
+  const STATUS_PENDING = 'pending';
+  const STATUS_CONFIRMED = 'confirmed';
+  const STATUS_CANCELLED = 'cancelled';
+  let activeBookingService = 'clinic';
 
   const translations = {
     en: {
@@ -41,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.login': 'Sign in',
       'header.register': 'Create account',
       'header.dashboard': 'Personal cabinet',
+      'header.adminPanel': 'Admin panel',
       'header.logout': 'Sign out',
       'header.languageToggle': 'Select language',
       'header.home': 'Home',
@@ -114,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'footer.backToTop': 'Back to top',
       'login.title': 'Sign in to Aura Memoria',
       'login.subtitle': 'Continue supporting your companions and families with compassion and calm.',
-      'login.emailLabel': 'Email',
-      'login.emailPlaceholder': 'you@example.com',
+      'login.loginLabel': 'Login',
+      'login.loginPlaceholder': 'aurora',
       'login.passwordLabel': 'Password',
       'login.passwordPlaceholder': 'Enter your password',
       'login.submit': 'Sign in',
@@ -124,12 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'login.switchLink': 'Create one',
       'register.title': 'Create your Aura Memoria account',
       'register.subtitle': 'Join our community to book visits, plan memorials, and share stories of cherished companions.',
-      'register.nameLabel': 'Full name',
-      'register.namePlaceholder': 'Alexei Petrov',
-      'register.emailLabel': 'Email',
-      'register.emailPlaceholder': 'you@example.com',
-      'register.phoneLabel': 'Phone (optional)',
-      'register.phonePlaceholder': '+7 999 000 00 00',
+      'register.firstNameLabel': 'First name',
+      'register.firstNamePlaceholder': 'Alexei',
+      'register.lastNameLabel': 'Last name',
+      'register.lastNamePlaceholder': 'Petrov',
+      'register.loginLabel': 'Login',
+      'register.loginPlaceholder': 'aurora',
       'register.passwordLabel': 'Create password',
       'register.passwordPlaceholder': 'Create a password',
       'register.confirmLabel': 'Confirm password',
@@ -145,13 +166,35 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.nextVisit.manage': 'Manage appointments',
       'dashboard.nextVisit.none': 'No visit scheduled yet — choose your moment on the clinic page.',
       'dashboard.profile.title': 'Guest profile',
-      'dashboard.profile.name': 'Name',
+      'dashboard.profile.firstName': 'First name',
+      'dashboard.profile.lastName': 'Last name',
       'dashboard.profile.memberSince': 'Member since',
       'dashboard.profile.favoriteDrink': 'Tea ritual',
       'dashboard.profile.favoriteDrinkValue': 'Golden chamomile with sage honey',
       'dashboard.profile.preferredDoctor': 'Preferred doctor',
       'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
       'dashboard.profile.edit': 'Update preferences',
+      'dashboard.appointments.title': 'Your appointments',
+      'dashboard.appointments.subtitle': 'Manage every visit with gentle adjustments.',
+      'dashboard.appointments.close': 'Close appointment list',
+      'dashboard.appointments.empty': 'No appointments yet. Book a serene visit to see it here.',
+      'dashboard.appointments.editDate': 'Adjust date',
+      'dashboard.appointments.editTime': 'Adjust time',
+      'dashboard.appointments.save': 'Save changes',
+      'dashboard.appointments.delete': 'Cancel appointment',
+      'dashboard.appointments.deleteConfirm': 'Are you sure you want to cancel this appointment?',
+      'appointments.status.pending': 'Awaiting confirmation',
+      'appointments.status.confirmed': 'Confirmed',
+      'appointments.status.cancelled': 'Cancelled',
+      'appointments.service.clinic': 'Veterinary center',
+      'appointments.service.memorial': 'Memorial consultation',
+      'appointments.service.recreation': 'Recreation visit',
+      'dashboard.appointments.save': 'Save changes',
+      'dashboard.appointments.delete': 'Remove booking',
+      'dashboard.appointments.confirmDelete': 'Cancel this appointment?',
+      'dashboard.appointments.status.pending': 'Awaiting confirmation',
+      'dashboard.appointments.status.confirmed': 'Confirmed',
+      'dashboard.appointments.status.cancelled': 'Cancelled',
       'dashboard.history.title': 'Visit history',
       'dashboard.history.item1.title': 'Wellness examination',
       'dashboard.history.item1.note': 'Gentle check-in, holistic aromatherapy, and updated health plan.',
@@ -164,6 +207,36 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Bring your companion’s favorite blanket for each visit to anchor them in comfort.',
       'dashboard.insights.item3': 'Write a short gratitude note after each walk to keep your shared memories glowing.',
       'dashboard.insights.cta': 'Download tailored plan',
+      'admin.kicker': 'Administrator',
+      'admin.title': 'Management panel',
+      'admin.subtitle': 'Review every guest appointment, confirm serene visits, and keep the schedule flowing gently.',
+      'admin.filter.status': 'Filter by status',
+      'admin.filter.statusAll': 'All statuses',
+      'admin.filter.statusPending': 'Awaiting confirmation',
+      'admin.filter.statusConfirmed': 'Confirmed',
+      'admin.filter.statusCancelled': 'Cancelled',
+      'admin.filter.user': 'Filter by guest',
+      'admin.filter.userAll': 'All guests',
+      'admin.filter.date': 'Filter by date',
+      'admin.sort.label': 'Sort by',
+      'admin.sort.dateAsc': 'Date — oldest first',
+      'admin.sort.dateDesc': 'Date — newest first',
+      'admin.sort.status': 'Status',
+      'admin.sort.guest': 'Guest name',
+      'admin.table.title': 'Guest appointments',
+      'admin.table.subtitle': 'Confirm, reschedule, or cancel with a gentle touch.',
+      'admin.table.guest': 'Guest',
+      'admin.table.service': 'Service',
+      'admin.table.datetime': 'Date & time',
+      'admin.table.status': 'Status',
+      'admin.table.actions': 'Actions',
+      'admin.actions.confirm': 'Confirm',
+      'admin.actions.pending': 'Mark pending',
+      'admin.actions.cancel': 'Cancel',
+      'admin.actions.save': 'Save date & time',
+      'admin.actions.delete': 'Delete',
+      'admin.actions.deleteConfirm': 'Remove this appointment from the schedule?',
+      'admin.table.empty': 'No appointments yet.',
       'clinic.kicker': 'Veterinary center',
       'clinic.title': 'Gentle medicine surrounded by light',
       'clinic.subtitle': 'Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.',
@@ -266,15 +339,22 @@ document.addEventListener('DOMContentLoaded', () => {
       'memorial.aria.gallery2': 'Family listening to her twilight aria',
       'memorial.aria.gallery3': 'Lantern release echoing her final song',
       'toast.register.success': 'Account created — welcome to Aura Memoria.',
-      'toast.register.exists': 'An account with that email already exists.',
+      'toast.register.loginExists': 'That login is already in use.',
+      'toast.register.loginShort': 'Login must be at least 3 characters.',
       'toast.register.mismatch': 'Passwords do not match — please try again.',
       'toast.login.success': 'Welcome back. Your memories await.',
-      'toast.login.error': 'We could not find that email and password combination.',
+      'toast.login.error': 'We could not find that login and password combination.',
       'toast.logout.success': 'You have signed out. Our lantern will await your return.',
       'toast.contact.success': 'Message sent with warmth. We will reach out shortly.',
       'toast.booking.success': 'Your visit request has been received. Expect a confirmation soon.',
+      'toast.booking.userOnly': 'Guest accounts may book visits. Please sign in with your Aura Memoria profile.',
+      'toast.appointment.updated': 'Appointment updated with care.',
+      'toast.appointment.deleted': 'Appointment removed.',
+      'toast.appointment.confirmed': 'Appointment confirmed.',
+      'toast.appointment.pending': 'Appointment marked as awaiting confirmation.',
+      'toast.appointment.cancelled': 'Appointment cancelled.',
       'toast.auth.required': 'Please sign in to continue this journey.',
-      'toast.manageAppointments': 'Our concierge will be in touch soon to adjust your visit.',
+      'toast.auth.adminOnly': 'Administrator access required.',
     },
     ru: {
       'meta.homeTitle': 'Aura Memoria — Где забота и память живут рядом',
@@ -291,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.login': 'Войти',
       'header.register': 'Создать аккаунт',
       'header.dashboard': 'Личный кабинет',
+      'header.adminPanel': 'Панель управления',
       'header.logout': 'Выйти',
       'header.languageToggle': 'Выбрать язык',
       'header.home': 'Главная',
@@ -364,8 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'footer.backToTop': 'Наверх',
       'login.title': 'Войдите в Aura Memoria',
       'login.subtitle': 'Продолжайте поддерживать питомцев и семьи с теплом и спокойствием.',
-      'login.emailLabel': 'Электронная почта',
-      'login.emailPlaceholder': 'name@example.com',
+      'login.loginLabel': 'Логин',
+      'login.loginPlaceholder': 'aurora',
       'login.passwordLabel': 'Пароль',
       'login.passwordPlaceholder': 'Введите пароль',
       'login.submit': 'Войти',
@@ -374,12 +455,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'login.switchLink': 'Зарегистрироваться',
       'register.title': 'Создайте аккаунт Aura Memoria',
       'register.subtitle': 'Присоединяйтесь, чтобы записываться на приём, планировать церемонии и делиться историями о любимцах.',
-      'register.nameLabel': 'Полное имя',
-      'register.namePlaceholder': 'Алексей Петров',
-      'register.emailLabel': 'Электронная почта',
-      'register.emailPlaceholder': 'name@example.com',
-      'register.phoneLabel': 'Телефон (необязательно)',
-      'register.phonePlaceholder': '+7 999 000 00 00',
+      'register.firstNameLabel': 'Имя',
+      'register.firstNamePlaceholder': 'Алексей',
+      'register.lastNameLabel': 'Фамилия',
+      'register.lastNamePlaceholder': 'Петров',
+      'register.loginLabel': 'Логин',
+      'register.loginPlaceholder': 'aurora',
       'register.passwordLabel': 'Создайте пароль',
       'register.passwordPlaceholder': 'Придумайте пароль',
       'register.confirmLabel': 'Повторите пароль',
@@ -395,13 +476,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.nextVisit.manage': 'Управлять записями',
       'dashboard.nextVisit.none': 'Визит ещё не назначен — выберите удобное время на странице центра.',
       'dashboard.profile.title': 'Профиль гостя',
-      'dashboard.profile.name': 'Имя',
+      'dashboard.profile.firstName': 'Имя',
+      'dashboard.profile.lastName': 'Фамилия',
       'dashboard.profile.memberSince': 'С нами с',
       'dashboard.profile.favoriteDrink': 'Чайный ритуал',
       'dashboard.profile.favoriteDrinkValue': 'Золотая ромашка с шалфейным мёдом',
       'dashboard.profile.preferredDoctor': 'Любимый доктор',
       'dashboard.profile.preferredDoctorValue': 'Др. Елизавета Серин',
       'dashboard.profile.edit': 'Обновить предпочтения',
+      'dashboard.appointments.title': 'Ваши записи',
+      'dashboard.appointments.subtitle': 'Управляйте каждой записью мягко и спокойно.',
+      'dashboard.appointments.close': 'Закрыть список записей',
+      'dashboard.appointments.empty': 'Записей пока нет. Забронируйте визит, и он появится здесь.',
+      'dashboard.appointments.editDate': 'Изменить дату',
+      'dashboard.appointments.editTime': 'Изменить время',
+      'dashboard.appointments.save': 'Сохранить изменения',
+      'dashboard.appointments.delete': 'Отменить запись',
+      'dashboard.appointments.deleteConfirm': 'Вы уверены, что хотите отменить эту запись?',
+      'appointments.status.pending': 'В ожидании подтверждения',
+      'appointments.status.confirmed': 'Подтверждена',
+      'appointments.status.cancelled': 'Отменена',
+      'appointments.service.clinic': 'Ветеринарный центр',
+      'appointments.service.memorial': 'Консультация в мемориальном парке',
+      'appointments.service.recreation': 'Прогулка в зелёной зоне',
       'dashboard.history.title': 'История посещений',
       'dashboard.history.item1.title': 'Профилактический осмотр',
       'dashboard.history.item1.note': 'Нежный приём, ароматерапия и обновлённый план здоровья.',
@@ -414,6 +511,36 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Приносите любимый плед питомца, чтобы ему было спокойнее.',
       'dashboard.insights.item3': 'Пишите благодарность после каждой прогулки, чтобы память сияла.',
       'dashboard.insights.cta': 'Скачать персональный план',
+      'admin.kicker': 'Администратор',
+      'admin.title': 'Панель управления',
+      'admin.subtitle': 'Просматривайте записи гостей, подтверждайте визиты и поддерживайте плавный график.',
+      'admin.filter.status': 'Фильтр по статусу',
+      'admin.filter.statusAll': 'Все статусы',
+      'admin.filter.statusPending': 'Ожидает подтверждения',
+      'admin.filter.statusConfirmed': 'Подтверждено',
+      'admin.filter.statusCancelled': 'Отменено',
+      'admin.filter.user': 'Фильтр по гостю',
+      'admin.filter.userAll': 'Все гости',
+      'admin.filter.date': 'Фильтр по дате',
+      'admin.sort.label': 'Сортировка',
+      'admin.sort.dateAsc': 'Дата — сначала ранние',
+      'admin.sort.dateDesc': 'Дата — сначала поздние',
+      'admin.sort.status': 'Статус',
+      'admin.sort.guest': 'Имя гостя',
+      'admin.table.title': 'Записи гостей',
+      'admin.table.subtitle': 'Подтверждайте, переносите или отменяйте бережно.',
+      'admin.table.guest': 'Гость',
+      'admin.table.service': 'Услуга',
+      'admin.table.datetime': 'Дата и время',
+      'admin.table.status': 'Статус',
+      'admin.table.actions': 'Действия',
+      'admin.actions.confirm': 'Подтвердить',
+      'admin.actions.pending': 'Отметить как ожидающую',
+      'admin.actions.cancel': 'Отменить',
+      'admin.actions.save': 'Сохранить дату и время',
+      'admin.actions.delete': 'Удалить',
+      'admin.actions.deleteConfirm': 'Удалить эту запись из расписания?',
+      'admin.table.empty': 'Записей пока нет.',
       'clinic.kicker': 'Ветеринарный центр',
       'clinic.title': 'Нежная медицина в окружении света',
       'clinic.subtitle': 'Медицинское крыло Aura Memoria сочетает технологии и ритуалы спа, чтобы каждый визит был спокойным.',
@@ -516,15 +643,22 @@ document.addEventListener('DOMContentLoaded', () => {
       'memorial.aria.gallery2': 'Семья слушает её сумеречную арию',
       'memorial.aria.gallery3': 'Запуск фонарей в честь её последней песни',
       'toast.register.success': 'Аккаунт создан — добро пожаловать в Aura Memoria.',
-      'toast.register.exists': 'Аккаунт с такой почтой уже существует.',
+      'toast.register.loginExists': 'Такой логин уже используется.',
+      'toast.register.loginShort': 'Логин должен быть не короче 3 символов.',
       'toast.register.mismatch': 'Пароли не совпадают — попробуйте ещё раз.',
       'toast.login.success': 'Рады видеть вас снова. Воспоминания ждут.',
-      'toast.login.error': 'Не удалось найти такую пару почты и пароля.',
+      'toast.login.error': 'Не удалось найти такую пару логина и пароля.',
       'toast.logout.success': 'Вы вышли. Светильник будет ждать вашего возвращения.',
       'toast.contact.success': 'Сообщение отправлено с теплом. Мы свяжемся в ближайшее время.',
       'toast.booking.success': 'Запрос на визит получен. Ждите подтверждение.',
+      'toast.booking.userOnly': 'Записываются только гостевые аккаунты. Войдите в личный кабинет.',
+      'toast.appointment.updated': 'Запись обновлена бережно.',
+      'toast.appointment.deleted': 'Запись удалена.',
+      'toast.appointment.confirmed': 'Запись подтверждена.',
+      'toast.appointment.pending': 'Запись отмечена как ожидающая.',
+      'toast.appointment.cancelled': 'Запись отменена.',
       'toast.auth.required': 'Пожалуйста, войдите, чтобы продолжить путь.',
-      'toast.manageAppointments': 'Наш консьерж скоро свяжется, чтобы скорректировать визит.',
+      'toast.auth.adminOnly': 'Требуется доступ администратора.',
     },
     tr: {
       'meta.homeTitle': 'Aura Memoria — Şefkat ve anı yan yana yaşatıyoruz',
@@ -541,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.login': 'Giriş yap',
       'header.register': 'Hesap oluştur',
       'header.dashboard': 'Kişisel alan',
+      'header.adminPanel': 'Yönetim paneli',
       'header.logout': 'Çıkış yap',
       'header.languageToggle': 'Dili seçin',
       'header.home': 'Ana sayfa',
@@ -614,8 +749,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'footer.backToTop': 'Başa dön',
       'login.title': 'Aura Memoria hesabınıza giriş yapın',
       'login.subtitle': 'Evcil dostlara ve ailelere şefkat ve huzurla eşlik etmeye devam edin.',
-      'login.emailLabel': 'E-posta',
-      'login.emailPlaceholder': 'ornek@example.com',
+      'login.loginLabel': 'Kullanıcı adı',
+      'login.loginPlaceholder': 'aurora',
       'login.passwordLabel': 'Parola',
       'login.passwordPlaceholder': 'Parolanızı girin',
       'login.submit': 'Giriş yap',
@@ -624,12 +759,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'login.switchLink': 'Oluşturun',
       'register.title': 'Aura Memoria hesabınızı oluşturun',
       'register.subtitle': 'Randevu almak, anma törenleri planlamak ve sevgili dostların hikayelerini paylaşmak için aramıza katılın.',
-      'register.nameLabel': 'Tam adınız',
-      'register.namePlaceholder': 'Ahmet Yılmaz',
-      'register.emailLabel': 'E-posta',
-      'register.emailPlaceholder': 'ornek@example.com',
-      'register.phoneLabel': 'Telefon (isteğe bağlı)',
-      'register.phonePlaceholder': '+90 555 000 00 00',
+      'register.firstNameLabel': 'Ad',
+      'register.firstNamePlaceholder': 'Ahmet',
+      'register.lastNameLabel': 'Soyad',
+      'register.lastNamePlaceholder': 'Yılmaz',
+      'register.loginLabel': 'Kullanıcı adı',
+      'register.loginPlaceholder': 'aurora',
       'register.passwordLabel': 'Parola oluşturun',
       'register.passwordPlaceholder': 'Bir parola oluşturun',
       'register.confirmLabel': 'Parolayı doğrulayın',
@@ -645,13 +780,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.nextVisit.manage': 'Randevuları yönet',
       'dashboard.nextVisit.none': 'Henüz bir ziyaret planlanmadı — klinik sayfasından zaman seçebilirsiniz.',
       'dashboard.profile.title': 'Misafir profili',
-      'dashboard.profile.name': 'İsim',
+      'dashboard.profile.firstName': 'Ad',
+      'dashboard.profile.lastName': 'Soyad',
       'dashboard.profile.memberSince': 'Bizimle',
       'dashboard.profile.favoriteDrink': 'Çay ritüeli',
       'dashboard.profile.favoriteDrinkValue': 'Adaçaylı altın papatya',
       'dashboard.profile.preferredDoctor': 'Tercih edilen doktor',
       'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
       'dashboard.profile.edit': 'Tercihleri güncelle',
+      'dashboard.appointments.title': 'Randevularınız',
+      'dashboard.appointments.subtitle': 'Her ziyareti nazik dokunuşlarla yönetin.',
+      'dashboard.appointments.close': 'Randevu listesini kapat',
+      'dashboard.appointments.empty': 'Henüz randevu yok. Yeni bir ziyaret ayarladığınızda burada görünecek.',
+      'dashboard.appointments.editDate': 'Tarihi güncelle',
+      'dashboard.appointments.editTime': 'Saati güncelle',
+      'dashboard.appointments.save': 'Değişiklikleri kaydet',
+      'dashboard.appointments.delete': 'Randevuyu iptal et',
+      'dashboard.appointments.deleteConfirm': 'Bu randevuyu iptal etmek istediğinize emin misiniz?',
+      'appointments.status.pending': 'Onay bekliyor',
+      'appointments.status.confirmed': 'Onaylandı',
+      'appointments.status.cancelled': 'İptal edildi',
+      'appointments.service.clinic': 'Veteriner merkezi',
+      'appointments.service.memorial': 'Anı parkı danışmanlığı',
+      'appointments.service.recreation': 'Yeşil alan ziyareti',
       'dashboard.history.title': 'Ziyaret geçmişi',
       'dashboard.history.item1.title': 'Sağlık kontrolü',
       'dashboard.history.item1.note': 'Nazik karşılama, aromaterapi ve güncellenen sağlık planı.',
@@ -664,6 +815,36 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Her ziyarette dostunuzun en sevdiği battaniyeyi getirin.',
       'dashboard.insights.item3': 'Her yürüyüşten sonra kısa bir şükran notu yazın.',
       'dashboard.insights.cta': 'Kişisel planı indir',
+      'admin.kicker': 'Yönetici',
+      'admin.title': 'Yönetim paneli',
+      'admin.subtitle': 'Tüm misafir randevularını inceleyin, nazikçe onaylayın ve programın akışını koruyun.',
+      'admin.filter.status': 'Duruma göre filtrele',
+      'admin.filter.statusAll': 'Tüm durumlar',
+      'admin.filter.statusPending': 'Onay bekliyor',
+      'admin.filter.statusConfirmed': 'Onaylandı',
+      'admin.filter.statusCancelled': 'İptal edildi',
+      'admin.filter.user': 'Misafire göre filtrele',
+      'admin.filter.userAll': 'Tüm misafirler',
+      'admin.filter.date': 'Tarihe göre filtrele',
+      'admin.sort.label': 'Sırala',
+      'admin.sort.dateAsc': 'Tarih — eskiden yeniye',
+      'admin.sort.dateDesc': 'Tarih — yeniden eskiye',
+      'admin.sort.status': 'Durum',
+      'admin.sort.guest': 'Misafir adı',
+      'admin.table.title': 'Misafir randevuları',
+      'admin.table.subtitle': 'Nazik dokunuşlarla onaylayın, yeniden planlayın veya iptal edin.',
+      'admin.table.guest': 'Misafir',
+      'admin.table.service': 'Hizmet',
+      'admin.table.datetime': 'Tarih ve saat',
+      'admin.table.status': 'Durum',
+      'admin.table.actions': 'İşlemler',
+      'admin.actions.confirm': 'Onayla',
+      'admin.actions.pending': 'Beklemede işaretle',
+      'admin.actions.cancel': 'İptal et',
+      'admin.actions.save': 'Tarih ve saati kaydet',
+      'admin.actions.delete': 'Sil',
+      'admin.actions.deleteConfirm': 'Bu randevuyu programdan kaldırmak istiyor musunuz?',
+      'admin.table.empty': 'Henüz randevu yok.',
       'clinic.kicker': 'Veteriner merkezi',
       'clinic.title': 'Işıkla çevrili nazik tıp',
       'clinic.subtitle': 'Aura Memoria\'nın tıbbi kanadı modern teşhisi spa benzeri ritüellerle birleştirir.',
@@ -766,15 +947,22 @@ document.addEventListener('DOMContentLoaded', () => {
       'memorial.aria.gallery2': 'Ailenin alacakaranlık aryasını dinlemesi',
       'memorial.aria.gallery3': 'Son şarkısını yansıtan fener bırakma',
       'toast.register.success': 'Hesabınız oluşturuldu — Aura Memoria\'ya hoş geldiniz.',
-      'toast.register.exists': 'Bu e-posta ile bir hesap zaten var.',
+      'toast.register.loginExists': 'Bu kullanıcı adı zaten kullanılıyor.',
+      'toast.register.loginShort': 'Kullanıcı adı en az 3 karakter olmalı.',
       'toast.register.mismatch': 'Parolalar eşleşmiyor — lütfen tekrar deneyin.',
       'toast.login.success': 'Tekrar hoş geldiniz. Anılarınız sizi bekliyor.',
-      'toast.login.error': 'Bu e-posta ve parola eşleşmesi bulunamadı.',
+      'toast.login.error': 'Bu kullanıcı adı ve parola eşleşmesi bulunamadı.',
       'toast.logout.success': 'Çıkış yaptınız. Fenerimiz dönüşünüzü bekleyecek.',
       'toast.contact.success': 'Mesajınız sıcaklıkla gönderildi. Kısa süre içinde size ulaşacağız.',
       'toast.booking.success': 'Randevu talebiniz alındı. Yakında onay gelecektir.',
+      'toast.booking.userOnly': 'Randevu oluşturmak için misafir hesabınızla giriş yapın.',
+      'toast.appointment.updated': 'Randevu nazikçe güncellendi.',
+      'toast.appointment.deleted': 'Randevu silindi.',
+      'toast.appointment.confirmed': 'Randevu onaylandı.',
+      'toast.appointment.pending': 'Randevu onay bekliyor olarak işaretlendi.',
+      'toast.appointment.cancelled': 'Randevu iptal edildi.',
       'toast.auth.required': 'Lütfen devam etmek için giriş yapın.',
-      'toast.manageAppointments': 'Konuk görevlilerimiz ziyaretinizi ayarlamak için sizinle iletişime geçecek.',
+      'toast.auth.adminOnly': 'Bu işlem için yönetici erişimi gerekiyor.',
     },
     de: {
       'meta.homeTitle': 'Aura Memoria – Wo Fürsorge und Erinnerung Seite an Seite leben',
@@ -791,6 +979,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.login': 'Anmelden',
       'header.register': 'Konto erstellen',
       'header.dashboard': 'Persönlicher Bereich',
+      'header.adminPanel': 'Verwaltungspanel',
       'header.logout': 'Abmelden',
       'header.languageToggle': 'Sprache auswählen',
       'header.home': 'Startseite',
@@ -864,8 +1053,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'footer.backToTop': 'Nach oben',
       'login.title': 'Melden Sie sich bei Aura Memoria an',
       'login.subtitle': 'Begleiten Sie weiterhin Tiere und Familien mit Mitgefühl und Ruhe.',
-      'login.emailLabel': 'E-Mail',
-      'login.emailPlaceholder': 'name@example.com',
+      'login.loginLabel': 'Login',
+      'login.loginPlaceholder': 'aurora',
       'login.passwordLabel': 'Passwort',
       'login.passwordPlaceholder': 'Geben Sie Ihr Passwort ein',
       'login.submit': 'Anmelden',
@@ -874,12 +1063,12 @@ document.addEventListener('DOMContentLoaded', () => {
       'login.switchLink': 'Jetzt erstellen',
       'register.title': 'Erstellen Sie Ihr Aura Memoria Konto',
       'register.subtitle': 'Nehmen Sie teil, um Termine zu buchen, Erinnerungsfeiern zu planen und Geschichten über geliebte Begleiter zu teilen.',
-      'register.nameLabel': 'Vollständiger Name',
-      'register.namePlaceholder': 'Anna Schneider',
-      'register.emailLabel': 'E-Mail',
-      'register.emailPlaceholder': 'name@example.com',
-      'register.phoneLabel': 'Telefon (optional)',
-      'register.phonePlaceholder': '+49 170 000 00 00',
+      'register.firstNameLabel': 'Vorname',
+      'register.firstNamePlaceholder': 'Anna',
+      'register.lastNameLabel': 'Nachname',
+      'register.lastNamePlaceholder': 'Schneider',
+      'register.loginLabel': 'Login',
+      'register.loginPlaceholder': 'aurora',
       'register.passwordLabel': 'Passwort erstellen',
       'register.passwordPlaceholder': 'Passwort erstellen',
       'register.confirmLabel': 'Passwort bestätigen',
@@ -895,13 +1084,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.nextVisit.manage': 'Termine verwalten',
       'dashboard.nextVisit.none': 'Noch kein Termin geplant – wählen Sie Ihre Zeit auf der Klinikseite.',
       'dashboard.profile.title': 'Gästeprofil',
-      'dashboard.profile.name': 'Name',
+      'dashboard.profile.firstName': 'Vorname',
+      'dashboard.profile.lastName': 'Nachname',
       'dashboard.profile.memberSince': 'Mitglied seit',
       'dashboard.profile.favoriteDrink': 'Tee-Ritual',
       'dashboard.profile.favoriteDrinkValue': 'Goldene Kamille mit Salbeihonig',
       'dashboard.profile.preferredDoctor': 'Bevorzugte Ärztin',
       'dashboard.profile.preferredDoctorValue': 'Dr. Elizaveta Serin',
       'dashboard.profile.edit': 'Präferenzen aktualisieren',
+      'dashboard.appointments.title': 'Ihre Termine',
+      'dashboard.appointments.subtitle': 'Verwalten Sie jede Buchung mit sanften Anpassungen.',
+      'dashboard.appointments.close': 'Terminliste schließen',
+      'dashboard.appointments.empty': 'Noch keine Termine. Nach der Buchung erscheinen sie hier.',
+      'dashboard.appointments.editDate': 'Datum anpassen',
+      'dashboard.appointments.editTime': 'Uhrzeit anpassen',
+      'dashboard.appointments.save': 'Änderungen speichern',
+      'dashboard.appointments.delete': 'Termin stornieren',
+      'dashboard.appointments.deleteConfirm': 'Möchten Sie diesen Termin wirklich stornieren?',
+      'appointments.status.pending': 'Wartet auf Bestätigung',
+      'appointments.status.confirmed': 'Bestätigt',
+      'appointments.status.cancelled': 'Storniert',
+      'appointments.service.clinic': 'Tierärztliches Zentrum',
+      'appointments.service.memorial': 'Beratung im Gedenkpark',
+      'appointments.service.recreation': 'Besuch im Grüngarten',
       'dashboard.history.title': 'Besuchshistorie',
       'dashboard.history.item1.title': 'Wellness-Untersuchung',
       'dashboard.history.item1.note': 'Sanfter Empfang, Aromatherapie und aktualisierter Gesundheitsplan.',
@@ -914,6 +1119,36 @@ document.addEventListener('DOMContentLoaded', () => {
       'dashboard.insights.item2': 'Bringen Sie für jeden Besuch die Lieblingsdecke Ihres Gefährten mit.',
       'dashboard.insights.item3': 'Schreiben Sie nach jedem Spaziergang einen kurzen Dankbarkeitsgruß.',
       'dashboard.insights.cta': 'Individuellen Plan herunterladen',
+      'admin.kicker': 'Administrator',
+      'admin.title': 'Verwaltungspanel',
+      'admin.subtitle': 'Prüfen Sie alle Gästetermine, bestätigen Sie behutsam und halten Sie den Ablauf im Fluss.',
+      'admin.filter.status': 'Nach Status filtern',
+      'admin.filter.statusAll': 'Alle Status',
+      'admin.filter.statusPending': 'Wartet auf Bestätigung',
+      'admin.filter.statusConfirmed': 'Bestätigt',
+      'admin.filter.statusCancelled': 'Storniert',
+      'admin.filter.user': 'Nach Gast filtern',
+      'admin.filter.userAll': 'Alle Gäste',
+      'admin.filter.date': 'Nach Datum filtern',
+      'admin.sort.label': 'Sortieren nach',
+      'admin.sort.dateAsc': 'Datum – älteste zuerst',
+      'admin.sort.dateDesc': 'Datum – neueste zuerst',
+      'admin.sort.status': 'Status',
+      'admin.sort.guest': 'Gastname',
+      'admin.table.title': 'Gästetermine',
+      'admin.table.subtitle': 'Bestätigen, verschieben oder stornieren Sie mit sanfter Begleitung.',
+      'admin.table.guest': 'Gast',
+      'admin.table.service': 'Leistung',
+      'admin.table.datetime': 'Datum & Uhrzeit',
+      'admin.table.status': 'Status',
+      'admin.table.actions': 'Aktionen',
+      'admin.actions.confirm': 'Bestätigen',
+      'admin.actions.pending': 'Als ausstehend markieren',
+      'admin.actions.cancel': 'Stornieren',
+      'admin.actions.save': 'Datum & Uhrzeit speichern',
+      'admin.actions.delete': 'Löschen',
+      'admin.actions.deleteConfirm': 'Diesen Termin aus dem Plan entfernen?',
+      'admin.table.empty': 'Noch keine Termine.',
       'clinic.kicker': 'Tierärztliches Zentrum',
       'clinic.title': 'Sanfte Medizin im Licht',
       'clinic.subtitle': 'Das medizinische Flügel von Aura Memoria verbindet moderne Diagnostik mit Spa-Ritualen für einen ruhigen Termin.',
@@ -1016,15 +1251,22 @@ document.addEventListener('DOMContentLoaded', () => {
       'memorial.aria.gallery2': 'Familie lauscht ihrer Abend-Arie',
       'memorial.aria.gallery3': 'Laternenzug, der ihr letztes Lied spiegelt',
       'toast.register.success': 'Konto erstellt – willkommen bei Aura Memoria.',
-      'toast.register.exists': 'Für diese E-Mail existiert bereits ein Konto.',
+      'toast.register.loginExists': 'Dieser Login wird bereits verwendet.',
+      'toast.register.loginShort': 'Der Login muss mindestens 3 Zeichen lang sein.',
       'toast.register.mismatch': 'Die Passwörter stimmen nicht überein – bitte erneut versuchen.',
       'toast.login.success': 'Schön, dass Sie wieder da sind. Ihre Erinnerungen warten.',
-      'toast.login.error': 'Diese Kombination aus E-Mail und Passwort wurde nicht gefunden.',
+      'toast.login.error': 'Diese Kombination aus Login und Passwort wurde nicht gefunden.',
       'toast.logout.success': 'Sie haben sich abgemeldet. Unsere Laterne wartet auf Ihre Rückkehr.',
       'toast.contact.success': 'Nachricht warm gesendet. Wir melden uns zeitnah.',
       'toast.booking.success': 'Ihre Terminanfrage ist eingegangen. Eine Bestätigung folgt bald.',
+      'toast.booking.userOnly': 'Bitte melden Sie sich mit einem Gästekonto an, um Termine zu buchen.',
+      'toast.appointment.updated': 'Termin sorgsam aktualisiert.',
+      'toast.appointment.deleted': 'Termin entfernt.',
+      'toast.appointment.confirmed': 'Termin bestätigt.',
+      'toast.appointment.pending': 'Termin als wartend markiert.',
+      'toast.appointment.cancelled': 'Termin storniert.',
       'toast.auth.required': 'Bitte melden Sie sich an, um fortzufahren.',
-      'toast.manageAppointments': 'Unser Concierge wird sich melden, um Ihren Besuch anzupassen.',
+      'toast.auth.adminOnly': 'Administratorzugang erforderlich.',
     },
   };
 
@@ -1032,6 +1274,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentDictionary = translations.en;
   let currentUser = null;
   let hasDashboardWarning = false;
+  let hasAdminWarning = false;
 
   const titleKeyByPage = {
     home: 'meta.homeTitle',
@@ -1079,9 +1322,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3400);
   };
 
+  const createId = () => {
+    if (window.crypto?.randomUUID) {
+      return window.crypto.randomUUID();
+    }
+    return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  };
+
+  const normalizeLogin = (value) => (value || '').toString().trim().toLowerCase();
+
+  const migrateAppointment = (appointment = {}, fallbackService = 'clinic') => {
+    if (!appointment) {
+      return {
+        id: createId(),
+        serviceType: fallbackService,
+        date: '',
+        time: '',
+        status: STATUS_PENDING,
+        guardian: '',
+        contact: '',
+        notes: '',
+        createdAt: new Date().toISOString(),
+      };
+    }
+
+    return {
+      id: appointment.id || createId(),
+      serviceType: appointment.serviceType || fallbackService,
+      date: appointment.date || '',
+      time: appointment.time || '',
+      status: appointment.status || STATUS_PENDING,
+      guardian: appointment.guardian || appointment.name || '',
+      contact: appointment.contact || appointment.phone || '',
+      notes: appointment.notes || '',
+      createdAt: appointment.createdAt || new Date().toISOString(),
+    };
+  };
+
+  const migrateUser = (user) => {
+    if (!user) return null;
+    const trimmedLogin = user.login ? user.login.toString().trim() : '';
+    const fallbackName = user.name ? user.name.toString().trim() : '';
+    const [firstName = '', ...restName] = (user.firstName ? user.firstName : fallbackName).split(' ');
+    const lastName = user.lastName ? user.lastName : restName.join(' ').trim();
+    const appointments = Array.isArray(user.appointments)
+      ? user.appointments.map((appointment) => migrateAppointment(appointment, appointment?.serviceType || 'clinic'))
+      : user.upcomingVisit
+      ? [
+          migrateAppointment(
+            {
+              ...user.upcomingVisit,
+              status: STATUS_PENDING,
+            },
+            'clinic'
+          ),
+        ]
+      : [];
+
+    return {
+      id: user.id || createId(),
+      login: trimmedLogin || (user.email ? user.email.toString().trim() : ''),
+      firstName: user.firstName ? user.firstName.toString().trim() : firstName.trim(),
+      lastName: lastName,
+      password: user.password || '',
+      createdAt: user.createdAt || new Date().toISOString(),
+      appointments,
+      preferences: {
+        teaRitual: user.preferences?.teaRitual || null,
+        favoriteDoctor: user.preferences?.favoriteDoctor || null,
+      },
+    };
+  };
+
   const loadUsers = () => {
     try {
-      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+      const stored = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+      return stored.map((entry) => migrateUser(entry)).filter(Boolean);
     } catch (error) {
       console.warn('Failed to parse saved users', error);
       return [];
@@ -1089,23 +1405,94 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const saveUsers = (users) => {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    const sanitized = users.map((user) => {
+      if (!user) return null;
+      const { role, ...rest } = user;
+      return rest;
+    }).filter(Boolean);
+    localStorage.setItem(USERS_KEY, JSON.stringify(sanitized));
   };
 
-  const normalizeEmail = (email) => (email || '').trim().toLowerCase();
-
-  const findUser = (email) => {
-    const all = loadUsers();
-    const target = normalizeEmail(email);
-    return all.find((user) => normalizeEmail(user.email) === target) || null;
+  const findUser = (login) => {
+    const normalized = normalizeLogin(login);
+    return loadUsers().find((user) => normalizeLogin(user.login) === normalized) || null;
   };
 
-  const getCurrentUserEmail = () => localStorage.getItem(CURRENT_USER_KEY);
-  const setCurrentUserEmail = (email) => localStorage.setItem(CURRENT_USER_KEY, normalizeEmail(email));
-  const clearCurrentUserEmail = () => localStorage.removeItem(CURRENT_USER_KEY);
+  const updateStoredUser = (login, updater) => {
+    const users = loadUsers();
+    const normalized = normalizeLogin(login);
+    const index = users.findIndex((user) => normalizeLogin(user.login) === normalized);
+    if (index === -1) {
+      return null;
+    }
+    const draft = {
+      ...users[index],
+      appointments: Array.isArray(users[index].appointments)
+        ? users[index].appointments.map((appointment) => ({ ...appointment }))
+        : [],
+      preferences: {
+        ...users[index].preferences,
+      },
+    };
+    const nextUser = updater ? updater(draft) || draft : draft;
+    users[index] = nextUser;
+    saveUsers(users);
+    if (currentUser && currentUser.role === 'user' && normalizeLogin(currentUser.login) === normalized) {
+      currentUser = { ...nextUser, role: 'user' };
+    }
+    return nextUser;
+  };
+
+  const getCurrentSession = () => {
+    try {
+      const stored = localStorage.getItem(CURRENT_USER_KEY);
+      if (!stored) return null;
+      if (stored.startsWith('{')) {
+        return JSON.parse(stored);
+      }
+      return {
+        login: stored,
+        role: 'user',
+      };
+    } catch (error) {
+      console.warn('Failed to parse current user session', error);
+      return null;
+    }
+  };
+
+  const setCurrentSession = (session) => {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(session));
+  };
+
+  const clearCurrentSession = () => {
+    localStorage.removeItem(CURRENT_USER_KEY);
+  };
 
   const refreshCurrentUser = () => {
-    currentUser = findUser(getCurrentUserEmail());
+    const session = getCurrentSession();
+    if (!session) {
+      currentUser = null;
+      return currentUser;
+    }
+
+    if (session.role === 'admin') {
+      currentUser = {
+        role: 'admin',
+        login: ADMIN_LOGIN,
+        firstName: 'Administrator',
+        lastName: '',
+      };
+      return currentUser;
+    }
+
+    const storedUser = findUser(session.login);
+    if (!storedUser) {
+      clearCurrentSession();
+      currentUser = null;
+      return currentUser;
+    }
+
+    currentUser = { ...storedUser, role: 'user' };
     return currentUser;
   };
 
@@ -1116,7 +1503,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const shouldShow = (targetState === 'signed-in' && isSignedIn) || (targetState === 'signed-out' && !isSignedIn);
       element.toggleAttribute('hidden', !shouldShow);
     });
+    roleElements.forEach((element) => {
+      const requiredRole = element.dataset.roleVisible;
+      const shouldShowRole = isSignedIn && requiredRole && currentUser?.role === requiredRole;
+      element.toggleAttribute('hidden', !shouldShowRole);
+    });
     document.body.classList.toggle('is-authenticated', isSignedIn);
+    document.body.classList.toggle('is-admin', currentUser?.role === 'admin');
   };
 
   const formatDateForDisplay = (value) => {
@@ -1150,6 +1543,336 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const getTranslation = (key) => {
+    if (currentDictionary && Object.prototype.hasOwnProperty.call(currentDictionary, key)) {
+      return currentDictionary[key];
+    }
+    if (translations.en && Object.prototype.hasOwnProperty.call(translations.en, key)) {
+      return translations.en[key];
+    }
+    return key;
+  };
+
+  const getUserDisplayName = (user) => {
+    if (!user) return '';
+    const parts = [user.firstName, user.lastName].map((part) => (part || '').toString().trim()).filter(Boolean);
+    if (parts.length) {
+      return parts.join(' ');
+    }
+    if (user.login) {
+      return user.login;
+    }
+    return getTranslation('dashboard.profile.title');
+  };
+
+  const getAppointmentStatusLabel = (status) => getTranslation(`appointments.status.${status}`);
+
+  const getAppointmentServiceLabel = (service) => getTranslation(`appointments.service.${service}`);
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case STATUS_CONFIRMED:
+        return 'status-badge status-badge--confirmed';
+      case STATUS_CANCELLED:
+        return 'status-badge status-badge--cancelled';
+      case STATUS_PENDING:
+      default:
+        return 'status-badge status-badge--pending';
+    }
+  };
+
+  const getAppointmentDateValue = (appointment) => {
+    if (!appointment || !appointment.date || !appointment.time) return Number.POSITIVE_INFINITY;
+    const value = new Date(`${appointment.date}T${appointment.time}`);
+    const timestamp = value.getTime();
+    return Number.isNaN(timestamp) ? Number.POSITIVE_INFINITY : timestamp;
+  };
+
+  const pickNextAppointment = (appointments = []) => {
+    const upcoming = appointments
+      .filter((appointment) => appointment && appointment.status !== STATUS_CANCELLED)
+      .filter((appointment) => appointment.date && appointment.time)
+      .map((appointment) => ({
+        ...appointment,
+        __sortValue: getAppointmentDateValue(appointment),
+      }))
+      .filter((appointment) => Number.isFinite(appointment.__sortValue));
+    if (!upcoming.length) return null;
+    upcoming.sort((a, b) => a.__sortValue - b.__sortValue);
+    return upcoming[0];
+  };
+
+  const renderUserAppointments = () => {
+    if (!appointmentsList) return;
+    const wrapper = appointmentsList;
+    const existingItems = wrapper.querySelectorAll('[data-appointment-id]');
+    existingItems.forEach((node) => node.remove());
+
+    const appointments = currentUser?.role === 'user' ? currentUser?.appointments || [] : [];
+
+    if (!appointments.length) {
+      if (appointmentsEmptyState) {
+        appointmentsEmptyState.hidden = false;
+      }
+      return;
+    }
+
+    if (appointmentsEmptyState) {
+      appointmentsEmptyState.hidden = true;
+    }
+
+    appointments
+      .slice()
+      .sort((a, b) => getAppointmentDateValue(a) - getAppointmentDateValue(b))
+      .forEach((appointment) => {
+        const form = document.createElement('form');
+        form.className = 'appointment-item';
+        form.dataset.appointmentId = appointment.id;
+
+        const header = document.createElement('div');
+        header.className = 'appointment-item__header';
+
+        const info = document.createElement('div');
+        const service = document.createElement('p');
+        service.className = 'appointment-item__service';
+        service.textContent = getAppointmentServiceLabel(appointment.serviceType || 'clinic');
+        const datetime = document.createElement('p');
+        datetime.className = 'appointment-item__datetime';
+        datetime.textContent = formatDateTimeForDisplay(appointment.date, appointment.time);
+        info.append(service, datetime);
+
+        const status = document.createElement('span');
+        status.className = getStatusClass(appointment.status || STATUS_PENDING);
+        status.dataset.statusBadge = 'true';
+        status.textContent = getAppointmentStatusLabel(appointment.status || STATUS_PENDING);
+
+        header.append(info, status);
+
+        const fields = document.createElement('div');
+        fields.className = 'appointment-item__fields';
+
+        const dateLabel = document.createElement('label');
+        const dateCaption = document.createElement('span');
+        dateCaption.textContent = getTranslation('dashboard.appointments.editDate');
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.name = 'date';
+        dateInput.required = true;
+        dateInput.value = appointment.date || '';
+        dateLabel.append(dateCaption, dateInput);
+
+        const timeLabel = document.createElement('label');
+        const timeCaption = document.createElement('span');
+        timeCaption.textContent = getTranslation('dashboard.appointments.editTime');
+        const timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.name = 'time';
+        timeInput.required = true;
+        timeInput.value = appointment.time || '';
+        timeLabel.append(timeCaption, timeInput);
+
+        fields.append(dateLabel, timeLabel);
+
+        const actions = document.createElement('div');
+        actions.className = 'appointment-item__actions';
+
+        const saveButton = document.createElement('button');
+        saveButton.className = 'btn btn--ghost';
+        saveButton.type = 'submit';
+        saveButton.textContent = getTranslation('dashboard.appointments.save');
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn--danger';
+        deleteButton.type = 'button';
+        deleteButton.dataset.appointmentDelete = 'true';
+        deleteButton.textContent = getTranslation('dashboard.appointments.delete');
+
+        actions.append(saveButton, deleteButton);
+
+        form.append(header, fields, actions);
+        wrapper.append(form);
+      });
+  };
+
+  const getAllAppointments = () => {
+    const users = loadUsers();
+    return users.flatMap((user) =>
+      (user.appointments || []).map((appointment) => ({
+        user,
+        appointment,
+        login: user.login,
+        normalizedLogin: normalizeLogin(user.login),
+      }))
+    );
+  };
+
+  const hydrateAdminPanel = () => {
+    if (page !== 'admin') return;
+    if (!currentUser || currentUser.role !== 'admin') {
+      return;
+    }
+
+    const appointments = getAllAppointments();
+
+    if (adminFilterUser) {
+      const selectedValue = adminFilterUser.value || 'all';
+      const uniqueUsers = Array.from(
+        new Map(
+          loadUsers().map((user) => [normalizeLogin(user.login), user])
+        ).values()
+      );
+      const fragment = document.createDocumentFragment();
+      const allOption = document.createElement('option');
+      allOption.value = 'all';
+      allOption.textContent = getTranslation('admin.filter.userAll');
+      fragment.append(allOption);
+      uniqueUsers
+        .sort((a, b) => getUserDisplayName(a).localeCompare(getUserDisplayName(b)))
+        .forEach((user) => {
+          const option = document.createElement('option');
+          option.value = normalizeLogin(user.login);
+          option.textContent = getUserDisplayName(user);
+          fragment.append(option);
+        });
+      adminFilterUser.innerHTML = '';
+      adminFilterUser.append(fragment);
+      adminFilterUser.value = selectedValue;
+      if (!adminFilterUser.value) {
+        adminFilterUser.value = 'all';
+      }
+    }
+
+    const statusFilter = adminFilterStatus ? adminFilterStatus.value : 'all';
+    const userFilter = adminFilterUser ? adminFilterUser.value : 'all';
+    const dateFilter = adminFilterDate ? adminFilterDate.value : '';
+    const sortMode = adminSort ? adminSort.value : 'dateAsc';
+
+    const statusRank = {
+      [STATUS_PENDING]: 0,
+      [STATUS_CONFIRMED]: 1,
+      [STATUS_CANCELLED]: 2,
+    };
+
+    const filtered = appointments
+      .filter(({ appointment }) => (statusFilter === 'all' ? true : appointment.status === statusFilter))
+      .filter(({ normalizedLogin }) => (userFilter === 'all' ? true : normalizedLogin === userFilter))
+      .filter(({ appointment }) => (dateFilter ? appointment.date === dateFilter : true))
+      .map((entry) => ({
+        ...entry,
+        sortValue: getAppointmentDateValue(entry.appointment),
+      }));
+
+    filtered.sort((a, b) => {
+      switch (sortMode) {
+        case 'dateDesc':
+          return b.sortValue - a.sortValue;
+        case 'status':
+          return (statusRank[a.appointment.status] || 0) - (statusRank[b.appointment.status] || 0);
+        case 'guest':
+          return getUserDisplayName(a.user).localeCompare(getUserDisplayName(b.user));
+        case 'dateAsc':
+        default:
+          return a.sortValue - b.sortValue;
+      }
+    });
+
+    if (adminTableBody) {
+      adminTableBody.querySelectorAll('[data-admin-row]').forEach((row) => row.remove());
+
+      filtered.forEach(({ user, appointment }) => {
+        const row = document.createElement('tr');
+        row.dataset.adminRow = 'true';
+        row.dataset.appointmentId = appointment.id;
+        row.dataset.userLogin = normalizeLogin(user.login);
+
+        const guestCell = document.createElement('td');
+        const guestName = document.createElement('div');
+        guestName.className = 'admin-table__guest';
+        guestName.textContent = getUserDisplayName(user);
+        const guestLogin = document.createElement('div');
+        guestLogin.className = 'admin-table__guest-login';
+        guestLogin.textContent = `@${user.login}`;
+        guestCell.append(guestName, guestLogin);
+
+        const serviceCell = document.createElement('td');
+        serviceCell.textContent = getAppointmentServiceLabel(appointment.serviceType || 'clinic');
+
+        const datetimeCell = document.createElement('td');
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.value = appointment.date || '';
+        dateInput.dataset.adminDate = 'true';
+        const timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.value = appointment.time || '';
+        timeInput.dataset.adminTime = 'true';
+        datetimeCell.append(dateInput, timeInput);
+
+        const statusCell = document.createElement('td');
+        const statusChip = document.createElement('span');
+        statusChip.className = getStatusClass(appointment.status || STATUS_PENDING);
+        statusChip.textContent = getAppointmentStatusLabel(appointment.status || STATUS_PENDING);
+        statusCell.append(statusChip);
+
+        const actionsCell = document.createElement('td');
+        actionsCell.className = 'admin-table__actions';
+
+        const confirmButton = document.createElement('button');
+        confirmButton.className = 'btn btn--ghost';
+        confirmButton.type = 'button';
+        confirmButton.dataset.adminAction = 'confirm';
+        confirmButton.textContent = getTranslation('admin.actions.confirm');
+
+        const pendingButton = document.createElement('button');
+        pendingButton.className = 'btn btn--ghost';
+        pendingButton.type = 'button';
+        pendingButton.dataset.adminAction = 'pending';
+        pendingButton.textContent = getTranslation('admin.actions.pending');
+
+        const cancelButton = document.createElement('button');
+        cancelButton.className = 'btn btn--ghost';
+        cancelButton.type = 'button';
+        cancelButton.dataset.adminAction = 'cancel';
+        cancelButton.textContent = getTranslation('admin.actions.cancel');
+
+        const saveButton = document.createElement('button');
+        saveButton.className = 'btn btn--ghost';
+        saveButton.type = 'button';
+        saveButton.dataset.adminAction = 'save';
+        saveButton.textContent = getTranslation('admin.actions.save');
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn--danger';
+        deleteButton.type = 'button';
+        deleteButton.dataset.adminAction = 'delete';
+        deleteButton.textContent = getTranslation('admin.actions.delete');
+
+        actionsCell.append(confirmButton, pendingButton, cancelButton, saveButton, deleteButton);
+
+        row.append(guestCell, serviceCell, datetimeCell, statusCell, actionsCell);
+        adminTableBody.append(row);
+      });
+
+      if (adminEmptyRow) {
+        adminEmptyRow.toggleAttribute('hidden', filtered.length > 0);
+      }
+    }
+  };
+
+  const enforceAdminAccess = () => {
+    if (page !== 'admin') return;
+    if (currentUser?.role === 'admin') {
+      hasAdminWarning = false;
+      return;
+    }
+    if (hasAdminWarning) return;
+    hasAdminWarning = true;
+    showToast('toast.auth.adminOnly');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 900);
+  };
+
   const hydrateDashboard = () => {
     if (page !== 'dashboard') return;
     if (!currentUser) {
@@ -1163,30 +1886,52 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    if (currentUser.role !== 'user') {
+      if (!hasDashboardWarning) {
+        hasDashboardWarning = true;
+        showToast('toast.auth.adminOnly');
+        setTimeout(() => {
+          window.location.href = currentUser.role === 'admin' ? 'admin.html' : 'login.html';
+        }, 900);
+      }
+      return;
+    }
+
     const greeting = document.querySelector('[data-user-greeting]');
-    const nameSlots = document.querySelectorAll('[data-user-name]');
+    const firstSlot = document.querySelector('[data-user-first]');
+    const lastSlot = document.querySelector('[data-user-last]');
     const memberSinceSlot = document.querySelector('[data-member-since]');
     const nextVisitSlot = document.querySelector('[data-next-visit]');
 
+    const displayName = getUserDisplayName(currentUser);
     if (greeting && currentDictionary['dashboard.greeting']) {
-      greeting.textContent = currentDictionary['dashboard.greeting'].replace('{name}', currentUser.name || currentUser.email);
+      greeting.textContent = currentDictionary['dashboard.greeting'].replace('{name}', displayName);
     }
 
-    nameSlots.forEach((slot) => {
-      slot.textContent = currentUser.name || currentUser.email;
-    });
+    if (firstSlot) {
+      firstSlot.textContent = (currentUser.firstName || '—').toString();
+    }
+
+    if (lastSlot) {
+      lastSlot.textContent = (currentUser.lastName || '—').toString();
+    }
 
     if (memberSinceSlot) {
       memberSinceSlot.textContent = formatDateForDisplay(currentUser.createdAt || new Date().toISOString());
     }
 
     if (nextVisitSlot) {
-      if (currentUser.upcomingVisit && currentUser.upcomingVisit.date && currentUser.upcomingVisit.time) {
-        nextVisitSlot.textContent = formatDateTimeForDisplay(currentUser.upcomingVisit.date, currentUser.upcomingVisit.time);
+      const upcoming = pickNextAppointment(currentUser.appointments || []);
+      if (upcoming) {
+        const formatted = formatDateTimeForDisplay(upcoming.date, upcoming.time);
+        const statusLabel = getAppointmentStatusLabel(upcoming.status || STATUS_PENDING);
+        nextVisitSlot.textContent = `${formatted} — ${statusLabel}`;
       } else if (currentDictionary['dashboard.nextVisit.none']) {
         nextVisitSlot.textContent = currentDictionary['dashboard.nextVisit.none'];
       }
     }
+
+    renderUserAppointments();
   };
 
   const applyTheme = (theme) => {
@@ -1278,6 +2023,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLanguageLabel(resolvedLang);
     applyLanguageStrings(resolvedLang);
     hydrateDashboard();
+    renderUserAppointments();
+    hydrateAdminPanel();
     return resolvedLang;
   };
 
@@ -1291,9 +2038,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateAuthUI();
   hydrateDashboard();
+  hydrateAdminPanel();
+  enforceAdminAccess();
 
   if (languageList) {
     languageList.hidden = true;
+    languageList.classList.remove('is-visible');
   }
   if (languageToggle) {
     languageToggle.setAttribute('aria-expanded', 'false');
@@ -1303,13 +2053,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const closeLanguageMenu = () => {
     if (!languageMenu) return;
+    if (!isLanguageMenuOpen) return;
     isLanguageMenuOpen = false;
     languageMenu.classList.remove('is-open');
+    languageMenu.classList.add('is-closing');
     if (languageToggle) {
       languageToggle.setAttribute('aria-expanded', 'false');
     }
     if (languageList) {
-      languageList.hidden = true;
+      languageList.classList.remove('is-visible');
+      setTimeout(() => {
+        if (!isLanguageMenuOpen && languageList) {
+          languageList.hidden = true;
+        }
+        languageMenu.classList.remove('is-closing');
+      }, 220);
+    } else {
+      languageMenu.classList.remove('is-closing');
     }
   };
 
@@ -1317,11 +2077,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!languageMenu) return;
     isLanguageMenuOpen = true;
     languageMenu.classList.add('is-open');
+    languageMenu.classList.remove('is-closing');
     if (languageToggle) {
       languageToggle.setAttribute('aria-expanded', 'true');
     }
     if (languageList) {
       languageList.hidden = false;
+      requestAnimationFrame(() => {
+        languageList.classList.add('is-visible');
+      });
     }
   };
 
@@ -1369,10 +2133,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const syncModalState = () => {
+    const bookingOpen = bookingModal && !bookingModal.hasAttribute('hidden');
+    const appointmentsOpen = appointmentsModal && !appointmentsModal.hasAttribute('hidden');
+    if (bookingOpen || appointmentsOpen) {
+      document.body.classList.add('has-modal');
+    } else {
+      document.body.classList.remove('has-modal');
+    }
+  };
+
   const openBookingModal = () => {
     if (!bookingModal) return;
     bookingModal.removeAttribute('hidden');
-    document.body.classList.add('has-modal');
+    syncModalState();
     const focusTarget = bookingModal.querySelector('input, textarea, button');
     if (focusTarget) {
       setTimeout(() => focusTarget.focus(), 50);
@@ -1382,11 +2156,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBookingModal = () => {
     if (!bookingModal) return;
     bookingModal.setAttribute('hidden', '');
-    document.body.classList.remove('has-modal');
+    syncModalState();
+  };
+
+  const openAppointmentsModal = () => {
+    if (!appointmentsModal) return;
+    appointmentsModal.removeAttribute('hidden');
+    renderUserAppointments();
+    syncModalState();
+    const focusTarget = appointmentsModal.querySelector('input, textarea, button');
+    if (focusTarget) {
+      setTimeout(() => focusTarget.focus(), 50);
+    }
+  };
+
+  const closeAppointmentsModal = () => {
+    if (!appointmentsModal) return;
+    appointmentsModal.setAttribute('hidden', '');
+    syncModalState();
   };
 
   const requireAuth = () => {
-    if (currentUser) return true;
+    if (currentUser?.role === 'user') return true;
+    if (currentUser?.role === 'admin') {
+      showToast('toast.booking.userOnly');
+      return false;
+    }
     showToast('toast.auth.required');
     setTimeout(() => {
       window.location.href = 'login.html';
@@ -1400,12 +2195,22 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   bookingOpeners.forEach((button) => {
-    button.addEventListener('click', handleBookingRequest);
+    button.addEventListener('click', () => {
+      const service = button.dataset.bookingService || button.dataset.service || button.dataset.bookingType;
+      activeBookingService = service || activeBookingService || 'clinic';
+      handleBookingRequest();
+    });
   });
 
   bookingClosers.forEach((button) => {
     button.addEventListener('click', closeBookingModal);
   });
+
+  if (appointmentsCloseButtons.length) {
+    appointmentsCloseButtons.forEach((button) => {
+      button.addEventListener('click', closeAppointmentsModal);
+    });
+  }
 
   if (bookingModal) {
     bookingModal.addEventListener('click', (event) => {
@@ -1415,14 +2220,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (appointmentsModal) {
+    appointmentsModal.addEventListener('click', (event) => {
+      if (event.target === appointmentsModal) {
+        closeAppointmentsModal();
+      }
+    });
+  }
+
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && bookingModal && !bookingModal.hasAttribute('hidden')) {
-      closeBookingModal();
+    if (event.key === 'Escape') {
+      if (bookingModal && !bookingModal.hasAttribute('hidden')) {
+        closeBookingModal();
+      }
+      if (appointmentsModal && !appointmentsModal.hasAttribute('hidden')) {
+        closeAppointmentsModal();
+      }
     }
   });
 
   if (manageAppointmentsBtn) {
-    manageAppointmentsBtn.addEventListener('click', handleBookingRequest);
+    manageAppointmentsBtn.addEventListener('click', () => {
+      if (!requireAuth()) return;
+      openAppointmentsModal();
+    });
   }
 
   if (bookingForm) {
@@ -1430,31 +2251,249 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       if (!requireAuth()) return;
       const formData = new FormData(bookingForm);
-      const date = formData.get('date');
-      const time = formData.get('time');
+      const date = (formData.get('date') || '').toString();
+      const time = (formData.get('time') || '').toString();
+      const guardian = (formData.get('guardian') || '').toString();
+      const contact = (formData.get('contact') || '').toString();
+      const notes = (formData.get('notes') || '').toString();
       if (!date || !time) {
         return;
       }
 
-      const users = loadUsers();
-      const normalizedEmail = normalizeEmail(currentUser.email);
-      const index = users.findIndex((user) => normalizeEmail(user.email) === normalizedEmail);
-      if (index !== -1) {
-        users[index] = {
-          ...users[index],
-          upcomingVisit: {
-            date,
-            time,
-          },
-        };
-        saveUsers(users);
-        currentUser = users[index];
+      const loginKey = currentUser?.login || getCurrentSession()?.login;
+      if (!loginKey) {
+        return;
       }
+
+      const newAppointment = {
+        id: createId(),
+        serviceType: activeBookingService || (page === 'clinic' ? 'clinic' : 'memorial'),
+        date,
+        time,
+        guardian,
+        contact,
+        notes,
+        status: STATUS_PENDING,
+        createdAt: new Date().toISOString(),
+      };
+
+      updateStoredUser(loginKey, (user) => {
+        const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+        appointments.push(newAppointment);
+        return {
+          ...user,
+          appointments,
+        };
+      });
 
       bookingForm.reset();
       closeBookingModal();
       hydrateDashboard();
+      hydrateAdminPanel();
       showToast('toast.booking.success');
+    });
+  }
+
+  if (appointmentsList) {
+    appointmentsList.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-appointment-id]');
+      if (!form) return;
+      event.preventDefault();
+      if (!requireAuth()) return;
+      const appointmentId = form.dataset.appointmentId;
+      const dateInput = form.querySelector('input[name="date"]');
+      const timeInput = form.querySelector('input[name="time"]');
+      const date = dateInput?.value || '';
+      const time = timeInput?.value || '';
+      if (!appointmentId || !date || !time) {
+        return;
+      }
+      const loginKey = currentUser?.login || getCurrentSession()?.login;
+      if (!loginKey) return;
+
+      updateStoredUser(loginKey, (user) => {
+        const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+        const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+        if (index === -1) {
+          return user;
+        }
+        appointments[index] = {
+          ...appointments[index],
+          date,
+          time,
+          status: STATUS_PENDING,
+        };
+        return {
+          ...user,
+          appointments,
+        };
+      });
+
+      hydrateDashboard();
+      hydrateAdminPanel();
+      showToast('toast.appointment.updated');
+    });
+
+    appointmentsList.addEventListener('click', (event) => {
+      const deleteButton = event.target.closest('[data-appointment-delete]');
+      if (!deleteButton) return;
+      event.preventDefault();
+      if (!requireAuth()) return;
+      const form = deleteButton.closest('[data-appointment-id]');
+      const appointmentId = form?.dataset.appointmentId;
+      if (!appointmentId) return;
+      const confirmation = window.confirm(getTranslation('dashboard.appointments.deleteConfirm'));
+      if (!confirmation) return;
+      const loginKey = currentUser?.login || getCurrentSession()?.login;
+      if (!loginKey) return;
+
+      updateStoredUser(loginKey, (user) => {
+        const appointments = Array.isArray(user.appointments) ? user.appointments.filter((appointment) => appointment.id !== appointmentId) : [];
+        return {
+          ...user,
+          appointments,
+        };
+      });
+
+      hydrateDashboard();
+      hydrateAdminPanel();
+      showToast('toast.appointment.deleted');
+    });
+  }
+
+  if (adminFilterStatus) {
+    adminFilterStatus.addEventListener('change', hydrateAdminPanel);
+  }
+
+  if (adminFilterUser) {
+    adminFilterUser.addEventListener('change', hydrateAdminPanel);
+  }
+
+  if (adminFilterDate) {
+    adminFilterDate.addEventListener('change', hydrateAdminPanel);
+  }
+
+  if (adminSort) {
+    adminSort.addEventListener('change', hydrateAdminPanel);
+  }
+
+  if (adminTableBody) {
+    adminTableBody.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-admin-action]');
+      if (!button) return;
+      event.preventDefault();
+      if (currentUser?.role !== 'admin') {
+        showToast('toast.auth.adminOnly');
+        return;
+      }
+
+      const action = button.dataset.adminAction;
+      const row = button.closest('tr[data-admin-row]');
+      if (!row) return;
+      const appointmentId = row.dataset.appointmentId;
+      const userLogin = row.dataset.userLogin;
+      if (!appointmentId || !userLogin) return;
+
+      const commitUpdate = (updater, toastKey) => {
+        const updated = updateStoredUser(userLogin, updater);
+        if (!updated) return;
+        hydrateDashboard();
+        renderUserAppointments();
+        hydrateAdminPanel();
+        if (toastKey) {
+          showToast(toastKey);
+        }
+      };
+
+      if (action === 'save') {
+        const dateInput = row.querySelector('[data-admin-date]');
+        const timeInput = row.querySelector('[data-admin-time]');
+        const date = dateInput?.value || '';
+        const time = timeInput?.value || '';
+        if (!date || !time) {
+          return;
+        }
+        commitUpdate((user) => {
+          const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+          const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+          if (index === -1) return user;
+          appointments[index] = {
+            ...appointments[index],
+            date,
+            time,
+          };
+          return {
+            ...user,
+            appointments,
+          };
+        }, 'toast.appointment.updated');
+        return;
+      }
+
+      if (action === 'confirm') {
+        commitUpdate((user) => {
+          const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+          const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+          if (index === -1) return user;
+          appointments[index] = {
+            ...appointments[index],
+            status: STATUS_CONFIRMED,
+          };
+          return {
+            ...user,
+            appointments,
+          };
+        }, 'toast.appointment.confirmed');
+        return;
+      }
+
+      if (action === 'pending') {
+        commitUpdate((user) => {
+          const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+          const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+          if (index === -1) return user;
+          appointments[index] = {
+            ...appointments[index],
+            status: STATUS_PENDING,
+          };
+          return {
+            ...user,
+            appointments,
+          };
+        }, 'toast.appointment.pending');
+        return;
+      }
+
+      if (action === 'cancel') {
+        commitUpdate((user) => {
+          const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+          const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+          if (index === -1) return user;
+          appointments[index] = {
+            ...appointments[index],
+            status: STATUS_CANCELLED,
+          };
+          return {
+            ...user,
+            appointments,
+          };
+        }, 'toast.appointment.cancelled');
+        return;
+      }
+
+      if (action === 'delete') {
+        const confirmation = window.confirm(getTranslation('admin.actions.deleteConfirm'));
+        if (!confirmation) return;
+        commitUpdate((user) => {
+          const appointments = Array.isArray(user.appointments)
+            ? user.appointments.filter((appointment) => appointment.id !== appointmentId)
+            : [];
+          return {
+            ...user,
+            appointments,
+          };
+        }, 'toast.appointment.deleted');
+      }
     });
   }
 
@@ -1470,9 +2509,10 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const data = new FormData(registerForm);
-      const name = (data.get('name') || '').toString().trim();
-      const email = normalizeEmail(data.get('email'));
-      const phone = (data.get('phone') || '').toString().trim();
+      const firstName = (data.get('firstName') || '').toString().trim();
+      const lastName = (data.get('lastName') || '').toString().trim();
+      const loginValue = (data.get('login') || '').toString().trim();
+      const normalizedLogin = normalizeLogin(loginValue);
       const password = (data.get('password') || '').toString();
       const confirm = (data.get('confirm') || '').toString();
 
@@ -1481,29 +2521,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!email || !password) {
+      if (!normalizedLogin || normalizedLogin.length < 3) {
+        showToast('toast.register.loginShort');
         return;
       }
 
-      if (findUser(email)) {
-        showToast('toast.register.exists');
+      if (findUser(normalizedLogin)) {
+        showToast('toast.register.loginExists');
         return;
       }
 
-      const users = loadUsers();
-      users.push({
-        name: name || email,
-        email,
-        phone,
+      const newUser = {
+        id: createId(),
+        login: loginValue,
+        firstName,
+        lastName,
         password,
         createdAt: new Date().toISOString(),
-        upcomingVisit: null,
-      });
+        appointments: [],
+        preferences: {
+          teaRitual: null,
+          favoriteDoctor: null,
+        },
+      };
+
+      const users = loadUsers();
+      users.push(newUser);
       saveUsers(users);
-      showToast('toast.register.success');
+      setCurrentSession({ login: newUser.login, role: 'user' });
+      currentUser = { ...newUser, role: 'user' };
+      hasDashboardWarning = false;
+      hasAdminWarning = false;
       registerForm.reset();
+      updateAuthUI();
+      hydrateDashboard();
+      hydrateAdminPanel();
+      showToast('toast.register.success');
       setTimeout(() => {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
       }, 900);
     });
   }
@@ -1512,19 +2567,43 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const data = new FormData(loginForm);
-      const email = normalizeEmail(data.get('email'));
+      const loginValue = (data.get('login') || '').toString().trim();
+      const normalizedLogin = normalizeLogin(loginValue);
       const password = (data.get('password') || '').toString();
-      const user = findUser(email);
+
+      if (normalizedLogin === normalizeLogin(ADMIN_LOGIN) && password === ADMIN_PASSWORD) {
+        setCurrentSession({ login: ADMIN_LOGIN, role: 'admin' });
+        currentUser = {
+          role: 'admin',
+          login: ADMIN_LOGIN,
+          firstName: 'Administrator',
+          lastName: '',
+        };
+        hasDashboardWarning = false;
+        hasAdminWarning = false;
+        updateAuthUI();
+        hydrateAdminPanel();
+        showToast('toast.login.success');
+        loginForm.reset();
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 900);
+        return;
+      }
+
+      const user = findUser(normalizedLogin);
       if (!user || user.password !== password) {
         showToast('toast.login.error');
         return;
       }
 
-      setCurrentUserEmail(email);
-      currentUser = user;
+      setCurrentSession({ login: user.login, role: 'user' });
+      currentUser = { ...user, role: 'user' };
       hasDashboardWarning = false;
+      hasAdminWarning = false;
       updateAuthUI();
       hydrateDashboard();
+      hydrateAdminPanel();
       showToast('toast.login.success');
       loginForm.reset();
       setTimeout(() => {
@@ -1535,13 +2614,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   logoutButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      clearCurrentUserEmail();
+      clearCurrentSession();
       currentUser = null;
       hasDashboardWarning = false;
+      hasAdminWarning = false;
       updateAuthUI();
       hydrateDashboard();
+      hydrateAdminPanel();
+      renderUserAppointments();
+      closeAppointmentsModal();
+      closeBookingModal();
       showToast('toast.logout.success');
-      if (page === 'dashboard') {
+      if (page === 'dashboard' || page === 'admin') {
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 600);
