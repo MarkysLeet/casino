@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const languageList = languageMenu ? languageMenu.querySelector('.language-menu__list') : null;
   const languageLabel = languageMenu ? languageMenu.querySelector('[data-language-label]') : null;
   const languageOptions = languageMenu ? Array.from(languageMenu.querySelectorAll('.language-menu__option')) : [];
+  const mobileMenu = document.querySelector('[data-mobile-menu]');
+  const mobileMenuToggle = document.querySelector('[data-mobile-menu-toggle]');
+  const mobileMenuCloseButtons = mobileMenu
+    ? Array.from(mobileMenu.querySelectorAll('[data-mobile-menu-close]'))
+    : [];
+  const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('[data-mobile-menu-link]')) : [];
   const revealElements = document.querySelectorAll('.reveal');
   const parallaxItems = document.querySelectorAll('[data-parallax]');
   const contactForm = document.querySelector('[data-form="contact"]');
@@ -61,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   let openAdminActionMenu = null;
   const compactAdminMedia = window.matchMedia('(max-width: 900px)');
+  const mobileMenuDesktopMedia = window.matchMedia('(min-width: 901px)');
+  let mobileMenuHideTimeout = null;
 
   const translations = {
     en: {
@@ -83,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.languageToggle': 'Select language',
       'header.bookAppointment': 'Book a visit',
       'header.home': 'Home',
+      'header.menuOpen': 'Open menu',
+      'header.menuClose': 'Close menu',
       'nav.services': 'Services',
       'nav.memory': 'Memory',
       'nav.about': 'About',
@@ -406,6 +416,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.languageToggle': 'Выбрать язык',
       'header.bookAppointment': 'Записаться на приём',
       'header.home': 'Главная',
+      'header.menuOpen': 'Открыть меню',
+      'header.menuClose': 'Закрыть меню',
       'nav.services': 'Услуги',
       'nav.memory': 'Память',
       'nav.about': 'О нас',
@@ -723,6 +735,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.languageToggle': 'Dili seçin',
       'header.bookAppointment': 'Randevu al',
       'header.home': 'Ana sayfa',
+      'header.menuOpen': 'Menüyü aç',
+      'header.menuClose': 'Menüyü kapat',
       'nav.services': 'Hizmetler',
       'nav.memory': 'Hatıra',
       'nav.about': 'Hakkımızda',
@@ -1040,6 +1054,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.languageToggle': 'Sprache auswählen',
       'header.bookAppointment': 'Termin buchen',
       'header.home': 'Startseite',
+      'header.menuOpen': 'Menü öffnen',
+      'header.menuClose': 'Menü schließen',
       'nav.services': 'Leistungen',
       'nav.memory': 'Erinnerung',
       'nav.about': 'Über uns',
@@ -1399,6 +1415,90 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const normalizeLogin = (value) => (value || '').toString().trim().toLowerCase();
+
+  const isMobileMenuOpen = () => mobileMenu && mobileMenu.classList.contains('is-visible');
+
+  const openMobileMenu = () => {
+    if (!mobileMenu) return;
+    if (mobileMenuHideTimeout) {
+      clearTimeout(mobileMenuHideTimeout);
+      mobileMenuHideTimeout = null;
+    }
+    mobileMenu.hidden = false;
+    requestAnimationFrame(() => {
+      mobileMenu.classList.add('is-visible');
+    });
+    document.body.classList.add('has-open-mobile-menu');
+    if (mobileMenuToggle) {
+      mobileMenuToggle.setAttribute('aria-expanded', 'true');
+    }
+  };
+
+  const closeMobileMenu = ({ returnFocus = false } = {}) => {
+    if (!mobileMenu) return;
+    if (mobileMenuHideTimeout) {
+      clearTimeout(mobileMenuHideTimeout);
+      mobileMenuHideTimeout = null;
+    }
+    mobileMenu.classList.remove('is-visible');
+    document.body.classList.remove('has-open-mobile-menu');
+    if (mobileMenuToggle) {
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    }
+    mobileMenuHideTimeout = window.setTimeout(() => {
+      if (mobileMenu && !mobileMenu.classList.contains('is-visible')) {
+        mobileMenu.hidden = true;
+      }
+      mobileMenuHideTimeout = null;
+    }, 320);
+    if (returnFocus && mobileMenuToggle) {
+      mobileMenuToggle.focus();
+    }
+  };
+
+  const toggleMobileMenu = () => {
+    if (!mobileMenu) return;
+    if (isMobileMenuOpen()) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  };
+
+  if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+  }
+
+  mobileMenuCloseButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const shouldReturnFocus = button.classList.contains('mobile-menu__close');
+      closeMobileMenu({ returnFocus: shouldReturnFocus });
+    });
+  });
+
+  mobileMenuLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
+  });
+
+  if (mobileMenuDesktopMedia) {
+    mobileMenuDesktopMedia.addEventListener('change', (event) => {
+      if (event.matches) {
+        closeMobileMenu();
+        if (mobileMenu) {
+          mobileMenu.hidden = true;
+          mobileMenu.classList.remove('is-visible');
+        }
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isMobileMenuOpen()) {
+      closeMobileMenu({ returnFocus: true });
+    }
+  });
 
   const migrateAppointment = (appointment = {}, fallbackService = 'clinic') => {
     if (!appointment) {
