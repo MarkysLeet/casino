@@ -68,6 +68,13 @@
           <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
         </button>
         <a
+          class="btn btn--header btn--header-cta"
+          href="clinic.html"
+          data-i18n="header.bookAppointment"
+        >
+          Book a visit
+        </a>
+        <a
           class="btn btn--header"
           href="login.html"
           data-i18n="header.login"
@@ -160,6 +167,9 @@
             <thead>
               <tr>
                 <th data-i18n="admin.table.guest">Guest</th>
+                <th data-i18n="admin.table.guardian">Guardian</th>
+                <th data-i18n="admin.table.contact">Contact</th>
+                <th data-i18n="admin.table.notes">Notes</th>
                 <th data-i18n="admin.table.service">Service</th>
                 <th data-i18n="admin.table.datetime">Date & time</th>
                 <th data-i18n="admin.table.status">Status</th>
@@ -168,7 +178,7 @@
             </thead>
             <tbody data-admin-table-body>
               <tr data-admin-empty>
-                <td colspan="5" data-i18n="admin.table.empty">No appointments yet.</td>
+                <td colspan="8" data-i18n="admin.table.empty">No appointments yet.</td>
               </tr>
             </tbody>
           </table>
@@ -189,10 +199,44 @@
         </nav>
         <div class="footer-meta">
           <p data-i18n="footer.copy">© 2025 Aura Memoria. All rights reserved.</p>
-          <a class="footer-link" href="#top" data-i18n="footer.backToTop">Back to top</a>
+          <a class="footer-link" href="#top" data-scroll-top data-i18n="footer.backToTop">Back to top</a>
         </div>
       </div>
     </footer>
+    <div class="admin-reschedule" data-admin-reschedule hidden>
+      <div class="admin-reschedule__backdrop" data-admin-reschedule-backdrop></div>
+      <div class="admin-reschedule__dialog" role="dialog" aria-modal="true" aria-labelledby="admin-reschedule-title">
+        <button
+          type="button"
+          class="admin-reschedule__close"
+          aria-label="Close reschedule dialog"
+          data-i18n-aria-label="admin.reschedule.cancel"
+          data-admin-reschedule-close
+        ></button>
+        <h2 id="admin-reschedule-title" data-i18n="admin.reschedule.title">Adjust appointment</h2>
+        <p class="admin-reschedule__intro" data-i18n="admin.reschedule.subtitle">
+          Update the time and confirm when the guest is ready.
+        </p>
+        <form class="admin-reschedule__form" data-admin-reschedule-form>
+          <div class="form-row">
+            <label class="form-group">
+              <span data-i18n="admin.reschedule.date">New date</span>
+              <input type="date" name="date" required />
+            </label>
+            <label class="form-group">
+              <span data-i18n="admin.reschedule.time">New time</span>
+              <input type="time" name="time" required />
+            </label>
+          </div>
+          <div class="admin-reschedule__actions">
+            <button type="submit" class="btn btn--primary" data-i18n="admin.reschedule.submit">Save changes</button>
+            <button type="button" class="btn btn--ghost" data-admin-reschedule-close data-i18n="admin.reschedule.cancel">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <script src="assets/scripts.js" defer></script>
 </body>

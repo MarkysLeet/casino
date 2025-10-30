@@ -36,6 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminSort = document.querySelector('[data-admin-sort]');
   const adminTableBody = document.querySelector('[data-admin-table-body]');
   const adminEmptyRow = document.querySelector('[data-admin-empty]');
+  const adminRescheduleModal = document.querySelector('[data-admin-reschedule]');
+  const adminRescheduleForm = adminRescheduleModal
+    ? adminRescheduleModal.querySelector('[data-admin-reschedule-form]')
+    : null;
+  const adminRescheduleCloseButtons = adminRescheduleModal
+    ? Array.from(adminRescheduleModal.querySelectorAll('[data-admin-reschedule-close]'))
+    : [];
+  const adminRescheduleBackdrop = adminRescheduleModal
+    ? adminRescheduleModal.querySelector('[data-admin-reschedule-backdrop]')
+    : null;
+  const backToTopLinks = document.querySelectorAll('[data-scroll-top]');
   const page = document.body.dataset.page || 'home';
 
   const ADMIN_LOGIN = 'admin';
@@ -44,6 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const STATUS_CONFIRMED = 'confirmed';
   const STATUS_CANCELLED = 'cancelled';
   let activeBookingService = 'clinic';
+  let adminRescheduleState = {
+    appointmentId: null,
+    userLogin: null,
+  };
+  let openAdminActionMenu = null;
+  const compactAdminMedia = window.matchMedia('(max-width: 900px)');
 
   const translations = {
     en: {
@@ -64,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.adminPanel': 'Admin panel',
       'header.logout': 'Sign out',
       'header.languageToggle': 'Select language',
+      'header.bookAppointment': 'Book a visit',
       'header.home': 'Home',
       'nav.services': 'Services',
       'nav.memory': 'Memory',
@@ -227,16 +245,28 @@ document.addEventListener('DOMContentLoaded', () => {
       'admin.table.subtitle': 'Confirm, reschedule, or cancel with a gentle touch.',
       'admin.table.guest': 'Guest',
       'admin.table.service': 'Service',
+      'admin.table.guardian': 'Guardian',
+      'admin.table.contact': 'Contact',
+      'admin.table.notes': 'Notes',
       'admin.table.datetime': 'Date & time',
       'admin.table.status': 'Status',
       'admin.table.actions': 'Actions',
+      'admin.table.showDetails': 'Show details',
+      'admin.table.hideDetails': 'Hide details',
       'admin.actions.confirm': 'Confirm',
       'admin.actions.pending': 'Mark pending',
       'admin.actions.cancel': 'Cancel',
-      'admin.actions.save': 'Save date & time',
+      'admin.actions.action': 'Action',
+      'admin.actions.reschedule': 'Reschedule',
       'admin.actions.delete': 'Delete',
       'admin.actions.deleteConfirm': 'Remove this appointment from the schedule?',
       'admin.table.empty': 'No appointments yet.',
+      'admin.reschedule.title': 'Adjust appointment',
+      'admin.reschedule.subtitle': 'Update the time and confirm when the guest is ready.',
+      'admin.reschedule.date': 'New date',
+      'admin.reschedule.time': 'New time',
+      'admin.reschedule.submit': 'Save changes',
+      'admin.reschedule.cancel': 'Cancel',
       'clinic.kicker': 'Veterinary center',
       'clinic.title': 'Gentle medicine surrounded by light',
       'clinic.subtitle': 'Aura Memoria’s medical wing unites advanced diagnostics with spa-like rituals to keep every visit serene.',
@@ -374,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.adminPanel': 'Панель управления',
       'header.logout': 'Выйти',
       'header.languageToggle': 'Выбрать язык',
+      'header.bookAppointment': 'Записаться на приём',
       'header.home': 'Главная',
       'nav.services': 'Услуги',
       'nav.memory': 'Память',
@@ -530,17 +561,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'admin.table.title': 'Записи гостей',
       'admin.table.subtitle': 'Подтверждайте, переносите или отменяйте бережно.',
       'admin.table.guest': 'Гость',
+      'admin.table.guardian': 'Хранитель',
+      'admin.table.contact': 'Контакты',
+      'admin.table.notes': 'Заметки',
       'admin.table.service': 'Услуга',
       'admin.table.datetime': 'Дата и время',
       'admin.table.status': 'Статус',
       'admin.table.actions': 'Действия',
+      'admin.table.showDetails': 'Показать детали',
+      'admin.table.hideDetails': 'Скрыть детали',
       'admin.actions.confirm': 'Подтвердить',
       'admin.actions.pending': 'Отметить как ожидающую',
       'admin.actions.cancel': 'Отменить',
-      'admin.actions.save': 'Сохранить дату и время',
+      'admin.actions.action': 'Действие',
+      'admin.actions.reschedule': 'Перенести',
       'admin.actions.delete': 'Удалить',
       'admin.actions.deleteConfirm': 'Удалить эту запись из расписания?',
       'admin.table.empty': 'Записей пока нет.',
+      'admin.reschedule.title': 'Перенести запись',
+      'admin.reschedule.subtitle': 'Обновите время и подтвердите, когда гость будет готов.',
+      'admin.reschedule.date': 'Новая дата',
+      'admin.reschedule.time': 'Новое время',
+      'admin.reschedule.submit': 'Сохранить изменения',
+      'admin.reschedule.cancel': 'Отменить',
       'clinic.kicker': 'Ветеринарный центр',
       'clinic.title': 'Нежная медицина в окружении света',
       'clinic.subtitle': 'Медицинское крыло Aura Memoria сочетает технологии и ритуалы спа, чтобы каждый визит был спокойным.',
@@ -678,6 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.adminPanel': 'Yönetim paneli',
       'header.logout': 'Çıkış yap',
       'header.languageToggle': 'Dili seçin',
+      'header.bookAppointment': 'Randevu al',
       'header.home': 'Ana sayfa',
       'nav.services': 'Hizmetler',
       'nav.memory': 'Hatıra',
@@ -834,17 +878,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'admin.table.title': 'Misafir randevuları',
       'admin.table.subtitle': 'Nazik dokunuşlarla onaylayın, yeniden planlayın veya iptal edin.',
       'admin.table.guest': 'Misafir',
+      'admin.table.guardian': 'Bakıcı',
+      'admin.table.contact': 'İletişim',
+      'admin.table.notes': 'Notlar',
       'admin.table.service': 'Hizmet',
       'admin.table.datetime': 'Tarih ve saat',
       'admin.table.status': 'Durum',
       'admin.table.actions': 'İşlemler',
+      'admin.table.showDetails': 'Detayları göster',
+      'admin.table.hideDetails': 'Detayları gizle',
       'admin.actions.confirm': 'Onayla',
       'admin.actions.pending': 'Beklemede işaretle',
       'admin.actions.cancel': 'İptal et',
-      'admin.actions.save': 'Tarih ve saati kaydet',
+      'admin.actions.action': 'İşlem',
+      'admin.actions.reschedule': 'Yeniden planla',
       'admin.actions.delete': 'Sil',
       'admin.actions.deleteConfirm': 'Bu randevuyu programdan kaldırmak istiyor musunuz?',
       'admin.table.empty': 'Henüz randevu yok.',
+      'admin.reschedule.title': 'Randevuyu güncelle',
+      'admin.reschedule.subtitle': 'Zamanı güncelleyin ve hazır olduğunda onaylayın.',
+      'admin.reschedule.date': 'Yeni tarih',
+      'admin.reschedule.time': 'Yeni saat',
+      'admin.reschedule.submit': 'Değişiklikleri kaydet',
+      'admin.reschedule.cancel': 'İptal',
       'clinic.kicker': 'Veteriner merkezi',
       'clinic.title': 'Işıkla çevrili nazik tıp',
       'clinic.subtitle': 'Aura Memoria\'nın tıbbi kanadı modern teşhisi spa benzeri ritüellerle birleştirir.',
@@ -982,6 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'header.adminPanel': 'Verwaltungspanel',
       'header.logout': 'Abmelden',
       'header.languageToggle': 'Sprache auswählen',
+      'header.bookAppointment': 'Termin buchen',
       'header.home': 'Startseite',
       'nav.services': 'Leistungen',
       'nav.memory': 'Erinnerung',
@@ -1138,17 +1195,29 @@ document.addEventListener('DOMContentLoaded', () => {
       'admin.table.title': 'Gästetermine',
       'admin.table.subtitle': 'Bestätigen, verschieben oder stornieren Sie mit sanfter Begleitung.',
       'admin.table.guest': 'Gast',
+      'admin.table.guardian': 'Begleitperson',
+      'admin.table.contact': 'Kontakt',
+      'admin.table.notes': 'Notizen',
       'admin.table.service': 'Leistung',
       'admin.table.datetime': 'Datum & Uhrzeit',
       'admin.table.status': 'Status',
       'admin.table.actions': 'Aktionen',
+      'admin.table.showDetails': 'Details anzeigen',
+      'admin.table.hideDetails': 'Details verbergen',
       'admin.actions.confirm': 'Bestätigen',
       'admin.actions.pending': 'Als ausstehend markieren',
       'admin.actions.cancel': 'Stornieren',
-      'admin.actions.save': 'Datum & Uhrzeit speichern',
+      'admin.actions.action': 'Aktion',
+      'admin.actions.reschedule': 'Verschieben',
       'admin.actions.delete': 'Löschen',
       'admin.actions.deleteConfirm': 'Diesen Termin aus dem Plan entfernen?',
       'admin.table.empty': 'Noch keine Termine.',
+      'admin.reschedule.title': 'Termin anpassen',
+      'admin.reschedule.subtitle': 'Zeit aktualisieren und bestätigen, sobald der Gast bereit ist.',
+      'admin.reschedule.date': 'Neues Datum',
+      'admin.reschedule.time': 'Neue Uhrzeit',
+      'admin.reschedule.submit': 'Änderungen speichern',
+      'admin.reschedule.cancel': 'Abbrechen',
       'clinic.kicker': 'Tierärztliches Zentrum',
       'clinic.title': 'Sanfte Medizin im Licht',
       'clinic.subtitle': 'Das medizinische Flügel von Aura Memoria verbindet moderne Diagnostik mit Spa-Ritualen für einen ruhigen Termin.',
@@ -1588,6 +1657,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return Number.isNaN(timestamp) ? Number.POSITIVE_INFINITY : timestamp;
   };
 
+  const smoothScrollToTop = () => {
+    const start = window.scrollY || document.documentElement.scrollTop || 0;
+    if (start === 0) return;
+    const duration = 320;
+    const startTime = performance.now();
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const step = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(progress);
+      const next = Math.round(start * (1 - eased));
+      window.scrollTo(0, next);
+      if (elapsed < duration) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
+
   const pickNextAppointment = (appointments = []) => {
     const upcoming = appointments
       .filter((appointment) => appointment && appointment.status !== STATUS_CANCELLED)
@@ -1706,6 +1796,96 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   };
 
+  const updateDetailsToggle = (row, expanded) => {
+    const toggle = row.querySelector('[data-admin-toggle-details]');
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', String(expanded));
+      toggle.textContent = getTranslation(expanded ? 'admin.table.hideDetails' : 'admin.table.showDetails');
+    }
+  };
+
+  const syncAdminDetails = () => {
+    if (!adminTableBody) return;
+    adminTableBody.querySelectorAll('tr[data-admin-row]').forEach((row) => {
+      const manual = row.dataset.detailsManual === 'true';
+      if (!compactAdminMedia.matches) {
+        row.classList.add('is-expanded');
+        row.dataset.detailsManual = 'false';
+        updateDetailsToggle(row, true);
+        return;
+      }
+      if (!manual) {
+        row.classList.remove('is-expanded');
+        updateDetailsToggle(row, false);
+      }
+    });
+  };
+
+  const closeAdminActionMenu = () => {
+    if (!openAdminActionMenu) return;
+    const { menu, trigger } = openAdminActionMenu;
+    if (menu) {
+      menu.classList.remove('is-visible');
+      menu.hidden = true;
+    }
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.classList.remove('is-open');
+    }
+    openAdminActionMenu = null;
+  };
+
+  const openAdminActionMenuFor = (trigger, menu) => {
+    if (!menu || !trigger) return;
+    if (openAdminActionMenu && openAdminActionMenu.menu === menu) {
+      closeAdminActionMenu();
+      return;
+    }
+    closeAdminActionMenu();
+    menu.hidden = false;
+    requestAnimationFrame(() => {
+      menu.classList.add('is-visible');
+    });
+    trigger.setAttribute('aria-expanded', 'true');
+    trigger.classList.add('is-open');
+    openAdminActionMenu = { menu, trigger };
+  };
+
+  const openAdminRescheduleModal = (appointment) => {
+    if (!adminRescheduleModal || !adminRescheduleForm) return;
+    const dateField = adminRescheduleForm.querySelector('input[name="date"]');
+    const timeField = adminRescheduleForm.querySelector('input[name="time"]');
+    if (dateField) {
+      dateField.value = appointment?.date || '';
+    }
+    if (timeField) {
+      timeField.value = appointment?.time || '';
+    }
+    adminRescheduleModal.removeAttribute('hidden');
+    requestAnimationFrame(() => {
+      adminRescheduleModal.classList.add('is-open');
+    });
+    syncModalState();
+    const focusTarget = dateField || adminRescheduleForm.querySelector('input, button');
+    if (focusTarget) {
+      setTimeout(() => focusTarget.focus(), 50);
+    }
+  };
+
+  const closeAdminRescheduleModal = () => {
+    if (!adminRescheduleModal) return;
+    adminRescheduleModal.classList.remove('is-open');
+    adminRescheduleModal.setAttribute('hidden', '');
+    if (adminRescheduleForm) {
+      adminRescheduleForm.reset();
+    }
+    adminRescheduleState = {
+      appointmentId: null,
+      userLogin: null,
+    };
+    syncModalState();
+  };
+
   const hydrateAdminPanel = () => {
     if (page !== 'admin') return;
     if (!currentUser || currentUser.role !== 'admin') {
@@ -1777,15 +1957,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (adminTableBody) {
+      closeAdminActionMenu();
       adminTableBody.querySelectorAll('[data-admin-row]').forEach((row) => row.remove());
+
+      const fallback = (value) => {
+        const raw = (value || '').toString().trim();
+        return raw.length ? raw : '—';
+      };
 
       filtered.forEach(({ user, appointment }) => {
         const row = document.createElement('tr');
         row.dataset.adminRow = 'true';
         row.dataset.appointmentId = appointment.id;
         row.dataset.userLogin = normalizeLogin(user.login);
+        row.dataset.detailsManual = 'false';
+        row.className = 'admin-table__row';
 
         const guestCell = document.createElement('td');
+        guestCell.dataset.label = getTranslation('admin.table.guest');
+        guestCell.className = 'admin-table__cell admin-table__cell--guest';
         const guestName = document.createElement('div');
         guestName.className = 'admin-table__guest';
         guestName.textContent = getUserDisplayName(user);
@@ -1794,68 +1984,126 @@ document.addEventListener('DOMContentLoaded', () => {
         guestLogin.textContent = `@${user.login}`;
         guestCell.append(guestName, guestLogin);
 
+        const guardianCell = document.createElement('td');
+        guardianCell.dataset.label = getTranslation('admin.table.guardian');
+        guardianCell.className = 'admin-table__cell';
+        guardianCell.textContent = fallback(appointment.guardian);
+
+        const contactCell = document.createElement('td');
+        contactCell.dataset.label = getTranslation('admin.table.contact');
+        contactCell.className = 'admin-table__cell admin-table__cell--secondary';
+        const contactValue = fallback(appointment.contact);
+        contactCell.textContent = contactValue;
+        contactCell.title = contactValue !== '—' ? contactValue : '';
+
+        const notesCell = document.createElement('td');
+        notesCell.dataset.label = getTranslation('admin.table.notes');
+        notesCell.className = 'admin-table__cell admin-table__cell--secondary';
+        const notesValue = fallback(appointment.notes);
+        notesCell.textContent = notesValue;
+        notesCell.title = notesValue !== '—' ? notesValue : '';
+
         const serviceCell = document.createElement('td');
+        serviceCell.dataset.label = getTranslation('admin.table.service');
+        serviceCell.className = 'admin-table__cell';
         serviceCell.textContent = getAppointmentServiceLabel(appointment.serviceType || 'clinic');
 
         const datetimeCell = document.createElement('td');
-        const dateInput = document.createElement('input');
-        dateInput.type = 'date';
-        dateInput.value = appointment.date || '';
-        dateInput.dataset.adminDate = 'true';
-        const timeInput = document.createElement('input');
-        timeInput.type = 'time';
-        timeInput.value = appointment.time || '';
-        timeInput.dataset.adminTime = 'true';
-        datetimeCell.append(dateInput, timeInput);
+        datetimeCell.dataset.label = getTranslation('admin.table.datetime');
+        datetimeCell.className = 'admin-table__cell admin-table__cell--datetime';
+        const dateLine = document.createElement('div');
+        dateLine.className = 'admin-table__date';
+        dateLine.textContent = fallback(appointment.date);
+        const timeLine = document.createElement('div');
+        timeLine.className = 'admin-table__time';
+        timeLine.textContent = fallback(appointment.time);
+        datetimeCell.append(dateLine, timeLine);
 
         const statusCell = document.createElement('td');
+        statusCell.dataset.label = getTranslation('admin.table.status');
+        statusCell.className = 'admin-table__cell';
         const statusChip = document.createElement('span');
         statusChip.className = getStatusClass(appointment.status || STATUS_PENDING);
         statusChip.textContent = getAppointmentStatusLabel(appointment.status || STATUS_PENDING);
         statusCell.append(statusChip);
 
         const actionsCell = document.createElement('td');
-        actionsCell.className = 'admin-table__actions';
+        actionsCell.dataset.label = getTranslation('admin.table.actions');
+        actionsCell.className = 'admin-table__cell admin-table__cell--actions';
 
-        const confirmButton = document.createElement('button');
-        confirmButton.className = 'btn btn--ghost';
-        confirmButton.type = 'button';
-        confirmButton.dataset.adminAction = 'confirm';
-        confirmButton.textContent = getTranslation('admin.actions.confirm');
+        const actionsWrapper = document.createElement('div');
+        actionsWrapper.className = 'admin-actions';
+        actionsWrapper.dataset.adminActions = appointment.id;
 
-        const pendingButton = document.createElement('button');
-        pendingButton.className = 'btn btn--ghost';
-        pendingButton.type = 'button';
-        pendingButton.dataset.adminAction = 'pending';
-        pendingButton.textContent = getTranslation('admin.actions.pending');
+        const actionToggle = document.createElement('button');
+        actionToggle.type = 'button';
+        actionToggle.className = 'admin-actions__trigger';
+        actionToggle.dataset.adminActionToggle = appointment.id;
+        actionToggle.setAttribute('aria-haspopup', 'true');
+        actionToggle.setAttribute('aria-expanded', 'false');
+        actionToggle.textContent = getTranslation('admin.actions.action');
+        const actionChevron = document.createElement('span');
+        actionChevron.className = 'admin-actions__chevron';
+        actionChevron.setAttribute('aria-hidden', 'true');
+        actionToggle.append(actionChevron);
 
-        const cancelButton = document.createElement('button');
-        cancelButton.className = 'btn btn--ghost';
-        cancelButton.type = 'button';
-        cancelButton.dataset.adminAction = 'cancel';
-        cancelButton.textContent = getTranslation('admin.actions.cancel');
+        const actionMenu = document.createElement('div');
+        actionMenu.className = 'admin-actions__menu';
+        actionMenu.dataset.adminActionMenu = appointment.id;
+        actionMenu.hidden = true;
+        actionMenu.setAttribute('role', 'menu');
 
-        const saveButton = document.createElement('button');
-        saveButton.className = 'btn btn--ghost';
-        saveButton.type = 'button';
-        saveButton.dataset.adminAction = 'save';
-        saveButton.textContent = getTranslation('admin.actions.save');
+        const appendMenuItem = (action, labelKey, extraClass) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'admin-actions__item';
+          if (extraClass) {
+            item.classList.add(extraClass);
+          }
+          item.dataset.adminAction = action;
+          item.setAttribute('role', 'menuitem');
+          item.textContent = getTranslation(labelKey);
+          actionMenu.append(item);
+        };
 
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn--danger';
-        deleteButton.type = 'button';
-        deleteButton.dataset.adminAction = 'delete';
-        deleteButton.textContent = getTranslation('admin.actions.delete');
+        appendMenuItem('confirm', 'admin.actions.confirm');
+        appendMenuItem('reschedule', 'admin.actions.reschedule');
+        appendMenuItem('cancel', 'admin.actions.cancel');
+        appendMenuItem('delete', 'admin.actions.delete', 'admin-actions__item--danger');
 
-        actionsCell.append(confirmButton, pendingButton, cancelButton, saveButton, deleteButton);
+        actionsWrapper.append(actionToggle, actionMenu);
 
-        row.append(guestCell, serviceCell, datetimeCell, statusCell, actionsCell);
+        const detailsToggle = document.createElement('button');
+        detailsToggle.type = 'button';
+        detailsToggle.className = 'admin-table__details-toggle';
+        detailsToggle.dataset.adminToggleDetails = appointment.id;
+
+        actionsCell.append(actionsWrapper, detailsToggle);
+
+        row.append(
+          guestCell,
+          guardianCell,
+          contactCell,
+          notesCell,
+          serviceCell,
+          datetimeCell,
+          statusCell,
+          actionsCell
+        );
+
         adminTableBody.append(row);
+
+        if (!compactAdminMedia.matches) {
+          row.classList.add('is-expanded');
+        }
+        updateDetailsToggle(row, !compactAdminMedia.matches);
       });
 
       if (adminEmptyRow) {
         adminEmptyRow.toggleAttribute('hidden', filtered.length > 0);
       }
+
+      syncAdminDetails();
     }
   };
 
@@ -2136,7 +2384,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const syncModalState = () => {
     const bookingOpen = bookingModal && !bookingModal.hasAttribute('hidden');
     const appointmentsOpen = appointmentsModal && !appointmentsModal.hasAttribute('hidden');
-    if (bookingOpen || appointmentsOpen) {
+    const adminRescheduleOpen = adminRescheduleModal && !adminRescheduleModal.hasAttribute('hidden');
+    if (bookingOpen || appointmentsOpen || adminRescheduleOpen) {
       document.body.classList.add('has-modal');
     } else {
       document.body.classList.remove('has-modal');
@@ -2236,7 +2485,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (appointmentsModal && !appointmentsModal.hasAttribute('hidden')) {
         closeAppointmentsModal();
       }
+      if (adminRescheduleModal && !adminRescheduleModal.hasAttribute('hidden')) {
+        closeAdminRescheduleModal();
+      }
+      closeAdminActionMenu();
     }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!openAdminActionMenu) return;
+    const { menu, trigger } = openAdminActionMenu;
+    if (!menu) return;
+    const target = event.target;
+    if (menu.contains(target)) return;
+    if (trigger && (target === trigger || trigger.contains(target))) return;
+    closeAdminActionMenu();
   });
 
   if (manageAppointmentsBtn) {
@@ -2377,8 +2640,33 @@ document.addEventListener('DOMContentLoaded', () => {
     adminSort.addEventListener('change', hydrateAdminPanel);
   }
 
+  if (compactAdminMedia) {
+    compactAdminMedia.addEventListener('change', syncAdminDetails);
+  }
+
   if (adminTableBody) {
     adminTableBody.addEventListener('click', (event) => {
+      const detailsButton = event.target.closest('[data-admin-toggle-details]');
+      if (detailsButton) {
+        const row = detailsButton.closest('tr[data-admin-row]');
+        if (!row) return;
+        const expanded = row.classList.toggle('is-expanded');
+        row.dataset.detailsManual = 'true';
+        updateDetailsToggle(row, expanded);
+        event.preventDefault();
+        return;
+      }
+
+      const toggleButton = event.target.closest('[data-admin-action-toggle]');
+      if (toggleButton) {
+        const row = toggleButton.closest('tr[data-admin-row]');
+        if (!row) return;
+        const menu = row.querySelector(`[data-admin-action-menu="${toggleButton.dataset.adminActionToggle}"]`);
+        openAdminActionMenuFor(toggleButton, menu);
+        event.preventDefault();
+        return;
+      }
+
       const button = event.target.closest('[data-admin-action]');
       if (!button) return;
       event.preventDefault();
@@ -2394,6 +2682,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const userLogin = row.dataset.userLogin;
       if (!appointmentId || !userLogin) return;
 
+      closeAdminActionMenu();
+
       const commitUpdate = (updater, toastKey) => {
         const updated = updateStoredUser(userLogin, updater);
         if (!updated) return;
@@ -2405,28 +2695,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      if (action === 'save') {
-        const dateInput = row.querySelector('[data-admin-date]');
-        const timeInput = row.querySelector('[data-admin-time]');
-        const date = dateInput?.value || '';
-        const time = timeInput?.value || '';
-        if (!date || !time) {
-          return;
-        }
-        commitUpdate((user) => {
-          const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
-          const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
-          if (index === -1) return user;
-          appointments[index] = {
-            ...appointments[index],
-            date,
-            time,
-          };
-          return {
-            ...user,
-            appointments,
-          };
-        }, 'toast.appointment.updated');
+      if (action === 'reschedule') {
+        adminRescheduleState = {
+          appointmentId,
+          userLogin,
+        };
+        const user = findUser(userLogin);
+        const appointment = user?.appointments?.find((entry) => entry.id === appointmentId) || null;
+        openAdminRescheduleModal(appointment);
         return;
       }
 
@@ -2494,6 +2770,76 @@ document.addEventListener('DOMContentLoaded', () => {
           };
         }, 'toast.appointment.deleted');
       }
+    });
+  }
+
+  if (adminRescheduleCloseButtons.length) {
+    adminRescheduleCloseButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        closeAdminRescheduleModal();
+      });
+    });
+  }
+
+  if (adminRescheduleBackdrop) {
+    adminRescheduleBackdrop.addEventListener('click', closeAdminRescheduleModal);
+  }
+
+  if (adminRescheduleForm) {
+    adminRescheduleForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (currentUser?.role !== 'admin') {
+        showToast('toast.auth.adminOnly');
+        return;
+      }
+      const { appointmentId, userLogin } = adminRescheduleState;
+      if (!appointmentId || !userLogin) {
+        closeAdminRescheduleModal();
+        return;
+      }
+      const formData = new FormData(adminRescheduleForm);
+      const date = (formData.get('date') || '').toString();
+      const time = (formData.get('time') || '').toString();
+      if (!date || !time) {
+        return;
+      }
+      const updated = updateStoredUser(userLogin, (user) => {
+        const appointments = Array.isArray(user.appointments) ? [...user.appointments] : [];
+        const index = appointments.findIndex((appointment) => appointment.id === appointmentId);
+        if (index === -1) {
+          return user;
+        }
+        appointments[index] = {
+          ...appointments[index],
+          date,
+          time,
+          status: STATUS_PENDING,
+        };
+        return {
+          ...user,
+          appointments,
+        };
+      });
+
+      if (!updated) {
+        return;
+      }
+
+      hydrateDashboard();
+      renderUserAppointments();
+      hydrateAdminPanel();
+      showToast('toast.appointment.updated');
+      closeAdminRescheduleModal();
+    });
+  }
+
+  if (backToTopLinks.length) {
+    backToTopLinks.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        smoothScrollToTop();
+      });
     });
   }
 
