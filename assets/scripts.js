@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ? Array.from(mobileMenu.querySelectorAll('[data-mobile-menu-close]'))
     : [];
   const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('[data-mobile-menu-link]')) : [];
+  const mobileMenuInitialFocus = mobileMenu
+    ? mobileMenu.querySelector('[data-mobile-menu-initial]') || mobileMenu.querySelector('[data-mobile-menu-close]')
+    : null;
   const revealElements = document.querySelectorAll('.reveal');
   const parallaxItems = document.querySelectorAll('[data-parallax]');
   const contactForm = document.querySelector('[data-form="contact"]');
@@ -69,6 +72,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const compactAdminMedia = window.matchMedia('(max-width: 900px)');
   const mobileMenuDesktopMedia = window.matchMedia('(min-width: 901px)');
   let mobileMenuHideTimeout = null;
+  let mobileMenuHistoryActive = false;
+  let mobileMenuShouldReturnFocus = false;
+
+  if (mobileMenu) {
+    const initialAriaHidden = mobileMenu.getAttribute('aria-hidden');
+    if (!initialAriaHidden) {
+      mobileMenu.setAttribute('aria-hidden', mobileMenu.hidden ? 'true' : 'false');
+    }
+  }
 
   const translations = {
     en: {
@@ -1418,29 +1430,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const isMobileMenuOpen = () => mobileMenu && mobileMenu.classList.contains('is-visible');
 
-  const openMobileMenu = () => {
-    if (!mobileMenu) return;
-    if (mobileMenuHideTimeout) {
-      clearTimeout(mobileMenuHideTimeout);
-      mobileMenuHideTimeout = null;
-    }
-    mobileMenu.hidden = false;
-    requestAnimationFrame(() => {
-      mobileMenu.classList.add('is-visible');
-    });
-    document.body.classList.add('has-open-mobile-menu');
-    if (mobileMenuToggle) {
-      mobileMenuToggle.setAttribute('aria-expanded', 'true');
-    }
+  const focusableMenuSelectors =
+    'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  const getMobileMenuFocusable = () => {
+    if (!mobileMenu) return [];
+    return Array.from(mobileMenu.querySelectorAll(focusableMenuSelectors)).filter((el) =>
+      el.offsetParent !== null && !el.hasAttribute('hidden') && !el.closest('[hidden]')
+    );
   };
 
-  const closeMobileMenu = ({ returnFocus = false } = {}) => {
+  const applyCloseMobileMenu = ({ returnFocus = false } = {}) => {
     if (!mobileMenu) return;
     if (mobileMenuHideTimeout) {
       clearTimeout(mobileMenuHideTimeout);
       mobileMenuHideTimeout = null;
     }
     mobileMenu.classList.remove('is-visible');
+    mobileMenu.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('has-open-mobile-menu');
     if (mobileMenuToggle) {
       mobileMenuToggle.setAttribute('aria-expanded', 'false');
@@ -1450,10 +1457,56 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenu.hidden = true;
       }
       mobileMenuHideTimeout = null;
-    }, 320);
+    }, 260);
     if (returnFocus && mobileMenuToggle) {
       mobileMenuToggle.focus();
     }
+  };
+
+  const openMobileMenu = () => {
+    if (!mobileMenu) return;
+    if (mobileMenuHideTimeout) {
+      clearTimeout(mobileMenuHideTimeout);
+      mobileMenuHideTimeout = null;
+    }
+    mobileMenu.hidden = false;
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-open-mobile-menu');
+    mobileMenuShouldReturnFocus = false;
+    if (!mobileMenuHistoryActive && window.history?.pushState) {
+      try {
+        window.history.pushState({ auraMobileMenu: true }, '', window.location.href);
+        mobileMenuHistoryActive = true;
+      } catch (error) {
+        mobileMenuHistoryActive = false;
+      }
+    }
+    requestAnimationFrame(() => {
+      mobileMenu.classList.add('is-visible');
+      const focusTarget = mobileMenuInitialFocus || getMobileMenuFocusable()[0];
+      if (focusTarget) {
+        focusTarget.focus();
+      }
+    });
+    if (mobileMenuToggle) {
+      mobileMenuToggle.setAttribute('aria-expanded', 'true');
+    }
+  };
+
+  const closeMobileMenu = ({
+    returnFocus = false,
+    triggeredByHistory = false,
+    manageHistory = true,
+  } = {}) => {
+    if (!mobileMenu) return;
+    if (manageHistory && mobileMenuHistoryActive && !triggeredByHistory && window.history?.pushState) {
+      mobileMenuShouldReturnFocus = mobileMenuShouldReturnFocus || returnFocus;
+      window.history.back();
+      return;
+    }
+    applyCloseMobileMenu({ returnFocus: returnFocus || mobileMenuShouldReturnFocus });
+    mobileMenuHistoryActive = false;
+    mobileMenuShouldReturnFocus = false;
   };
 
   const toggleMobileMenu = () => {
@@ -1469,23 +1522,45 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileMenuToggle.addEventListener('click', toggleMobileMenu);
   }
 
+  if (mobileMenu) {
+    mobileMenu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') {
+        return;
+      }
+      const focusable = getMobileMenuFocusable();
+      if (!focusable.length) {
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  }
+
   mobileMenuCloseButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      const shouldReturnFocus = button.classList.contains('mobile-menu__close');
+      const shouldReturnFocus =
+        button.classList.contains('mobile-menu__close') || button.classList.contains('mobile-menu__overlay');
       closeMobileMenu({ returnFocus: shouldReturnFocus });
     });
   });
 
   mobileMenuLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      closeMobileMenu();
+      closeMobileMenu({ manageHistory: false });
     });
   });
 
   if (mobileMenuDesktopMedia) {
     mobileMenuDesktopMedia.addEventListener('change', (event) => {
       if (event.matches) {
-        closeMobileMenu();
+        closeMobileMenu({ manageHistory: false });
         if (mobileMenu) {
           mobileMenu.hidden = true;
           mobileMenu.classList.remove('is-visible');
@@ -1497,6 +1572,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && isMobileMenuOpen()) {
       closeMobileMenu({ returnFocus: true });
+    }
+  });
+
+  window.addEventListener('popstate', (event) => {
+    if (isMobileMenuOpen()) {
+      closeMobileMenu({ returnFocus: true, triggeredByHistory: true });
+    } else if (event.state && event.state.auraMobileMenu) {
+      mobileMenuHistoryActive = false;
+      mobileMenuShouldReturnFocus = false;
     }
   });
 

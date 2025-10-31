@@ -33,10 +33,11 @@
         aria-label="Open menu"
         data-i18n-aria-label="header.menuOpen"
         data-mobile-menu-toggle
+        aria-controls="mobile-menu"
       >
-        <span></span>
-        <span></span>
-        <span></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </button>
       <div class="header-controls">
         <div class="language-menu" data-language-menu>
@@ -146,7 +147,7 @@
           Sign out
         </button>
       </div>
-      <div class="mobile-menu" data-mobile-menu hidden>
+      <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden aria-hidden="true">
         <div class="mobile-menu__overlay" data-mobile-menu-close></div>
         <div class="mobile-menu__panel">
           <button
@@ -155,9 +156,10 @@
             aria-label="Close menu"
             data-i18n-aria-label="header.menuClose"
             data-mobile-menu-close
+            data-mobile-menu-initial
           >
-            <span></span>
-            <span></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
           </button>
           <nav class="mobile-menu__nav" aria-label="Mobile navigation">
             <a href="index.html#services" data-i18n="nav.services" data-mobile-menu-link>Services</a>
