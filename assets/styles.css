@@ -361,18 +361,24 @@ body.theme-dark .header-menu-toggle:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease;
-  z-index: 40;
+  z-index: 200;
 }
 
 .mobile-menu__overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(11, 43, 38, 0.45);
   backdrop-filter: blur(2px);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 200ms ease;
   cursor: pointer;
-  z-index: 0;
+  z-index: 190;
+}
+
+.mobile-menu__overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 body.theme-dark .mobile-menu__overlay {
@@ -394,7 +400,7 @@ body.theme-dark .mobile-menu__overlay {
   transform: translateY(-12px);
   opacity: 0;
   transition: transform 200ms ease, opacity 200ms ease;
-  z-index: 1;
+  z-index: 210;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
 }
@@ -501,10 +507,6 @@ body.theme-dark .mobile-menu__close:hover {
 .mobile-menu.is-visible {
   opacity: 1;
   pointer-events: auto;
-}
-
-.mobile-menu.is-visible .mobile-menu__overlay {
-  opacity: 1;
 }
 
 .mobile-menu.is-visible .mobile-menu__panel {

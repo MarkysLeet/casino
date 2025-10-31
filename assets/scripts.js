@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const languageOptions = languageMenu ? Array.from(languageMenu.querySelectorAll('.language-menu__option')) : [];
   const mobileMenu = document.querySelector('[data-mobile-menu]');
   const mobileMenuToggle = document.querySelector('[data-mobile-menu-toggle]');
+  const mobileMenuOverlay = document.querySelector('[data-mobile-menu-overlay]');
   const mobileMenuCloseButtons = mobileMenu
     ? Array.from(mobileMenu.querySelectorAll('[data-mobile-menu-close]'))
     : [];
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const compactAdminMedia = window.matchMedia('(max-width: 900px)');
   const mobileMenuDesktopMedia = window.matchMedia('(min-width: 901px)');
   let mobileMenuHideTimeout = null;
+  let mobileMenuOverlayHideTimeout = null;
   let mobileMenuHistoryActive = false;
   let mobileMenuShouldReturnFocus = false;
 
@@ -1430,6 +1432,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const isMobileMenuOpen = () => mobileMenu && mobileMenu.classList.contains('is-visible');
 
+  const showMobileMenuOverlay = () => {
+    if (!mobileMenuOverlay) {
+      return;
+    }
+    if (mobileMenuOverlayHideTimeout) {
+      clearTimeout(mobileMenuOverlayHideTimeout);
+      mobileMenuOverlayHideTimeout = null;
+    }
+    mobileMenuOverlay.hidden = false;
+    requestAnimationFrame(() => {
+      mobileMenuOverlay.classList.add('is-visible');
+    });
+  };
+
+  const hideMobileMenuOverlay = () => {
+    if (!mobileMenuOverlay) {
+      return;
+    }
+    mobileMenuOverlay.classList.remove('is-visible');
+    if (mobileMenuOverlayHideTimeout) {
+      clearTimeout(mobileMenuOverlayHideTimeout);
+    }
+    mobileMenuOverlayHideTimeout = window.setTimeout(() => {
+      if (!mobileMenuOverlay.classList.contains('is-visible')) {
+        mobileMenuOverlay.hidden = true;
+      }
+      mobileMenuOverlayHideTimeout = null;
+    }, 240);
+  };
+
   const focusableMenuSelectors =
     'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -1448,6 +1480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     mobileMenu.classList.remove('is-visible');
     mobileMenu.setAttribute('aria-hidden', 'true');
+    hideMobileMenuOverlay();
     document.body.classList.remove('has-open-mobile-menu');
     if (mobileMenuToggle) {
       mobileMenuToggle.setAttribute('aria-expanded', 'false');
@@ -1471,6 +1504,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     mobileMenu.hidden = false;
     mobileMenu.setAttribute('aria-hidden', 'false');
+    showMobileMenuOverlay();
     document.body.classList.add('has-open-mobile-menu');
     mobileMenuShouldReturnFocus = false;
     if (!mobileMenuHistoryActive && window.history?.pushState) {
@@ -1543,7 +1577,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  mobileMenuCloseButtons.forEach((button) => {
+  const mobileMenuCloseElements = mobileMenuOverlay
+    ? [...mobileMenuCloseButtons, mobileMenuOverlay]
+    : mobileMenuCloseButtons;
+
+  mobileMenuCloseElements.forEach((button) => {
     button.addEventListener('click', () => {
       const shouldReturnFocus =
         button.classList.contains('mobile-menu__close') || button.classList.contains('mobile-menu__overlay');
