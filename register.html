@@ -139,70 +139,6 @@
           Sign out
         </button>
       </div>
-      <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden aria-hidden="true">
-        <div class="mobile-menu__panel">
-          <button
-            class="mobile-menu__close"
-            type="button"
-            aria-label="Close menu"
-            data-i18n-aria-label="header.menuClose"
-            data-mobile-menu-close
-            data-mobile-menu-initial
-          >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </button>
-          <nav class="mobile-menu__nav" aria-label="Mobile navigation">
-            <a href="index.html" data-i18n="header.home" data-mobile-menu-link>Home</a>
-            <a href="memorial.html" data-i18n="nav.memory" data-mobile-menu-link>Memory</a>
-            <a href="about.html" data-i18n="nav.about" data-mobile-menu-link>About</a>
-          </nav>
-          <div class="mobile-menu__actions">
-            <a
-              class="btn btn--header"
-              href="login.html"
-              data-i18n="header.login"
-              data-auth-visible="signed-out"
-              data-mobile-menu-link
-            >
-              Sign in
-            </a>
-            <a
-              class="btn btn--header btn--outline"
-              href="dashboard.html"
-              data-i18n="header.dashboard"
-              data-auth-visible="signed-in"
-              data-role-visible="user"
-              data-mobile-menu-link
-              hidden
-            >
-              Personal cabinet
-            </a>
-            <a
-              class="btn btn--header btn--outline"
-              href="admin.html"
-              data-i18n="header.adminPanel"
-              data-auth-visible="signed-in"
-              data-role-visible="admin"
-              data-mobile-menu-link
-              hidden
-            >
-              Admin panel
-            </a>
-            <button
-              class="header-link header-link--muted mobile-menu__logout"
-              type="button"
-              data-action="logout"
-              data-i18n="header.logout"
-              data-auth-visible="signed-in"
-              data-mobile-menu-link
-              hidden
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      </div>
     </header>
 
     <main class="auth-main reveal" aria-labelledby="register-title">
@@ -308,7 +244,73 @@
       </div>
     </footer>
   </div>
-  <div class="mobile-menu__overlay" data-mobile-menu-overlay data-mobile-menu-close hidden></div>
+  <div class="mobile-menu-layer" data-mobile-menu-root>
+    <div class="mobile-menu__overlay" data-mobile-menu-overlay data-mobile-menu-close hidden></div>
+    <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden aria-hidden="true">
+      <div class="mobile-menu__panel">
+        <button
+          class="mobile-menu__close"
+          type="button"
+          aria-label="Close menu"
+          data-i18n-aria-label="header.menuClose"
+          data-mobile-menu-close
+          data-mobile-menu-initial
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+        <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+          <a href="index.html" data-i18n="header.home" data-mobile-menu-link>Home</a>
+          <a href="memorial.html" data-i18n="nav.memory" data-mobile-menu-link>Memory</a>
+          <a href="about.html" data-i18n="nav.about" data-mobile-menu-link>About</a>
+        </nav>
+        <div class="mobile-menu__actions">
+          <a
+            class="btn btn--header"
+            href="login.html"
+            data-i18n="header.login"
+            data-auth-visible="signed-out"
+            data-mobile-menu-link
+          >
+            Sign in
+          </a>
+          <a
+            class="btn btn--header btn--outline"
+            href="dashboard.html"
+            data-i18n="header.dashboard"
+            data-auth-visible="signed-in"
+            data-role-visible="user"
+            data-mobile-menu-link
+            hidden
+          >
+            Personal cabinet
+          </a>
+          <a
+            class="btn btn--header btn--outline"
+            href="admin.html"
+            data-i18n="header.adminPanel"
+            data-auth-visible="signed-in"
+            data-role-visible="admin"
+            data-mobile-menu-link
+            hidden
+          >
+            Admin panel
+          </a>
+          <button
+            class="header-link header-link--muted mobile-menu__logout"
+            type="button"
+            data-action="logout"
+            data-i18n="header.logout"
+            data-auth-visible="signed-in"
+            data-mobile-menu-link
+            hidden
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/scripts.js" defer></script>
 </body>
