@@ -361,7 +361,7 @@ body.theme-dark .header-menu-toggle:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease;
-  z-index: 1200;
+  z-index: 1500;
 }
 
 .mobile-menu__overlay {
@@ -373,7 +373,7 @@ body.theme-dark .header-menu-toggle:hover {
   pointer-events: none;
   transition: opacity 200ms ease;
   cursor: pointer;
-  z-index: 1100;
+  z-index: 1400;
 }
 
 .mobile-menu__overlay.is-visible {
