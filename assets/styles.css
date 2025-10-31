@@ -361,7 +361,7 @@ body.theme-dark .header-menu-toggle:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease;
-  z-index: 200;
+  z-index: 1200;
 }
 
 .mobile-menu__overlay {
@@ -373,7 +373,7 @@ body.theme-dark .header-menu-toggle:hover {
   pointer-events: none;
   transition: opacity 200ms ease;
   cursor: pointer;
-  z-index: 190;
+  z-index: 1100;
 }
 
 .mobile-menu__overlay.is-visible {
@@ -400,7 +400,7 @@ body.theme-dark .mobile-menu__overlay {
   transform: translateY(-12px);
   opacity: 0;
   transition: transform 200ms ease, opacity 200ms ease;
-  z-index: 210;
+  z-index: 1;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
 }
